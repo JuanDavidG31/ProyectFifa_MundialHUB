@@ -1,0 +1,118 @@
+<div class="support-wrapper">
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+  <div class="bg-shape shape-3"></div>
+
+  <header class="top-nav">
+    <div class="logo-container" routerLink="/home" style="cursor: pointer;">
+      <div class="icon-pulse">⚽</div>
+      <h1 class="logo-text">Mundial<span class="gradient-text">Hub</span></h1>
+    </div>
+    <button class="btn-back" routerLink="/home">⬅ Volver al Inicio</button>
+  </header>
+
+  <div class="support-container">
+    <header class="support-header">
+      <div class="title-container">
+        <span class="icon">🎧</span>
+        <h1>Panel de <span class="gradient-text">Soporte</span></h1>
+      </div>
+      <p>Gestión de casos, auditoría y resolución operativa.</p>
+    </header>
+
+    <div class="support-grid">
+      <div class="glass-panel case-list-panel">
+        <h2>Casos Activos</h2>
+        <div class="case-list">
+          <div class="case-card" *ngFor="let c of cases" [class.active]="selectedCase?.id === c.id"
+            (click)="selectCase(c)">
+            <div class="case-header">
+              <span class="case-id">{{ c.id }}</span>
+              <span class="status-badge" [ngClass]="c.status.toLowerCase()">{{ c.status }}</span>
+            </div>
+            <h3 class="issue-title">{{ c.issueType }}</h3>
+            <p class="user-info">Usuario: <strong>{{ c.username }}</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-panel detail-panel">
+        <ng-container *ngIf="selectedCase; else noSelection">
+          <div class="detail-header">
+            <h2>Detalle del Caso: {{ selectedCase.id }}</h2>
+            <p><strong>Problema reportado:</strong> {{ selectedCase.issueType }}</p>
+          </div>
+
+          <div class="actions-container">
+            <h3>Acciones Operativas</h3>
+            <div class="button-group">
+              <button class="btn-action" (click)="executeAction('REINTENTAR_NOTIFICACION')"
+                [disabled]="isLoadingAction">
+                ✉️ Reintentar
+              </button>
+              <button class="btn-action" (click)="executeAction('REACTIVAR_RESERVA')" [disabled]="isLoadingAction">
+                🎟️ Reactivar
+              </button>
+              <button class="btn-action alert" (click)="executeAction('ABRIR_INVESTIGACION')"
+                [disabled]="isLoadingAction">
+                ⚠️ Investigar
+              </button>
+            </div>
+          </div>
+
+          <div class="timeline-container">
+            <h3>Línea de Tiempo de Eventos</h3>
+            <div class="timeline">
+              <div class="timeline-item" *ngFor="let event of selectedCase.timeline"
+                [ngClass]="event.type.toLowerCase()">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                  <span class="time">{{ event.date | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+                  <p>{{ event.description }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #noSelection>
+          <div class="empty-state">
+            <span class="icon">🔍</span>
+            <p>Selecciona un caso de la lista para ver el historial y tomar acciones.</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  <div class="chat-widget">
+    <button class="chat-fab icon-pulse" (click)="toggleChat()">💬</button>
+
+    <div class="chat-window" *ngIf="isChatOpen">
+      <div class="chat-header">
+        <h4>Panel de Comunicación</h4>
+        <button class="btn-close" (click)="toggleChat()">✖</button>
+      </div>
+
+      <div class="chat-status">{{ chatStatus }}</div>
+
+      <div class="chat-body">
+        <div *ngIf="chatMessages.length === 0" class="chat-empty">
+          <p>No hay chats activos. Esperando conexión de usuarios...</p>
+        </div>
+
+        <div class="msg" *ngFor="let m of chatMessages"
+          [ngClass]="{'me': m.isMe, 'other': !m.isMe, 'system': m.sender==='Sistema'}">
+          <span class="sender">{{ m.sender }}</span>
+          <p>{{ m.text }}</p>
+        </div>
+      </div>
+
+      <div class="chat-footer" *ngIf="chatStatus.startsWith('¡Chat asignado')">
+        <input type="text" [(ngModel)]="newMessage" (keyup.enter)="sendChatMessage()"
+          placeholder="Responde al usuario aquí...">
+        <button (click)="sendChatMessage()">Enviar</button>
+        <button class="btn-end" (click)="closeChatSession()">Terminar</button>
+      </div>
+    </div>
+  </div>
+</div>

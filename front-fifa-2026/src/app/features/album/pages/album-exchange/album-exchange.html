@@ -1,0 +1,236 @@
+<div class="exchange-wrapper">
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+  <div class="bg-shape shape-3"></div>
+
+  <nav class="top-nav">
+    <button class="back-nav" routerLink="/album">
+      <span class="icon">‹</span> Volver al Álbum
+    </button>
+  </nav>
+
+  <header class="exchange-hero centered">
+    <h1>Mercado de <span class="gradient-text">Intercambio</span></h1>
+    <p class="subtitle">Convierte tus láminas repetidas en FIFA Coins para seguir jugando.</p>
+  </header>
+
+  <main class="exchange-content">
+
+    <div class="exchange-card glass-card">
+      <div class="info-block">
+        <h2>Tienes <span class="highlight">{{ totalDuplicates }}</span> láminas repetidas</h2>
+        <p>Al vender tus repetidas, ganarás monedas virtuales que podrás usar para comprar más paquetes en la tienda.
+        </p>
+      </div>
+
+      <div class="conversion-preview">
+        <div class="box from-box glass-panel">
+          <span class="box-label">🔄 Entregas</span>
+          <strong class="box-value">{{ totalDuplicates }}</strong>
+          <span class="box-sub">Láminas</span>
+        </div>
+
+        <div class="arrow-container">
+          <span class="arrow">➔</span>
+        </div>
+
+        <div class="box to-box glass-panel">
+          <span class="box-label">🪙 Recibes</span>
+          <strong class="box-value">+{{ potentialCoins }}</strong>
+          <span class="box-sub">FIFA Coins</span>
+        </div>
+      </div>
+
+      <div class="alert-box error" *ngIf="totalDuplicates === 0">
+        <span class="alert-icon">⚠️</span>
+        <p>No tienes láminas repetidas en este momento. ¡Abre más paquetes!</p>
+      </div>
+
+      <button class="btn-play" [disabled]="totalDuplicates === 0 || isLoading" (click)="doExchange()">
+        <span *ngIf="!isLoading">VENDER REPETIDAS</span>
+        <span *ngIf="isLoading" class="spinner"></span>
+      </button>
+    </div>
+
+    <div class="exchange-card glass-card">
+
+      <div *ngIf="!currentRoom">
+        <div class="info-block">
+          <h2>Intercambio en <span class="highlight">Tiempo Real</span></h2>
+          <p>Ingresa el usuario de tu amigo para abrir una sala de trueque.</p>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: center; max-width: 400px; margin: 0 auto;">
+          <input type="text" [(ngModel)]="p2pTargetUser" placeholder="Nombre de usuario"
+            style="padding: 12px; border-radius: 8px; background: rgba(0,0,0,0.5); color: white; width: 100%;">
+          <button class="btn-play" (click)="inviteUser()" [disabled]="isInviting"
+            style="margin: 0; width: auto; padding: 0 20px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <span *ngIf="!isInviting">INVITAR</span>
+            <span *ngIf="isInviting" class="spinner" style="width: 15px; height: 15px; border-width: 2px;"></span>
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="currentRoom?.status === 'PENDING' && !isFetchingInventories">
+
+        <div *ngIf="currentRoom.requester === myUsername" class="loading-state"
+          style="display: flex; flex-direction: column; align-items: center; padding: 40px 0;">
+
+          <div class="waiting-spinner"></div>
+
+          <p style="font-size: 1.1rem; color: rgba(255,255,255,0.8);">Esperando a que <span
+              style="color: #f9c74f; font-weight: bold;">{{ currentRoom.target }}</span> acepte...</p>
+          <button class="btn-neutral" (click)="cancelExchange()" style="margin-top: 20px;">❌ Cancelar</button>
+        </div>
+        <div *ngIf="currentRoom.target === myUsername" class="info-block fade-in">
+          <h2>¡<span class="highlight">{{ currentRoom.requester }}</span> te invitó!</h2>
+          <p>Quiere realizar un trueque de láminas contigo ahora mismo.</p>
+          <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+            <button class="btn-danger" (click)="answerInvite('REJECT')">Rechazar</button>
+            <button class="btn-success" (click)="answerInvite('ACCEPT')">ACEPTAR</button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="(currentRoom?.status === 'ACCEPTED' || currentRoom?.status === 'EXECUTED') && (!myInventory || !theirInventory)"
+        class="fetching-state fade-in">
+        <div class="radar-spinner"></div>
+        <h3 style="color: #06b6d4; margin-top: 20px;">Obteniendo fichas disponibles...</h3>
+        <p style="color: rgba(255,255,255,0.6);">Sincronizando los inventarios de ambos jugadores 📡</p>
+      </div>
+
+      <div *ngIf="isFetchingInventories" class="fetching-state fade-in">
+        <div class="radar-spinner"></div>
+        <h3 style="color: #06b6d4; margin-top: 20px;">Cargando fichas...</h3>
+        <p style="color: rgba(255,255,255,0.6);">Obteniendo fichas disponibles en cada usuario 📡</p>
+      </div>
+
+      <div
+        *ngIf="(currentRoom?.status === 'ACCEPTED' || currentRoom?.status === 'EXECUTED') && myInventory && theirInventory && !isFetchingInventories"
+        class="fade-in">
+        <h3 style="text-align: center; color: #f9c74f;">Sala: {{ currentRoom.requester }} ↔️ {{ currentRoom.target }}
+        </h3>
+
+        <div class="ready-status-container">
+          <div class="player-status" [class.is-ready]="myReady">
+            <span class="avatar">Tú</span>
+            <span class="status-text">{{ myReady ? '¡Listo! ✅' : 'Eligiendo...' }}</span>
+          </div>
+          <div class="player-status" [class.is-ready]="theirReady">
+            <span class="avatar">{{ currentRoom.requester === myUsername ? currentRoom.target : currentRoom.requester
+              }}</span>
+            <span class="status-text">{{ theirReady ? '¡Listo! ✅' : 'Eligiendo...' }}</span>
+          </div>
+        </div>
+
+        <div class="p2p-columns" style="display: flex; gap: 20px; text-align: left; margin-top: 15px;">
+          <div class="p2p-col" style="flex: 1; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px;">
+            <div class="col-header" style="text-align: center; margin-bottom: 10px; font-weight: bold;">Lo que tú das
+            </div>
+            <div class="sticker-list"
+              style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;">
+              <div class="p2p-sticker-card" *ngFor="let s of myInventory" (click)="selectSticker(s.id)"
+                [ngStyle]="{'background': mySelectedSticker?.id === s.id ? 'rgba(16, 185, 129, 0.4)' : 'rgba(255,255,255,0.05)', 'padding': '10px', 'border-radius': '8px', 'cursor': 'pointer', 'transition': '0.3s'}">
+                <strong>{{ s.code }}</strong> - {{ s.title }}
+              </div>
+              <p *ngIf="myInventory.length === 0" style="text-align: center; color: gray;">No tienes repetidas.</p>
+            </div>
+          </div>
+
+          <div class="p2p-col" style="flex: 1; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px;">
+            <div class="col-header" style="text-align: center; margin-bottom: 10px; font-weight: bold;">Lo que recibes
+            </div>
+            <div class="sticker-list"
+              style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;">
+              <div class="p2p-sticker-card" *ngFor="let s of theirInventory" (click)="selectSticker(s.id)"
+                [ngStyle]="{'background': theirSelectedSticker?.id === s.id ? 'rgba(6, 182, 212, 0.4)' : 'rgba(255,255,255,0.05)', 'padding': '10px', 'border-radius': '8px', 'cursor': 'pointer', 'transition': '0.3s'}">
+                <strong>{{ s.code }}</strong> - {{ s.title }}
+              </div>
+              <p *ngIf="theirInventory.length === 0" style="text-align: center; color: gray;">Tu amigo no tiene
+                repetidas.</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+          <button class="btn-neutral" (click)="cancelExchange()">Salir</button>
+
+          <button *ngIf="!myReady" class="btn-success"
+            [disabled]="!mySelectedSticker || !theirSelectedSticker || isSettingReady" (click)="setReady()"
+            style="display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 160px;">
+            <span *ngIf="!isSettingReady">¡ESTOY LISTO!</span>
+            <span *ngIf="isSettingReady" class="spinner" style="width: 18px; height: 18px; border-width: 2px;"></span>
+          </button>
+
+          <div *ngIf="myReady && !theirReady"
+            style="display: flex; align-items: center; gap: 10px; color: #10b981; font-weight: bold; background: rgba(16, 185, 129, 0.15); padding: 10px 15px; border-radius: 8px;">
+            <span class="spinner"
+              style="width: 16px; height: 16px; border-width: 2px; border-top-color: #10b981; border-bottom-color: transparent;"></span>
+            Esperando al otro jugador...
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="overlay" *ngIf="showSuccessModal">
+    <div class="success-modal glass-card">
+      <div class="modal-icon">🎉</div>
+      <h2>¡Intercambio Exitoso!</h2>
+      <p>Has quemado tus láminas repetidas y has ganado:</p>
+      <div class="coin-reward">
+        <span class="coin-icon">🪙</span>
+        <span class="coin-amount">+{{ coinsGained }}</span>
+      </div>
+      <p class="sub-text">FIFA Coins</p>
+      <button class="btn-success" (click)="closeModal()">¡Excelente!</button>
+    </div>
+  </div>
+
+  <div class="overlay trade-overlay" *ngIf="isTrading" style="z-index: 2000;">
+    <div class="trade-arena">
+      <h2 class="trade-title">¡Intercambio en Proceso!</h2>
+      <div class="cards-container">
+        <div class="trade-card mine">
+          <div class="card-inner">
+            <span class="card-label">Tú das</span>
+            <strong class="card-code">{{ mySelectedSticker?.code }}</strong>
+            <span class="card-name">{{ mySelectedSticker?.title }}</span>
+          </div>
+        </div>
+
+        <div class="world-cup-center">
+          <div class="soccer-ball-3d"></div>
+          <span class="trading-text">Intercambiando...</span>
+        </div>
+
+        <div class="trade-card theirs">
+          <div class="card-inner">
+            <span class="card-label">Recibes</span>
+            <strong class="card-code">{{ theirSelectedSticker?.code }}</strong>
+            <span class="card-name">{{ theirSelectedSticker?.title }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" *ngIf="showP2PSuccess">
+    <div class="success-modal glass-card" style="text-align: center;">
+      <div style="font-size: 4rem;">🤝</div>
+      <h2>¡Intercambio Completado!</h2>
+      <p>Las nuevas láminas ya están en tu inventario.</p>
+      <button class="btn-success" (click)="closeModal()" style="margin-top: 15px;">Genial</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="overlay" *ngIf="showP2PSuccess">
+  <div class="success-modal glass-card" style="text-align: center;">
+    <div style="font-size: 4rem;">🤝</div>
+    <h2>¡Intercambio Completado!</h2>
+    <p>Las nuevas láminas ya están en tu inventario.</p>
+    <button class="btn-success" (click)="closeModal()" style="margin-top: 15px;">Genial</button>
+  </div>
+</div>

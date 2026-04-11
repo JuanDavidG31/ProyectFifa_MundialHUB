@@ -1,0 +1,173 @@
+<div class="home-wrapper">
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+  <div class="bg-shape shape-3"></div>
+
+  <header class="top-nav">
+    <div class="logo-container">
+      <div class="icon-pulse">⚽</div>
+      <h1 class="logo-text">Mundial<span class="gradient-text">Hub</span></h1>
+    </div>
+
+    <div class="user-actions">
+      <div class="user-info">
+        <p class="greeting">¡Hola, <strong class="gradient-text">{{ userName }}</strong>!</p>
+
+        <div class="avatar-group">
+          <div class="avatar-container">
+            <img *ngIf="userAvatar" [src]="userAvatar" alt="Avatar" class="avatar-img">
+            <div *ngIf="!userAvatar" class="avatar-placeholder">👤</div>
+          </div>
+
+          <button class="settings-btn" routerLink="/settings" title="Configuración de Perfil">
+            <span class="settings-icon">⚙️</span>
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-logout" (click)="cerrarSesion()">
+        <span class="text">Salir</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <section class="hero-section">
+      <h2 class="hero-title">¿Qué quieres hacer hoy?</h2>
+      <p class="hero-subtitle">Elige tu próximo movimiento en el torneo más grande del mundo.</p>
+    </section>
+
+    <div class="modules-grid">
+
+      <a routerLink="/album" class="module-card">
+        <div class="card-icon">📒</div>
+        <div class="card-body">
+          <h3>Mi Álbum</h3>
+          <p>Abre sobres y completa tu equipo ideal.</p>
+        </div>
+
+      </a>
+
+      <a routerLink="/apuestas" class="module-card">
+        <div class="card-icon">🎯</div>
+        <div class="card-body">
+          <h3>Pronósticos</h3>
+          <p>Demuestra cuánto sabes y gana premios.</p>
+        </div>
+
+      </a>
+
+      <a routerLink="/estadisticas" class="module-card">
+        <div class="card-icon">📊</div>
+        <div class="card-body">
+          <h3>Estadísticas</h3>
+          <p>Sigue los resultados en tiempo real.</p>
+        </div>
+
+      </a>
+
+      <a routerLink="/equipos" class="module-card">
+        <div class="card-icon">🌍</div>
+        <div class="card-body">
+          <h3>Equipos</h3>
+          <p>Conoce a las selecciones clasificadas.</p>
+        </div>
+
+      </a>
+
+      <a *ngIf="isAdmin" routerLink="/admin" class="module-card admin-variant">
+        <div class="card-icon">⚙️</div>
+        <div class="card-body">
+          <h3>Panel Admin</h3>
+          <p>Gestionar usuarios y torneos.</p>
+        </div>
+
+      </a>
+
+      <a *ngIf="isSupport" routerLink="/support" class="module-card support-variant">
+        <div class="card-icon">🎧</div>
+        <div class="card-body">
+          <h3>Panel Soporte</h3>
+          <p>Atención de casos y auditoría.</p>
+        </div>
+      </a>
+
+      <a routerLink="/tickets" class="module-card">
+        <div class="card-icon">🎟️</div>
+        <div class="card-body">
+          <h3>Entradas</h3>
+          <p>Asegura y gestiona tus pases al estadio.</p>
+        </div>
+      </a>
+
+    </div>
+  </main>
+
+  <div class="tutorial-overlay" *ngIf="showTutorial">
+    <div class="tutorial-modal">
+
+      <button class="skip-btn" (click)="finishTutorial()">Saltar tutorial ✕</button>
+
+      <div class="tutorial-content">
+        <div class="tutorial-icon icon-pulse">
+          {{ tutorialSteps[currentTutorialStep].icon }}
+        </div>
+        <h2 class="gradient-text">{{ tutorialSteps[currentTutorialStep].title }}</h2>
+        <p>{{ tutorialSteps[currentTutorialStep].desc }}</p>
+      </div>
+
+      <div class="tutorial-dots">
+        <span class="dot" *ngFor="let step of tutorialSteps; let i = index"
+          [class.active]="i === currentTutorialStep"></span>
+      </div>
+
+      <div class="tutorial-actions">
+        <button class="btn-prev" (click)="prevTutorialStep()"
+          [style.visibility]="currentTutorialStep === 0 ? 'hidden' : 'visible'">
+          Anterior
+        </button>
+        <button class="btn-next" (click)="nextTutorialStep()">
+          {{ currentTutorialStep === tutorialSteps.length - 1 ? '¡Empezar!' : 'Siguiente ➔' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+  <div class="chat-widget" *ngIf="!isSupport && !isAdmin">
+    <button class="chat-fab icon-pulse" (click)="toggleChat()">💬</button>
+
+    <div class="chat-window" *ngIf="isChatOpen">
+      <div class="chat-header">
+        <h4>Soporte en Línea</h4>
+        <button class="btn-close" (click)="toggleChat()">✖</button>
+      </div>
+
+      <div class="chat-status">{{ chatStatus }}</div>
+
+      <div class="chat-body">
+        <div *ngIf="chatMessages.length === 0" class="chat-empty">
+          <p>¿Necesitas ayuda? Solicita un agente.</p>
+          <button class="btn-request" (click)="requestAgent()">Contactar Soporte</button>
+        </div>
+
+        <div class="msg" *ngFor="let m of chatMessages"
+          [ngClass]="{'me': m.isMe, 'other': !m.isMe, 'system': m.sender==='Sistema'}">
+          <span class="sender">{{ m.sender }}</span>
+          <p>{{ m.text }}</p>
+        </div>
+      </div>
+
+      <div class="chat-footer" *ngIf="chatStatus.startsWith('Conectado')">
+        <input type="text" [(ngModel)]="newMessage" (keyup.enter)="sendChatMessage()" placeholder="Escribe aquí...">
+        <button (click)="sendChatMessage()">Enviar</button>
+        <button class="btn-end" (click)="closeChatSession()">Terminar</button>
+      </div>
+      <div class="chat-footer" *ngIf="chatStatus === 'Chat finalizado'">
+        <button style="width: 100%; padding: 12px; font-weight: bold; font-size: 1rem;" (click)="requestAgent()">
+          🔄 Iniciar un nuevo chat
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

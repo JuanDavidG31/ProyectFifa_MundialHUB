@@ -1,0 +1,88 @@
+<div class="teams-wrapper">
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+
+  <nav class="top-nav">
+    <button class="back-nav" routerLink="/home">
+      <span class="icon">‹</span> Volver al Hub
+    </button>
+  </nav>
+
+  <header class="header centered">
+    <h1>Rumbo al Mundial <span class="gradient-text">2026</span></h1>
+    <p class="subtitle">Equipos clasificados y próximos partidos de tu selección (Datos en Vivo).</p>
+  </header>
+
+  <main class="content" *ngIf="!isLoading">
+
+    <div class="my-team-section glass-card-massive">
+      <div class="badge-star">Tu Selección</div>
+      <h2>{{ userCountry || 'Tu País' }}</h2>
+      <p class="section-desc">Próximos partidos programados:</p>
+
+      <div class="fixtures-grid" *ngIf="myFixtures.length > 0">
+        <div class="match-card glass-card" *ngFor="let match of myFixtures">
+
+          <div class="match-header">
+            <span class="league">🏆 {{ match.grupo }}</span>
+            <span class="date">📅 {{ match.fecha }}</span>
+          </div>
+
+          <div class="match-body">
+
+            <div class="team">
+              <div class="team-flag">
+                <img *ngIf="match.localCrest" [src]="match.localCrest" alt="Bandera">
+                <span *ngIf="!match.localCrest">{{ match.local.charAt(0) }}</span>
+              </div>
+              <span>{{ match.local }}</span>
+            </div>
+
+            <div class="vs">VS</div>
+
+            <div class="team">
+              <div class="team-flag">
+                <img *ngIf="match.visitanteCrest" [src]="match.visitanteCrest" alt="Bandera">
+                <span *ngIf="!match.visitanteCrest">{{ match.visitante.charAt(0) }}</span>
+              </div>
+              <span>{{ match.visitante }}</span>
+            </div>
+
+          </div>
+
+          
+
+        </div>
+      </div>
+
+      <div class="alert-box error" *ngIf="myFixtures.length === 0">
+        ⚠️ No hay partidos próximos programados en la API para "{{ userCountry }}" o el país no está en el catálogo
+        rápido.
+      </div>
+    </div>
+
+    <h2 class="grid-title">Equipos Clasificados Oficialmente</h2>
+
+<div class="teams-grid">
+      <div class="team-card glass-card" *ngFor="let team of qualifiedTeams" (click)="verPartidosDeEquipo(team.name)">
+        
+        <div class="team-flag-wrapper">
+          <img *ngIf="team.crest" [src]="team.crest" alt="Bandera de {{ team.name }}" object-fit="cover">
+          <div *ngIf="!team.crest" class="fallback-flag">{{ team.name.charAt(0) }}</div>
+        </div>
+
+        <div class="card-details">
+          <h3>{{ team.name }}</h3>
+          <span class="country">Mundial 2026</span>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <div class="loading-screen" *ngIf="isLoading">
+    <div class="neon-spinner"></div>
+    <p>Cargando información...</p>
+  </div>
+</div>
