@@ -1,15 +1,15 @@
 import os
 import base64
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from email.mime.image import MIMEImage
-from fastapi import FastAPI, HTTPException, status, BackgroundTasks
+import resend
+from fastapi import FastAPI, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# --- CONFIGURACIÓN DE RESEND ---
+resend.api_key = os.getenv("RESEND_API_KEY")
 
 app = FastAPI(title="MundialHub Email API")
 
@@ -38,44 +38,33 @@ class TicketRequest(BaseModel):
     ticket_uuid: str
     qr_base64: str
 
-# --- FUNCIONES DE ENVÍO SMTP ---
-def get_smtp_server():
-    destino_fijo = os.getenv("EMAIL_USERNAME", "veltrixdigital.co@gmail.com")
-    password = os.getenv("EMAIL_PASSWORD")
-    if not password:
-        raise Exception("Falta configurar EMAIL_PASSWORD")
-    
-    server = smtplib.SMTP('smtp.gmail.com', 587, timeout=30)
-    server.starttls()
-    server.login(destino_fijo, password)
-    return server, destino_fijo
-
+# --- FUNCIONES DE ENVÍO CON RESEND ---
 def enviar_correo_base(to_email: str, subject: str, html_content: str):
     try:
-        server, from_email = get_smtp_server()
-        msg = MIMEMultipart()
-        msg['From'] = from_email
-        msg['To'] = to_email
-        msg['Subject'] = subject
-        
-        msg.attach(MIMEText(html_content, 'html'))
-        
-        server.send_message(msg)
-        server.quit()
+        # NOTA: En la capa gratuita de Resend, el remitente SIEMPRE debe ser onboarding@resend.dev
+        # y el correo de destino (to_email) debe ser el que verificaste en tu cuenta de Resend.
+        params = {
+            "from": "onboarding@resend.dev", 
+            "to": to_email,
+            "subject": subject,
+            "html": html_content
+        }
+        resend.Emails.send(params)
+        print("DEBUG: Correo base enviado exitosamente vía Resend")
     except Exception as e:
-        print(f"Error enviando correo: {e}")
+        print(f"Error enviando correo con Resend: {e}")
 
 def enviar_correo_ticket_qr(req: TicketRequest):
     try:
-        server, from_email = get_smtp_server()
+        # 1. Limpiar el Base64 por si trae la cabecera 'data:image/png;base64,'
+        qr_data = req.qr_base64
+        if "," in qr_data:
+            qr_data = qr_data.split(",")[1]
+            
+        # Convertimos el Base64 a una lista de bytes (formato que exige la librería de Resend)
+        image_bytes = base64.b64decode(qr_data.replace(" ", ""))
         
-        # Usamos 'related' para poder incrustar imágenes
-        msg = MIMEMultipart('related')
-        msg['From'] = from_email
-        msg['To'] = req.email
-        msg['Subject'] = f"🎟️ ¡Tu entrada confirmada para {req.match_name}!"
-        
-        # HTML del ticket respetando la estética de MundialHub
+        # HTML del ticket con la imagen incrustada directamente por Base64
         html_body = f"""
         <div style='font-family: Arial, sans-serif; background-color: #0b0f19; color: #ffffff; padding: 30px; text-align: center; border-radius: 15px;'>
             <h2 style='color: #ec4899; margin-bottom: 5px;'>¡Compra Exitosa!</h2>
@@ -86,29 +75,28 @@ def enviar_correo_ticket_qr(req: TicketRequest):
                 <p style='margin: 5px 0; color: #94a3b8;'>📅 {req.date}</p>
             </div>
             <p>Presenta este código QR en la entrada del estadio:</p>
-            <img src='cid:qrImage' alt='Código QR' style='width: 250px; height: 250px; border-radius: 15px; border: 3px solid #ec4899; margin-top: 15px;' />
+            <img src='data:image/png;base64,{qr_data}' alt='Código QR' style='width: 250px; height: 250px; border-radius: 15px; border: 3px solid #ec4899; margin-top: 15px;' />
             <p style='margin-top: 30px; font-size: 12px; color: #64748b;'>Ticket ID: {req.ticket_uuid}</p>
         </div>
         """
         
-        msg_alternative = MIMEMultipart('alternative')
-        msg.attach(msg_alternative)
-        msg_alternative.attach(MIMEText(html_body, 'html'))
-        
-        # Procesar y adjuntar el QR en base64
-        qr_data = req.qr_base64
-        if "," in qr_data:
-            qr_data = qr_data.split(",")[1] # Remover la cabecera data:image/png;base64,
-        
-        image_bytes = base64.b64decode(qr_data.replace(" ", ""))
-        qr_img = MIMEImage(image_bytes)
-        qr_img.add_header('Content-ID', '<qrImage>')
-        msg.attach(qr_img)
-        
-        server.send_message(msg)
-        server.quit()
+        params = {
+            "from": "onboarding@resend.dev",
+            "to": req.email,
+            "subject": f"🎟️ ¡Tu entrada confirmada para {req.match_name}!",
+            "html": html_body,
+            # Para mayor seguridad, además de mostrarlo en el HTML, lo enviamos como archivo adjunto
+            "attachments": [
+                {
+                    "filename": f"ticket_qr_{req.ticket_uuid}.png",
+                    "content": list(image_bytes) 
+                }
+            ]
+        }
+        resend.Emails.send(params)
+        print("DEBUG: Ticket con QR enviado exitosamente vía Resend")
     except Exception as e:
-        print(f"Error enviando ticket: {e}")
+        print(f"Error enviando ticket con Resend: {e}")
 
 # --- ENDPOINTS ---
 
@@ -127,10 +115,8 @@ async def send_email_verify_code(req: VerifyEmailRequest, background_tasks: Back
     background_tasks.add_task(enviar_correo_base, req.email, "🔒 Bienvenido a MundialHub - Código de Verificación", html_body)
     return {"message": "Correo de verificación enviado", "success": True}
 
-
 @app.post("/auth/sendEmailPasswordUpdate")
 async def send_email_password_update(req: PasswordResetRequest, background_tasks: BackgroundTasks):
-    # Plantilla nueva creada específicamente para coincidir con la estética
     html_body = f"""
     <div style='font-family: Arial, sans-serif; background-color: #0b0f19; color: #ffffff; padding: 30px; text-align: center; border-radius: 15px; max-width: 500px; margin: 0 auto;'>
         <h2 style='color: #06b6d4; margin-bottom: 5px;'>Contraseña Actualizada</h2>
@@ -144,7 +130,6 @@ async def send_email_password_update(req: PasswordResetRequest, background_tasks
     """
     background_tasks.add_task(enviar_correo_base, req.email, "🔑 MundialHub - Actualización de Contraseña", html_body)
     return {"message": "Correo de actualización de contraseña enviado", "success": True}
-
 
 @app.post("/email/sendTicketWithQR")
 async def send_ticket_with_qr(req: TicketRequest, background_tasks: BackgroundTasks):
