@@ -1,0 +1,500 @@
+@use "sass:color";
+
+// --- PALETA VIBRANTE Y GAMER ---
+$c-bg: #0b0f19; // Azul ultra oscuro
+$c-primary: #ec4899; // Magenta brillante
+$c-secondary: #06b6d4; // Cian eléctrico
+$c-tertiary: #8b5cf6; // Morado neón
+$c-success: #10b981; // Verde éxito
+$c-error: #ef4444; // Rojo alerta
+$c-warning: #f59e0b; // Naranja alerta
+$white: #ffffff;
+$glass-bg: rgba(255, 255, 255, 0.05);
+$glass-border: rgba(255, 255, 255, 0.15);
+
+::ng-deep body {
+  margin: 0 !important;
+  background-color: $c-bg;
+  font-family: 'Poppins', 'Inter', sans-serif;
+  // Permitimos scroll vertical por la altura del formulario
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.register-wrapper {
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px; // Espaciado extra para cuando haya scroll
+  box-sizing: border-box;
+}
+
+// ==========================================
+// FONDOS ANIMADOS (Fijos para el scroll)
+// ==========================================
+.bg-shape {
+  position: fixed; // Fixed para que no se muevan al hacer scroll
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 0;
+  opacity: 0.6;
+  animation: float 15s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.shape-1 {
+  width: 400px;
+  height: 400px;
+  background: $c-primary;
+  top: -10%;
+  left: -10%;
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  width: 500px;
+  height: 500px;
+  background: $c-secondary;
+  bottom: -20%;
+  right: -10%;
+  animation-delay: -5s;
+}
+
+.shape-3 {
+  width: 300px;
+  height: 300px;
+  background: $c-tertiary;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation-delay: -10s;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(50px, -50px) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-30px, 40px) scale(0.9);
+  }
+
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+// ==========================================
+// TARJETA DE CRISTAL
+// ==========================================
+.register-glass-card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 650px; // Más ancha que el login para soportar el grid de 2 columnas
+  background: $glass-bg;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid $glass-border;
+  border-radius: 30px;
+  padding: 40px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+
+  @media (max-width: 576px) {
+    padding: 30px 20px;
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+// --- CABECERA ---
+.card-header {
+  text-align: center;
+  margin-bottom: 30px;
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 10px;
+
+    .icon-pulse {
+      font-size: 2.5rem;
+      animation: heartbeat 2s infinite;
+
+      @media (max-width: 350px) {
+        font-size: 2rem;
+      }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: $white;
+      margin: 0;
+      letter-spacing: -1px;
+
+      @media (max-width: 400px) {
+        font-size: 2rem;
+      }
+
+      .gradient-text {
+        background: linear-gradient(to right, $c-secondary, $c-tertiary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+  }
+
+  .subtitle {
+    color: rgba($white, 0.8);
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 500;
+
+    @media (max-width: 400px) {
+      font-size: 0.85rem;
+    }
+  }
+}
+
+@keyframes heartbeat {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  10%,
+  30% {
+    transform: scale(1.15);
+  }
+
+  20% {
+    transform: scale(1.05);
+  }
+}
+
+// --- FORMULARIO Y GRID ---
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+
+  // En móviles, se apilan los campos uno debajo del otro
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// --- INPUTS ESTILO GAMER ---
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.25);
+  border: 2px solid transparent;
+  border-radius: 16px;
+  transition: 0.3s ease;
+
+  &:focus-within {
+    border-color: $c-secondary;
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 20px rgba($c-secondary, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .input-icon {
+    padding-left: 18px;
+    font-size: 1.3rem;
+    opacity: 0.8;
+  }
+
+  input,
+  select {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 16px 15px;
+    color: $white;
+    font-size: 1rem;
+    outline: none;
+    box-sizing: border-box;
+
+    &::placeholder {
+      color: rgba($white, 0.4);
+      font-weight: 500;
+    }
+
+    // Autofill fix del navegador
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+      -webkit-text-fill-color: $white !important;
+      transition: background-color 5000s ease-in-out 0s;
+      box-shadow: inset 0 0 20px 20px transparent;
+    }
+  }
+
+  select {
+    appearance: none;
+    cursor: pointer;
+    padding-right: 40px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+
+    option {
+      background-color: #111520;
+      color: $white;
+      padding: 12px;
+    }
+  }
+
+  .btn-eye {
+    position: absolute;
+    right: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.3rem;
+    transition: 0.2s;
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+}
+
+// --- MEDIDOR DE CONTRASEÑA ---
+.password-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.strength-meter {
+  padding: 0 10px;
+
+  .bar-background {
+    height: 4px;
+    background: rgba($white, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    transition: width 0.4s ease, background 0.4s ease;
+
+    &[data-strength="0"],
+    &[data-strength="1"] {
+      background: $c-error;
+    }
+
+    &[data-strength="2"] {
+      background: $c-warning;
+    }
+
+    &[data-strength="3"] {
+      background: $c-secondary;
+    }
+
+    &[data-strength="4"] {
+      background: $c-success;
+    }
+  }
+
+  .strength-text {
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 6px;
+    display: block;
+    color: rgba($white, 0.7);
+  }
+}
+
+// --- SUBIDA DE IMAGEN ---
+.file-upload-container {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.25);
+  border: 2px dashed rgba($white, 0.2);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  transition: 0.3s;
+
+  input {
+    display: none;
+  }
+
+  .file-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: rgba($white, 0.6);
+    font-size: 0.95rem;
+    font-weight: 500;
+
+    .icon {
+      font-size: 1.8rem;
+    }
+  }
+
+  &:hover {
+    border-color: $c-secondary;
+    background: rgba($c-secondary, 0.1);
+
+    .file-info {
+      color: $white;
+    }
+  }
+}
+
+// --- ALERTAS ---
+.alert-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  border-radius: 12px;
+  animation: shake 0.5s ease-in-out;
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  &.error {
+    background: rgba($c-error, 0.15);
+    border: 1px solid rgba($c-error, 0.4);
+    color: #fca5a5;
+  }
+
+  &.success {
+    background: rgba($c-success, 0.15);
+    border: 1px solid rgba($c-success, 0.4);
+    color: #6ee7b7;
+    animation: none;
+  }
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-8px);
+  }
+
+  50% {
+    transform: translateX(8px);
+  }
+
+  75% {
+    transform: translateX(-8px);
+  }
+}
+
+// --- BOTÓN PRINCIPAL ---
+.btn-play {
+  width: 100%;
+  background: linear-gradient(135deg, $c-primary, #f43f5e);
+  color: $white;
+  border: none;
+  padding: 18px;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  box-shadow: 0 10px 25px rgba($c-primary, 0.4);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 35px rgba($c-primary, 0.6);
+    background: linear-gradient(135deg, color.adjust($c-primary, $lightness: 5%), #fb7185);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(2px) scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #475569;
+    box-shadow: none;
+  }
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba($white, 0.3);
+  border-top-color: $white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+// --- FOOTER ---
+.card-footer {
+  margin-top: 30px;
+  text-align: center;
+  border-top: 1px solid rgba($white, 0.1);
+  padding-top: 20px;
+
+  p {
+    color: rgba($white, 0.7);
+    font-size: 0.95rem;
+    margin: 0;
+
+    a {
+      color: $c-secondary;
+      font-weight: 700;
+      text-decoration: none;
+      margin-left: 5px;
+      transition: 0.3s;
+
+      &:hover {
+        color:color.adjust($c-secondary, $lightness: 15%);
+        text-shadow: 0 0 10px rgba($c-secondary, 0.5);
+      }
+    }
+  }
+}

@@ -1,0 +1,96 @@
+<div class="album-wrapper">
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+  <div class="bg-shape shape-3"></div>
+
+  <div class="loading-screen" *ngIf="isLoading">
+    <div class="neon-spinner"></div>
+    <p>Cargando tu colección...</p>
+  </div>
+
+  <div class="content-wrapper" *ngIf="!isLoading">
+
+    <nav class="top-nav">
+      <button class="back-nav" routerLink="/home">
+        <span class="icon">‹</span> Volver al Hub
+      </button>
+
+      <div class="wallet-container">
+        <div class="stat-box gold">
+          <span class="stat-icon">🪙</span>
+          <span class="stat-value">{{ status.coins }} FIFA Coins</span>
+        </div>
+        <div class="stat-box cyan">
+          <span class="stat-icon">📦</span>
+          <span class="stat-value">{{ status.availablePacks }} Paquetes</span>
+        </div>
+      </div>
+    </nav>
+
+    <header class="album-hero centered">
+      <div class="hero-text">
+        <h1>Álbum Oficial <span class="gradient-text">2026</span></h1>
+        <p class="subtitle">Colecciona a las estrellas, completa los equipos e intercambia tus repetidas.</p>
+      </div>
+
+      <div class="action-buttons-centered">
+        <button class="btn-glass" routerLink="/album/history">
+          <span class="icon">📜</span> Historial
+        </button>
+
+        <button class="btn-play primary" (click)="goToPacks()">
+          <span class="pack-icon">📦</span> Abrir Paquetes
+        </button>
+
+        <button class="btn-glass" routerLink="/album/exchange">
+          <span class="icon">🔄</span> Mercado
+        </button>
+      </div>
+    </header>
+
+    <main class="album-content">
+      <div class="section-header centered-header">
+        <h2 class="section-title">
+          <span class="title-icon"></span> TU ALBUM!
+        </h2>
+      </div>
+
+      <div class="sections-grid">
+        <div class="section-card glass-card" *ngFor="let section of sections" (click)="goToSection(section.id)">
+          <div class="card-icon">{{ section.icon }}</div>
+
+          <div class="card-info">
+            <h3>{{ section.name }}</h3>
+
+            <div class="progress-container">
+              <div class="progress-stats">
+                <span class="stickers-count">{{ section.collected }} de {{ section.total }}</span>
+                <span class="percent">{{ getProgress(section) }}%</span>
+              </div>
+
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="getProgress(section)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+  <div class="overlay" *ngIf="showRewardModal">
+    <div class="success-modal glass-card">
+      <div class="modal-icon">🏆</div>
+      <h2>¡Álbum Completado!</h2>
+      <p>Has logrado lo imposible: 100% de la colección. Aquí tienes tu recompensa:</p>
+
+      <div class="coin-reward">
+        <span class="coin-icon">🪙</span>
+        <span class="coin-amount">+1000</span>
+      </div>
+      <p class="sub-text">FIFA Coins</p>
+
+      <button class="btn-success" (click)="claimReward()">¡Reclamar Premio! ✨</button>
+    </div>
+  </div>
+</div>

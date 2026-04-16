@@ -1,0 +1,71 @@
+<div class="history-wrapper">
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+  <div class="bg-shape shape-3"></div>
+
+  <nav class="top-nav">
+    <button class="back-nav" routerLink="/album">
+      <span class="icon">‹</span> Volver al Álbum
+    </button>
+  </nav>
+
+  <header class="history-hero centered">
+    <h1>Historial de <span class="gradient-text">Movimientos</span></h1>
+    <p class="subtitle">Rastrea tus aperturas de paquetes e intercambios de moneda.</p>
+  </header>
+
+  <main class="history-content">
+
+    <div class="loading-state" *ngIf="isLoading">
+      <div class="neon-spinner"></div>
+      <p>Cargando registros...</p>
+    </div>
+
+    <div class="empty-state glass-card" *ngIf="!isLoading && transactions.length === 0">
+      <span class="empty-icon">📂</span>
+      <h2>Sin movimientos</h2>
+      <p>Aún no has abierto paquetes ni intercambiado láminas en la plataforma.</p>
+      <button class="btn-play" routerLink="/album/packs">
+        <span>Ir a la Tienda 🚀</span>
+      </button>
+    </div>
+
+    <div class="transaction-list" *ngIf="!isLoading && transactions.length > 0">
+      <div class="transaction-card glass-panel" *ngFor="let tx of transactions">
+
+        <div class="tx-icon">
+          {{ getTransactionFormat(tx.transactionType).icon }}
+        </div>
+
+        <div class="tx-details">
+          <div class="tx-header">
+            <span class="tx-type">{{ getTransactionFormat(tx.transactionType).label }}</span>
+            <span class="tx-date">{{ tx.createdAt | date:'medium' }}</span>
+          </div>
+          <div class="tx-description">
+            {{ tx.description }}
+          </div>
+        </div>
+
+        <div class="tx-amount" [ngClass]="getTransactionFormat(tx.transactionType).colorClass">
+          <span
+            *ngIf="tx.transactionType === 'DUPLICATES_EXCHANGED' || tx.transactionType === 'ALBUM_COMPLETED_REWARD'">+</span>
+          <span *ngIf="tx.transactionType === 'PACK_BOUGHT'">-</span>
+
+          <ng-container
+            *ngIf="tx.transactionType === 'DUPLICATES_EXCHANGED' || tx.transactionType === 'PACK_BOUGHT' || tx.transactionType === 'ALBUM_COMPLETED_REWARD'">
+            {{ tx.amount }}
+            <span class="unit">Coins</span>
+          </ng-container>
+
+          <ng-container *ngIf="tx.transactionType === 'PACK_OPENED'">
+            -{{ tx.amount }} <span class="unit">Paquete</span>
+          </ng-container>
+
+          <span *ngIf="tx.transactionType === 'P2P_EXCHANGE'" style="font-size: 1.4rem;">↔️</span>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>

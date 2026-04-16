@@ -1,0 +1,369 @@
+<div class="admin-wrapper">
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+  <div class="bg-shape shape-3"></div>
+
+  <nav class="top-nav">
+    <button class="back-nav" routerLink="/home">
+      <span class="icon">‹</span> Salir de Admin
+    </button>
+    <div class="logo-container">
+      <div class="icon-pulse">⚙️</div>
+      <h1>Panel <span class="gradient-text">Administrador</span></h1>
+    </div>
+    <div style="width: 100px;"></div>
+  </nav>
+
+  <div class="admin-layout">
+
+    <aside class="sidebar glass-card">
+      <button class="tab-btn" [class.active]="activeTab === 'users'" (click)="activeTab = 'users'">
+        <span class="tab-icon"></span> Gestión de Usuarios
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'stickers'" (click)="activeTab = 'stickers'">
+        <span class="tab-icon"></span> Gestionar Stickers
+      </button>
+    </aside>
+
+    <main class="content-area">
+
+      <div *ngIf="activeTab === 'users'" class="tab-content glass-card fade-in">
+        <div class="content-header">
+          <h2>Directorio de <span class="highlight">Usuarios</span></h2>
+          <p class="subtitle">Administra los permisos y datos de la comunidad.</p>
+        </div>
+
+        <div
+          style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.05);">
+          <h3 style="margin-top: 0; color: #ec4899; margin-bottom: 15px;">➕ Añadir Nuevo Usuario</h3>
+          <form (ngSubmit)="createUser()" #userForm="ngForm">
+            <div class="form-grid">
+              <div class="input-group">
+                <label>Nombre Completo</label>
+                <input type="text" [(ngModel)]="registerData.name" name="name" required placeholder="Ej: Lionel Messi">
+              </div>
+              <div class="input-group">
+                <label>Nombre de Usuario (Username)</label>
+                <input type="text" [(ngModel)]="registerData.user" name="user" required placeholder="Ej: leomessi10">
+              </div>
+              <div class="input-group">
+                <label>Correo Electrónico</label>
+                <input type="email" [(ngModel)]="registerData.email" name="email" required
+                  placeholder="correo@ejemplo.com">
+              </div>
+              <div class="input-group">
+                <label>Contraseña Temporal</label>
+                <input type="text" [(ngModel)]="registerData.password" name="password" required
+                  placeholder="Contraseña segura">
+              </div>
+              <div class="input-group">
+                <label>Documento de Identidad (ID)</label>
+                <input type="text" [(ngModel)]="registerData.personalId" name="personalId" required
+                  placeholder="123456789">
+              </div>
+              <div class="input-group">
+                <label>País</label>
+                <input type="text" [(ngModel)]="registerData.coutry" name="coutry" required placeholder="Argentina">
+              </div>
+              <div class="input-group">
+                <label>Rol del Sistema</label>
+                <select [(ngModel)]="registerData.role" name="role">
+                  <option value="USER">Usuario (USER)</option>
+                  <option value="ADMIN">Administrador (ADMIN)</option>
+                  <option value="SUPPORT">Soporte (SUPPORT)</option>
+
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label>Foto de Perfil (Avatar) 📸</label>
+                <input type="file" (change)="onImageSelected($event)" accept="image/*" class="file-input">
+                <div class="file-info">
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="userImagePreview" style="margin-top: 15px; text-align: center; width: 100%;">
+              <p style="font-size: 0.8rem; color: #ec4899; margin-bottom: 5px;">Vista Previa:</p>
+              <img [src]="userImagePreview"
+                style="max-height: 100px; width: 100px; object-fit: cover; border-radius: 50%; border: 2px solid #ec4899;">
+            </div>
+
+            <button type="submit" class="btn-play"
+              style="margin-top: 20px; padding: 12px; background: linear-gradient(135deg, #ec4899, #8b5cf6);"
+              [disabled]="!registerData.user || !registerData.email || !registerData.password || isCreatingUser">
+              <span *ngIf="!isCreatingUser">CREAR USUARIO</span>
+              <span *ngIf="isCreatingUser" class="spinner"></span>
+            </button>
+          </form>
+        </div>
+
+        <div class="table-container">
+          <div *ngIf="isLoadingUsers" class="loading-state">
+            <span class="spinner"></span> Cargando usuarios...
+          </div>
+          <table class="data-table" *ngIf="!isLoadingUsers && users.length > 0">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let u of users">
+                <td class="id-cell">#{{ u.id }}</td>
+                <td class="user-cell"><strong style="color: #ec4899;">{{ u.user }}</strong></td>
+                <td>{{ u.name }}</td>
+                <td class="email-cell">{{ u.email }}</td>
+                <td><span class="role-badge" [ngClass]="u.role">{{ u.role }}</span></td>
+                <td class="table-actions">
+                  <button class="btn-edit" (click)="editUser(u)"
+                    style="padding: 6px 12px; font-size: 0.8rem; background: rgba(6, 182, 212, 0.2); border: 1px solid #06b6d4; color: white; border-radius: 6px; cursor: pointer; margin-right: 5px;">✏️
+                    Editar</button>
+                  <button class="btn-delete" (click)="deleteUser(u.id)"
+                    style="padding: 6px 12px; font-size: 0.8rem; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: white; border-radius: 6px; cursor: pointer;">🗑️
+                    Borrar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="overlay fade-in" *ngIf="selectedUser" (click)="cancelEdit()">
+        <div class="edit-modal" (click)="$event.stopPropagation()">
+          <h2>Editar Usuario: <span class="highlight"
+              style="color: #ec4899 !important; background: none; -webkit-text-fill-color: #ec4899;">{{
+              selectedUser.user }}</span></h2>
+
+          <div class="form-grid">
+            <div class="input-group">
+              <label>Username</label>
+              <input type="text" [(ngModel)]="selectedUser.user">
+            </div>
+            <div class="input-group">
+              <label>Nombre Completo</label>
+              <input type="text" [(ngModel)]="selectedUser.name">
+            </div>
+            <div class="input-group">
+              <label>Email</label>
+              <input type="email" [(ngModel)]="selectedUser.email">
+            </div>
+            <div class="input-group">
+              <label>País</label>
+              <input type="text" [(ngModel)]="selectedUser.coutry">
+            </div>
+            <div class="input-group">
+              <label>URL del Avatar 🖼️</label>
+              <input type="text" [(ngModel)]="selectedUser.avatar" placeholder="https://...">
+            </div>
+            <div class="input-group">
+              <label>Rol</label>
+              <select [(ngModel)]="selectedUser.role">
+                <option value="USER">USER</option>
+                <option value="ADMIN">ADMIN</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn-neutral" (click)="cancelEdit()">Cancelar</button>
+            <button class="btn-success" (click)="saveUser()"
+              style="background: linear-gradient(135deg, #ec4899, #f43f5e);">Guardar Cambios</button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'stickers'" class="tab-content glass-card fade-in">
+        <div class="content-header">
+          <h2>Gestión de <span class="highlight">Stickers</span></h2>
+          <p>Añade, edita o elimina las láminas del álbum global.</p>
+        </div>
+
+        <div
+          style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.05);">
+          <h3 style="margin-top: 0; color: #f9c74f; margin-bottom: 15px;">➕ Añadir Nuevo Sticker</h3>
+          <form (ngSubmit)="createSticker()" #stickerForm="ngForm">
+            <div class="form-grid">
+              <div class="input-group">
+                <label>Código Único <span class="hint">(Ej: ARG-1)</span></label>
+                <input type="text" [(ngModel)]="newSticker.code" name="code" required placeholder="ARG-1">
+              </div>
+              <div class="input-group">
+                <label>Nombre del Jugador</label>
+                <input type="text" [(ngModel)]="newSticker.title" name="title" required placeholder="Lionel Messi">
+              </div>
+              <div class="input-group">
+                <label>ID de Sección <span class="hint">(Ej: selecciones)</span></label>
+                <input type="text" [(ngModel)]="newSticker.sectionId" name="sectionId" required
+                  placeholder="selecciones">
+              </div>
+              <div class="input-group">
+                <label>Título de Página <span class="hint">(Ej: Estadios Oficiales)</span></label>
+                <input type="text" [(ngModel)]="newSticker.pageTitle" name="pageTitle" required
+                  placeholder="Estadios Oficiales">
+              </div>
+              <div class="input-group">
+                <label>Rareza</label>
+                <select [(ngModel)]="newSticker.rarity" name="rarity">
+                  <option value="Común">Común</option>
+                  <option value="Épica">Épica</option>
+                  <option value="Legendaria">Legendaria</option>
+                </select>
+              </div>
+              <div class="input-group">
+                <label>Valor de Intercambio (Coins)</label>
+                <input type="number" [(ngModel)]="newSticker.exchangeValue" name="exchangeValue" placeholder="10">
+              </div>
+
+              <div class="input-group" style="flex: 1 1 100%; flex-direction: row; gap: 15px;">
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                  <label>Subir Imagen (PC) 💻</label>
+                  <input type="file" (change)="onFileSelected($event)" accept="image/*" class="file-input">
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                  <label>O pegar URL de imagen 🔗</label>
+                  <input type="text" [(ngModel)]="newSticker.imageUrl" name="imageUrl" placeholder="https://..."
+                    [disabled]="selectedFile !== null">
+                </div>
+              </div>
+
+              <div *ngIf="imagePreview || newSticker.imageUrl"
+                style="margin-top: 15px; text-align: center; width: 100%;">
+                <p style="font-size: 0.8rem; color: #06b6d4; margin-bottom: 5px;">Vista Previa:</p>
+                <img [src]="selectedFile ? imagePreview : newSticker.imageUrl"
+                  style="max-height: 120px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);">
+              </div>
+            </div>
+
+
+
+            <button type="submit" class="btn-play" style="margin-top: 20px; padding: 12px;"
+              [disabled]="!newSticker.code || !newSticker.title || isCreatingSticker">
+              <span *ngIf="!isCreatingSticker">CREAR STICKER</span>
+              <span *ngIf="isCreatingSticker" class="spinner"></span>
+            </button>
+          </form>
+        </div>
+
+        <h3 style="color: #06b6d4; margin-bottom: 15px;">Inventario de Stickers ({{ stickers.length }})</h3>
+        <div class="table-container">
+          <div *ngIf="isLoadingStickers" class="loading-state">
+            <span class="spinner"></span> Cargando stickers...
+          </div>
+          <table class="data-table" *ngIf="!isLoadingStickers && stickers.length > 0">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Sección</th>
+                <th>Rareza</th>
+                <th>Valor</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let s of stickers">
+                <td><strong style="color: #f9c74f;">{{ s.code }}</strong></td>
+                <td>{{ s.title }}</td>
+                <td>{{ s.sectionId }}</td>
+                <td>
+                  <span class="role-badge"
+                    [ngClass]="{'admin': s.rarity === 'Legendaria', 'support': s.rarity === 'Épica', 'user': s.rarity === 'Común'}">
+                    {{ s.rarity }}
+                  </span>
+                </td>
+                <td>{{ s.exchangeValue }} 🪙</td>
+                <td class="table-actions">
+                  <button class="btn-edit" (click)="editSticker(s)"
+                    style="padding: 6px 12px; font-size: 0.8rem; background: rgba(6, 182, 212, 0.2); border: 1px solid #06b6d4; color: white; border-radius: 6px; cursor: pointer; margin-right: 5px;">✏️
+                    Editar</button>
+                  <button class="btn-delete" (click)="deleteSticker(s.id)"
+                    style="padding: 6px 12px; font-size: 0.8rem; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: white; border-radius: 6px; cursor: pointer;">🗑️
+                    Borrar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="!isLoadingStickers && stickers.length === 0"
+            style="text-align: center; padding: 30px; color: gray;">
+            No hay stickers registrados en la base de datos.
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="overlay fade-in" *ngIf="selectedStickerToEdit" (click)="cancelStickerEdit()">
+
+    <div class="edit-modal" (click)="$event.stopPropagation()">
+      <h2>Editar Sticker <span class="highlight">{{ selectedStickerToEdit.code }}</span></h2>
+
+      <div class="form-grid">
+        <div class="input-group">
+          <label>Código (No editable)</label>
+          <input type="text" [(ngModel)]="selectedStickerToEdit.code" disabled class="disabled-input">
+        </div>
+        <div class="input-group">
+          <label>Nombre del Jugador</label>
+          <input type="text" [(ngModel)]="selectedStickerToEdit.title">
+        </div>
+        <div class="input-group">
+          <label>ID de Sección</label>
+          <input type="text" [(ngModel)]="selectedStickerToEdit.sectionId">
+        </div>
+        <div class="input-group">
+          <label>Título de Página</label>
+          <input type="text" [(ngModel)]="selectedStickerToEdit.pageTitle">
+        </div>
+        <div class="input-group">
+          <label>Rareza</label>
+          <select [(ngModel)]="selectedStickerToEdit.rarity">
+            <option value="Común">Común</option>
+            <option value="Épica">Épica</option>
+            <option value="Legendaria">Legendaria</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Valor (Coins)</label>
+          <input type="number" [(ngModel)]="selectedStickerToEdit.exchangeValue">
+        </div>
+
+        <div class="input-group" style="flex: 1 1 100%; flex-direction: row; gap: 15px;">
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+            <label>Subir Nueva Imagen (PC) 💻</label>
+            <input type="file" (change)="onEditFileSelected($event)" accept="image/*" class="file-input">
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+            <label>O pegar URL de imagen 🔗</label>
+            <input type="text" [(ngModel)]="selectedStickerToEdit.imageUrl" name="editImageUrl"
+              placeholder="https://..." [disabled]="editSelectedFile !== null">
+          </div>
+        </div>
+
+        <div *ngIf="editImagePreview || selectedStickerToEdit.imageUrl"
+          style="margin-top: 15px; text-align: center; width: 100%;">
+          <p style="font-size: 0.8rem; color: #06b6d4; margin-bottom: 5px;">Vista Previa:</p>
+          <img [src]="editSelectedFile ? editImagePreview : selectedStickerToEdit.imageUrl"
+            style="max-height: 120px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);">
+        </div>
+      </div>
+
+
+
+      <div class="modal-actions">
+        <button class="btn-neutral" (click)="cancelStickerEdit()">Cancelar</button>
+        <button class="btn-success" (click)="saveStickerEdit()" [disabled]="isUpdatingSticker"
+          style="display: flex; justify-content: center; align-items: center; min-width: 170px;">
+          <span *ngIf="!isUpdatingSticker">Guardar Cambios</span>
+          <span *ngIf="isUpdatingSticker" class="spinner"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

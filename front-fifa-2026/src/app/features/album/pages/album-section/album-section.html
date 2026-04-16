@@ -1,0 +1,98 @@
+<div class="section-wrapper">
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+  <div class="bg-shape shape-3"></div>
+
+  <nav class="top-nav">
+    <button class="back-nav" (click)="goBack()">
+      <span class="icon">‹</span> Volver al Álbum
+    </button>
+
+    <div class="title-area">
+      <h1 class="title">{{ sectionTitle }}</h1>
+      <div class="subtitle">
+        <span class="stat-pill">
+          <span class="icon">🔖</span> {{ collected }} de {{ total }} Obtenidas
+        </span>
+        <span class="stat-pill cyan">
+          <span class="icon">✨</span> {{ percent }}% Completado
+        </span>
+      </div>
+    </div>
+  </nav>
+
+  <div *ngIf="activePage as page" class="page-area">
+
+    <button class="nav-side left" (click)="prevPage()" [disabled]="activePageIndex === 0">‹</button>
+
+    <div class="book-spread glass-card">
+      
+      <div class="book-spine"></div>
+
+      <div class="book-header">
+        <div class="left-page-header">
+          <h2 class="country-title">{{ page.title }}</h2>
+        </div>
+        <div class="right-page-header">
+          <div class="page-number">Pág. {{ page.pageNumber }}</div>
+        </div>
+      </div>
+
+      <div class="album-grid">
+        
+        <div class="slot" *ngFor="let s of page.slots" [class.owned]="s.owned" (click)="openDetail(s)">
+
+          <div class="placeholder" *ngIf="!s.owned">
+            <span class="code">{{ s.code }}</span>
+            <span class="hint-name">{{ s.title }}</span>
+          </div>
+
+          <ng-container *ngIf="s.owned">
+            <div class="badge" *ngIf="s.duplicates > 0">+{{ s.duplicates }}</div>
+
+            <div class="sticker-content">
+              <div class="img-fallback" *ngIf="!s.imageUrl">👤</div>
+              <img *ngIf="s.imageUrl" class="img" [src]="s.imageUrl" alt="{{ s.title }}">
+              <div class="sticker-footer">
+                <span class="s-code">{{ s.code }}</span>
+                <span class="s-title">{{ s.title }}</span>
+              </div>
+            </div>
+          </ng-container>
+
+        </div>
+
+      </div>
+    </div>
+
+    <button class="nav-side right" (click)="nextPage()" [disabled]="activePageIndex === pages.length - 1">›</button>
+  </div>
+</div>
+
+<div class="overlay detail-overlay" *ngIf="selectedSticker">
+  <div class="detail-card glass-card-massive foil-effect" [class.not-owned]="!selectedSticker.owned">
+    <button class="close-btn" (click)="closeDetail()">✕</button>
+
+    <div class="detail-header">
+      <span class="code">{{ selectedSticker.code }}</span>
+      <span class="rarity">{{ selectedSticker.type === 'LEGEND' ? '⭐ Leyenda' : 'Jugador' }}</span>
+    </div>
+
+    <div class="detail-img">
+      <div class="img-fallback" *ngIf="!selectedSticker.imageUrl">👤</div>
+      <img *ngIf="selectedSticker.imageUrl" [src]="selectedSticker.imageUrl" alt="">
+    </div>
+
+    <div class="detail-info">
+      <h3>{{ selectedSticker.title }}</h3>
+      <p class="status-msg error-text" *ngIf="!selectedSticker.owned">Aún no tienes esta lámina.</p>
+
+      <div class="stats" *ngIf="selectedSticker.owned">
+        <span class="badge" *ngIf="selectedSticker.duplicates > 0">+{{ selectedSticker.duplicates }} Repetidas</span>
+        <span class="value" *ngIf="selectedSticker.duplicates > 0">
+          Valor de cambio: <strong>{{ selectedSticker.exchangeValue || 10 }} 🪙 c/u</strong>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

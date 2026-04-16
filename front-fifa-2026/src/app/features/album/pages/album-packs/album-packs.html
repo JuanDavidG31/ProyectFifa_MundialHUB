@@ -1,0 +1,103 @@
+<div class="packs-wrapper">
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+  <div class="bg-shape shape-3"></div>
+
+  <nav class="top-nav">
+    <button class="back-nav" routerLink="/album">
+      <span class="icon">‹</span> Volver al Álbum
+    </button>
+
+    <div class="store-pill glass-card">
+      <div class="balance">
+        <span class="stat-icon" style="margin-left: 10px;">📦</span>
+        <span>Tienes <strong>{{ availablePacks }}</strong> Paquetes</span>
+
+        <span class="stat-icon" style="margin-left: 10px;">🪙</span>
+        <span>Tienes <strong>{{ coins }}</strong> Coins</span>
+      </div>
+      <button class="btn-buy" (click)="buyPack()" [disabled]="coins < 10 || isBuyingPack">
+        <ng-container *ngIf="!isBuyingPack">
+          <span class="icon">🛒</span> Comprar (-10)
+        </ng-container>
+        <span *ngIf="isBuyingPack" class="btn-spinner"></span>
+      </button>
+    </div>
+  </nav>
+
+  <header class="packs-hero centered">
+    <h1>Tus Paquetes <span class="gradient-text">2026</span></h1>
+    <p class="subtitle">Desliza para ver tus paquetes disponibles o adquiere nuevos en la tienda.</p>
+  </header>
+
+  <main class="packs-content">
+    <section class="carousel" *ngIf="packs.length > 0">
+      <button class="nav-btn" (click)="prev()" aria-label="Anterior">‹</button>
+
+      <div class="carousel-viewport">
+        <div class="pack-track" [style.transform]="'translateX(-' + (index * 100) + '%)'">
+          
+          <div class="pack-container" *ngFor="let p of packs; let i = index" [class.active]="i === index">
+            <div class="pack-art" [class.opened]="p.status === 'OPENED'" [class.shake]="isShaking && openingPackId === p.id">
+              <div class="pack-design" *ngIf="p.status === 'UNOPENED'">
+                <span class="pack-logo">⚽</span>
+                <span class="pack-text">FIFA 2026</span>
+                <span class="pack-type">EDICIÓN OFICIAL</span>
+              </div>
+              <div class="pack-opened-content" *ngIf="p.status === 'OPENED'">
+                <span class="icon">📦</span>
+                <span>Vacío</span>
+              </div>
+            </div>
+
+            <button class="btn-play" (click)="openCurrent()" [disabled]="p.status === 'OPENED' || isShaking">
+              <span class="icon" *ngIf="p.status === 'UNOPENED'"></span>
+              {{ p.status === 'UNOPENED' ? 'ABRIR PAQUETE' : 'PAQUETE ABIERTO' }}
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <button class="nav-btn" (click)="next()" aria-label="Siguiente">›</button>
+    </section>
+
+    <div class="empty-state glass-card" *ngIf="packs.length === 0">
+      <span class="empty-icon">📦</span>
+      <h2>¡Tu inventario está vacío!</h2>
+      <p>Ve a la tienda en la parte superior para adquirir más paquetes usando tus FIFA Coins y sigue expandiendo tu colección.</p>
+    </div>
+  </main>
+
+  <div class="overlay" *ngIf="openStep === 'RESULTS'">
+    <div class="sheet glass-card-massive">
+      <button class="close-btn" (click)="closeOverlay()">✕</button>
+      
+      <div class="results">
+        <h2 class="results-title">¡Nuevas <span class="gradient-text">Láminas!</span></h2>
+        
+        <div class="grid">
+          <div class="sticker-card foil-effect" *ngFor="let s of lastStickers" [ngClass]="(s.rarity || 'Común') | lowercase">
+            
+            <div class="rarity-badge" [ngClass]="(s.rarity || 'Común') | lowercase">
+              {{ s.rarity || 'Común' }}
+            </div>
+
+            <div class="dup-badge" *ngIf="s.duplicates > 0">Repetida</div>
+
+            <div class="img-placeholder" *ngIf="!s.imageUrl">
+              <span class="emoji">👤</span>
+            </div>
+            <img *ngIf="s.imageUrl" class="img" [src]="s.imageUrl" alt="{{s.title}}">
+
+            <div class="meta">
+              <span class="code">{{ s.code }}</span>
+              <div class="title">{{ s.title }}</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

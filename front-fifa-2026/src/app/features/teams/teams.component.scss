@@ -1,0 +1,590 @@
+@use "sass:color";
+
+// --- PALETA VIBRANTE Y GAMER ---
+$c-bg: #0b0f19;
+$c-primary: #ec4899;
+$c-secondary: #06b6d4;
+$c-tertiary: #8b5cf6;
+$c-gold: #f9c74f;
+$c-error: #ef4444; // <-- ¡Aquí está la variable corregida!
+$white: #ffffff;
+$glass-bg: rgba(255, 255, 255, 0.04);
+$glass-border: rgba(255, 255, 255, 0.1);
+
+// ==========================================
+// RESET GLOBAL (ELIMINA BORDES BLANCOS)
+// ==========================================
+::ng-deep body {
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: $c-bg !important;
+  font-family: 'Poppins', 'Inter', sans-serif;
+  overflow-x: hidden !important;
+}
+
+.teams-wrapper {
+  box-sizing: border-box;
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  color: $white;
+  overflow-x: hidden;
+  padding-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+
+  // ==========================================
+  // FONDOS ANIMADOS (BLOBS)
+  // ==========================================
+  .bg-shape {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    z-index: 0;
+    opacity: 0.35;
+    animation: float 15s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+
+  .shape-1 {
+    width: 500px;
+    height: 500px;
+    background: $c-primary;
+    top: -10%;
+    left: -10%;
+    animation-delay: 0s;
+  }
+
+  .shape-2 {
+    width: 600px;
+    height: 600px;
+    background: $c-secondary;
+    bottom: -20%;
+    right: -10%;
+    animation-delay: -5s;
+  }
+
+  .shape-3 {
+    width: 400px;
+    height: 400px;
+    background: $c-tertiary;
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+    animation-delay: -10s;
+  }
+
+  @keyframes float {
+    0% {
+      transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+      transform: translate(50px, -50px) scale(1.1);
+    }
+
+    66% {
+      transform: translate(-30px, 40px) scale(0.9);
+    }
+
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+  }
+
+  // ==========================================
+  // BARRA SUPERIOR
+  // ==========================================
+  .top-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 15px 5%;
+    background: rgba($c-bg, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    animation: fadeInDown 0.6s ease forwards;
+
+    .back-nav {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: $white;
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+
+      .icon {
+        margin-right: 8px;
+        font-size: 1.1rem;
+      }
+
+      &:hover {
+        border-color: $c-secondary;
+        background: rgba($c-secondary, 0.1);
+        transform: translateX(-5px);
+        color: $c-secondary;
+        box-shadow: 0 0 15px rgba($c-secondary, 0.3);
+      }
+    }
+  }
+
+  // ==========================================
+  // CABECERA
+  // ==========================================
+  .header.centered {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 40px 5% 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    animation: fadeIn 0.8s ease forwards;
+
+    h1 {
+      margin: 0 0 10px 0;
+      font-size: 3.5rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+
+      .gradient-text {
+        background: linear-gradient(to right, $c-secondary, $c-tertiary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      @media (max-width: 600px) {
+        font-size: 2.5rem;
+      }
+    }
+
+    .subtitle {
+      color: rgba($white, 0.6);
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin: 0;
+    }
+  }
+
+  // ==========================================
+  // CONTENIDO PRINCIPAL
+  // ==========================================
+  .content {
+    flex-grow: 1;
+    position: relative;
+    z-index: 10;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 5%;
+  }
+
+  // --- SECCIÓN DESTACADA: TU EQUIPO Y PARTIDOS ---
+  // --- SECCIÓN DESTACADA: TU EQUIPO Y PARTIDOS ---
+  .my-team-section {
+    background: rgba(15, 20, 30, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba($c-secondary, 0.4);
+    border-radius: 24px;
+    padding: 40px;
+    margin-bottom: 50px;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba($c-secondary, 0.05);
+    animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+
+    // 🌟 NUEVO: Reducimos el relleno en celulares para ganar espacio
+    @media (max-width: 768px) {
+      padding: 30px 15px; 
+      margin-bottom: 30px;
+      border-radius: 16px; // Bordes un poco menos pronunciados
+    }
+
+    .badge-star {
+      position: absolute;
+      top: -15px;
+      left: 40px;
+      background: linear-gradient(135deg, $c-gold, #f39c12);
+      color: #000;
+      padding: 6px 20px;
+      font-weight: 900;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba($c-gold, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+
+      @media (max-width: 600px) {
+        left: 50%; // Centramos el badge en móviles
+        transform: translateX(-50%);
+      }
+    }
+
+    h2 {
+      font-size: 3rem;
+      margin: 0 0 10px;
+      color: $white;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+
+      @media (max-width: 600px) {
+        font-size: 2.2rem;
+        text-align: center; // Centramos el título en móviles
+        margin-top: 15px;
+      }
+    }
+
+    .section-desc {
+      color: rgba($white, 0.7);
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+
+      @media (max-width: 600px) {
+        text-align: center;
+      }
+    }
+
+    .fixtures-grid {
+      display: grid;
+      // 🌟 CAMBIO: Bajamos de 300px a 260px para que la tarjeta no se desborde en celulares
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+      gap: 20px;
+
+      .match-card {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 20px;
+        transition: 0.3s;
+
+        &:hover {
+          transform: translateY(-5px);
+          border-color: $c-secondary;
+          box-shadow: 0 10px 20px rgba($c-secondary, 0.2);
+          background: rgba(0, 0, 0, 0.5);
+        }
+
+        .match-header {
+          display: flex;
+          justify-content: space-between;
+          font-size: 0.85rem;
+          color: rgba($white, 0.5);
+          margin-bottom: 15px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          padding-bottom: 10px;
+
+          .league {
+            color: $c-secondary;
+            font-weight: bold;
+          }
+        }
+
+        .match-body {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          text-align: center;
+
+          .team {
+            flex: 1;
+
+            img {
+              width: 50px;
+              height: 50px;
+              object-fit: contain;
+              margin-bottom: 8px;
+              filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.5));
+            }
+
+            span {
+              display: block;
+              font-weight: 700;
+              font-size: 0.95rem;
+            }
+          }
+
+          .vs {
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: rgba($white, 0.3);
+            padding: 0 15px;
+          }
+
+          .team-flag {
+            width: 60px; 
+            height: 40px; 
+            border-radius: 4px; 
+            background: linear-gradient(135deg, $c-primary, $c-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px auto; // Añadimos margin auto para centrar
+            box-shadow: 0 4px 15px rgba($c-primary, 0.4);
+            border: 2px solid rgba(255,255,255,0.2);
+            overflow: hidden; 
+
+            img {
+                width: 100%; 
+                height: 100%; 
+                object-fit: cover; 
+                background-color: white; 
+            }
+
+            span {
+                font-weight: 900;
+                font-size: 1.5rem;
+                color: $white;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // --- GRID DE EQUIPOS CLASIFICADOS ---
+  .grid-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+  }
+
+  // teams.component.scss
+
+// ... (resto de tus estilos)
+
+    /* Archivo: teams.component.scss */
+
+/* --- GRID DE EQUIPOS CLASIFICADOS (Sección principal) --- */
+.grid-title {
+  font-size: 2.2rem; // Ligeramente más grande
+  font-weight: 800;
+  color: $white;
+  margin-bottom: 30px;
+  text-align: center; // Centrado como en la imagen
+}
+
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); // Default: Pantallas grandes
+  gap: 30px; 
+  margin-top: 20px;
+
+  // 🌟 MAGIA RESPONSIVE AQUÍ 🌟
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr); // Pantallas medianas/Laptops
+  }
+  
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(3, 1fr); // Tablets
+  }
+  
+  @media (max-width: 650px) {
+    grid-template-columns: repeat(2, 1fr); // Celulares grandes
+    gap: 15px; // Espaciado más pequeño en celular
+  }
+
+  @media (max-width: 400px) {
+    grid-template-columns: 1fr; // Celulares pequeños (1 sola columna)
+  }
+
+  /* --- TARJETA DE EQUIPO INDIVIDUAL (El recuadro) --- */
+  .team-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    text-align: center;
+    padding: 30px 20px; 
+    cursor: default; 
+    transition: all 0.3s ease;
+
+    // 🌟 NUEVO: Reducimos el relleno interno en celulares
+    @media (max-width: 650px) {
+      padding: 20px 10px;
+    }
+
+    background: rgba(255, 255, 255, 0.03); 
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08); 
+    border-radius: 16px; 
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); 
+
+    &:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba($c-primary, 0.2);
+      border-color: rgba($c-primary, 0.4);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* --- ESTILO RECTANGULAR DE LA BANDERA --- */
+    .team-flag-wrapper {
+      width: 140px; 
+      height: 95px;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+      flex-shrink: 0;
+
+      // 🌟 NUEVO: Bandera un poco más pequeña en celulares muy pequeños
+      @media (max-width: 400px) {
+        width: 120px;
+        height: 80px;
+        margin-bottom: 15px;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        background-color: white;
+      }
+
+      .fallback-flag {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, $c-primary, $c-tertiary);
+        font-size: 2.2rem;
+        font-weight: 900;
+        color: white;
+      }
+    }
+
+    /* --- DETALLES DE LA TARJETA --- */
+    .card-details {
+      width: 100%;
+
+      h3 {
+        margin: 0 0 10px 0;
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: $white;
+        
+        @media (max-width: 650px) {
+          font-size: 1.3rem; // Texto un poco más pequeño
+        }
+      }
+
+      .stadium-text {
+        margin: 0;
+        font-size: 0.95rem;
+        color: rgba($white, 0.6);
+        line-height: 1.4;
+
+        @media (max-width: 650px) {
+          font-size: 0.85rem; // Texto un poco más pequeño
+        }
+      }
+    }
+  }
+}
+
+  // --- ALERTAS Y PANTALLA DE CARGA ---
+  .alert-box {
+    padding: 15px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 15px;
+
+    &.error {
+      background: rgba($c-error, 0.15);
+      border: 1px solid rgba($c-error, 0.3);
+      color: #fca5a5;
+    }
+  }
+
+  .loading-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+    z-index: 200;
+
+    .neon-spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(255, 255, 255, 0.05);
+      border-top-color: $c-secondary;
+      border-right-color: $c-tertiary;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+      box-shadow: 0 0 15px rgba($c-secondary, 0.4), inset 0 0 15px rgba($c-tertiary, 0.4);
+    }
+
+    p {
+      color: rgba($white, 0.7);
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      animation: pulseText 1.5s infinite alternate;
+    }
+  }
+
+  // --- KEYFRAMES ---
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes pulseText {
+    from {
+      opacity: 0.5;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes popIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9) translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+}
