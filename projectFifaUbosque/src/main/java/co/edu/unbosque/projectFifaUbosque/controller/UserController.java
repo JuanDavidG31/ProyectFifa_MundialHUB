@@ -55,6 +55,11 @@ public class UserController {
 
 	public UserController() {
 	}
+	
+	@GetMapping("/active-support")
+	public ResponseEntity<Boolean> checkActiveSupport() {
+		return ResponseEntity.ok(userServ.hasActiveSupport());
+	}
 
 	@PutMapping(value = "/actualizar-foto-perfil", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<?> actualizarFotoPerfil(@RequestParam long id,
@@ -111,6 +116,36 @@ public class UserController {
 	ResponseEntity<Map<String, Boolean>> updateStatusView(@RequestParam long id) {
 
 		int resultado = userServ.updateStatusTutorial(id);
+
+		if (resultado == 0) {
+			return ResponseEntity.ok(Map.of("success", true));
+		} else if (resultado == 2) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("success", false));
+		} else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("success", false));
+		}
+
+	}
+
+	@PutMapping(path = "/updateStatusConnectFalse")
+	ResponseEntity<Map<String, Boolean>> updateStatusConnectFalse(@RequestParam long id) {
+
+		int resultado = userServ.updateStatusConnectFalse(id);
+
+		if (resultado == 0) {
+			return ResponseEntity.ok(Map.of("success", true));
+		} else if (resultado == 2) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("success", false));
+		} else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("success", false));
+		}
+
+	}
+
+	@PutMapping(path = "/updateStatusConnectTrue")
+	ResponseEntity<Map<String, Boolean>> updateStatusConnectTrue(@RequestParam long id) {
+
+		int resultado = userServ.updateStatusConnectTrue(id);
 
 		if (resultado == 0) {
 			return ResponseEntity.ok(Map.of("success", true));

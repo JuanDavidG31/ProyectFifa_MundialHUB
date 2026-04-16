@@ -134,7 +134,7 @@ public class AuthController {
 					+ "</div>";
 
 			if (emailService.sendEmail(email, asunto, htmlBody)) {
-				return ResponseEntity.ok(new AuthResponse(null, null, null, false, false, false));
+				return ResponseEntity.ok(new AuthResponse(null, null, null, false, false, false, false));
 			}
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al enviar correo");
 		}
@@ -172,7 +172,9 @@ public class AuthController {
 			boolean verify = (loggedInUser != null) ? loggedInUser.isVerified() : null;
 			boolean albumCompleteReward = (loggedInUser != null) ? loggedInUser.isAlbumCompleteReward() : null;
 			boolean tutorialView = (loggedInUser != null) ? loggedInUser.isTutorialView() : null;
-			return ResponseEntity.ok(new AuthResponse(jwt, role, avatar, albumCompleteReward, verify, tutorialView));
+			boolean countActive = (loggedInUser != null) ? loggedInUser.isCountActive() : null;
+			return ResponseEntity
+					.ok(new AuthResponse(jwt, role, avatar, albumCompleteReward, verify, tutorialView, countActive));
 
 		} catch (AuthenticationException e) {
 			e.printStackTrace();
@@ -230,15 +232,17 @@ public class AuthController {
 		private final boolean albumCompleteReward;
 		private final boolean verify;
 		private final boolean tutorialView;
+		private final boolean countActive;
 
 		public AuthResponse(String token, String role, String avatar, boolean albumCompleteReward, boolean verify,
-				boolean tutorialView) {
+				boolean tutorialView, boolean countActive) {
 			this.token = token;
 			this.role = role;
 			this.avatar = avatar;
 			this.albumCompleteReward = albumCompleteReward;
 			this.verify = verify;
 			this.tutorialView = tutorialView;
+			this.countActive = countActive;
 		}
 
 		public String getToken() {
@@ -247,6 +251,10 @@ public class AuthController {
 
 		public String getRole() {
 			return role;
+		}
+
+		public boolean isCountActive() {
+			return countActive;
 		}
 
 		public String getAvatar() {

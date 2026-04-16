@@ -64,6 +64,7 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    
     this.loadUserData();
     window.scrollTo(0, 0);
     const role = this.authService.getRole();
@@ -105,6 +106,11 @@ export class HomeComponent implements OnInit {
         this.chatMessages.push({ sender: 'Sistema', text: 'El agente cerró la conexión.', isMe: false });
       }
     });
+
+  }
+
+  updateStatusConnect(){
+    this.updateStatusConnectTrue();
   }
 
   ngOnDestroy(): void {
@@ -117,9 +123,28 @@ export class HomeComponent implements OnInit {
   }
 
   requestAgent() {
-    this.chatMessages = [];
-    this.chatStatus = 'Buscando agente...';
-    this.chatService.requestSupport(this.userName);
+    // 1. Ponemos un estado de espera mientras le preguntamos al backend
+    this.chatStatus = 'Verificando disponibilidad de agentes...';
+    
+    // 2. Llamamos a nuestro nuevo endpoint
+    this.authService.checkActiveSupport().subscribe({
+      next: (hasSupport: boolean) => {
+        if (hasSupport) {
+          // ✅ SÍ HAY SOPORTE: Procedemos a conectarnos al WebSocket
+          this.chatMessages = [];
+          this.chatStatus = 'Buscando agente...';
+          this.chatService.requestSupport(this.userName);
+        } else {
+          // ❌ NO HAY SOPORTE: Bloqueamos y avisamos al usuario
+          this.chatStatus = 'No hay agentes de soporte conectados en este momento.';
+          this.chatMessages = [];
+        }
+      },
+      error: (err) => {
+        console.error("Error al verificar soporte", err);
+        this.chatStatus = 'Error al verificar disponibilidad. Intenta de nuevo.';
+      }
+    });
   }
 
   sendChatMessage() {
@@ -139,9 +164,28 @@ export class HomeComponent implements OnInit {
   }
 
   cerrarSesion(): void {
-    this.albumService.clearAlbumState();
-    localStorage.removeItem('userAvatar'); 
-    this.authService.logout();
+    // 1. Disparamos la orden al servidor UNA SOLA VEZ
+    this.updateStatusConnectFalse();
+    
+    // 2. Iniciamos el ciclo de verificación
+    this.verificarCierreSeguro();
+  }
+
+  verificarCierreSeguro(): void {
+    // Revisamos si el servidor ya respondió y la variable cambió
+    if (localStorage.getItem('countActive') === 'false') {
+      
+      // ¡Éxito! Limpiamos todo y cerramos sesión
+      this.albumService.clearAlbumState();
+      localStorage.removeItem('userAvatar'); 
+      this.authService.logout();  
+      
+    } else {
+      // Si todavía no ha cambiado, esperamos 200 milisegundos y nos volvemos a llamar a nosotros mismos
+      setTimeout(() => {
+        this.verificarCierreSeguro();
+      }, 200);
+    }
   }
 
   
@@ -168,10 +212,35 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  updateStatusConnectTrue() {
+    
+   if (this.userId !== null) {
+      this.authService.updateStatusConnectTrue(this.userId).subscribe({
+        next: () => {
+          localStorage.setItem('countActive','true');
+          console.log('Connect status updated on server');
+          
+        }
+      });
+    }
+  }
+
+  updateStatusConnectFalse(){
+    
+   if (this.userId !== null) {
+      this.authService.updateStatusConnectFalse(this.userId).subscribe({
+        next: () => {
+          localStorage.setItem('countActive','false');
+          console.log('Connect status updated on server');
+          
+        }
+      });
+    }
+  }
+
   finishTutorial() {
     this.showTutorial = false;
     
-    console.log(this.userId);
     if (this.userId !== null) {
       this.authService.updateTutorialStatus(this.userId).subscribe({
         next: () => {

@@ -341,4 +341,36 @@ public class UserService implements CRUDOperation<UserDTO, User> {
 		}
 		return 2;
 	}
+
+	@Override
+	public int updateStatusConnectTrue(Long id) {
+		Optional<User> found = userRepo.findById(id);
+		if (found.isPresent()) {
+			found.get().setCountActive(true);
+			userRepo.save(found.get());
+			return 0;
+		}
+		return 2;
+	}
+	
+	@Override
+	public int updateStatusConnectFalse(Long id) {
+		Optional<User> found = userRepo.findById(id);
+		if (found.isPresent()) {
+			found.get().setCountActive(false);
+			userRepo.save(found.get());
+			return 0;
+		}
+		return 2;
+	}
+	
+	public boolean hasActiveSupport() {
+		List<User> users = userRepo.findAll();
+		for (User u : users) {
+			if (u.getRole() != null && u.getRole().name().equals("SUPPORT") && u.isCountActive()) {
+				return true; // Encontró al menos uno
+			}
+		}
+		return false; // No hay nadie conectado
+	}
 }

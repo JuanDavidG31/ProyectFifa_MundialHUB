@@ -11,6 +11,7 @@ export interface AuthResponse {
   albumCompleteReward?: boolean; 
   verify?: boolean;
   tutorialView?: boolean;
+  countActive?: boolean;
 }
 
 export interface RegisterRequest {

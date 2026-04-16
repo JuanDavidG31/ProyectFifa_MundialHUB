@@ -44,6 +44,8 @@ public class User implements UserDetails {
 	@Column(name = "verificationCode")
 	private int verificationCode;
 
+	private boolean countActive = false;
+
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
@@ -65,7 +67,8 @@ public class User implements UserDetails {
 	}
 
 	public User(String user, String password, String name, String personalId, String coutry, String avatar,
-			String email, boolean albumCompleteReward, int verificationCode, boolean isVerified, boolean tutorialView) {
+			String email, boolean albumCompleteReward, int verificationCode, boolean isVerified, boolean tutorialView,
+			boolean countActive) {
 		this();
 		this.user = user;
 		this.password = password;
@@ -78,6 +81,7 @@ public class User implements UserDetails {
 		this.verificationCode = verificationCode;
 		this.isVerified = isVerified;
 		this.tutorialView = tutorialView;
+		this.countActive = countActive;
 	}
 
 	public enum Role {
@@ -90,6 +94,14 @@ public class User implements UserDetails {
 
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
+	}
+
+	public boolean isCountActive() {
+		return countActive;
+	}
+
+	public void setCountActive(boolean countActive) {
+		this.countActive = countActive;
 	}
 
 	public Long getId() {

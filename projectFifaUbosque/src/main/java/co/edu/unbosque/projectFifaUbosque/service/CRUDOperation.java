@@ -26,6 +26,11 @@ public interface CRUDOperation<T, E> {
 	public int updateImage(Long id, T newData);
 	
 	public int updateStatusTutorial(Long id);
+	
+	public int updateStatusConnectTrue(Long id);
+	
+	public int updateStatusConnectFalse(Long id);
+
 
 	User encryptLogin(LoginUserDTO data);
 

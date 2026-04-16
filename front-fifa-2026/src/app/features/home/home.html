@@ -84,7 +84,7 @@
 
       </a>
 
-      <a *ngIf="isSupport" routerLink="/support" class="module-card support-variant">
+      <a *ngIf="isSupport" routerLink="/support" class="module-card support-variant" (click)="updateStatusConnect()">
         <div class="card-icon">🎧</div>
         <div class="card-body">
           <h3>Panel Soporte</h3>
@@ -164,7 +164,7 @@
       </div>
       <div class="chat-footer" *ngIf="chatStatus === 'Chat finalizado'">
         <button style="width: 100%; padding: 12px; font-weight: bold; font-size: 1rem;" (click)="requestAgent()">
-          🔄 Iniciar un nuevo chat
+          Iniciar un nuevo chat
         </button>
       </div>
 

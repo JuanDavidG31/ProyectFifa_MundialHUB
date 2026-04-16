@@ -89,6 +89,12 @@ export class AuthService {
             localStorage.removeItem('albumCompleteReward');
           }
 
+          if (response.countActive == false || response.countActive == true) {
+            localStorage.setItem('countActive', response.countActive.toString());
+          } else {
+            localStorage.removeItem('countActive');
+          }
+
           if (response.verify == false || response.verify == true) {
             localStorage.setItem('verify', response.verify.toString());
           } else {
@@ -227,6 +233,26 @@ export class AuthService {
     return this.http.put(`${this.apiUrlUser}/updateStatusView`, formData, { headers });
   }
 
+  updateStatusConnectFalse(id: number): Observable<any> {
+    const formData = new FormData();
+    formData.append('id', id.toString());
+    const token = this.getToken();
+    const headers = token
+      ? new HttpHeaders({ Authorization: `Bearer ${token}` })
+      : new HttpHeaders();
+    return this.http.put(`${this.apiUrlUser}/updateStatusConnectFalse`, formData, { headers });
+  }
+
+  updateStatusConnectTrue(id: number): Observable<any> {
+    const formData = new FormData();
+    formData.append('id', id.toString());
+    const token = this.getToken();
+    const headers = token
+      ? new HttpHeaders({ Authorization: `Bearer ${token}` })
+      : new HttpHeaders();
+    return this.http.put(`${this.apiUrlUser}/updateStatusConnectTrue`, formData, { headers });
+  }
+
   updateUser(updateData: { id?: number; user?: string; password?: string }): Observable<any> {
     let params = new HttpParams();
     if (updateData.id) params = params.set('id', updateData.id);
@@ -302,5 +328,9 @@ export class AuthService {
   getWcMatches(): Observable<any[]> {
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
     return this.http.get<any[]>(`${this.apiMatchesUrl}/wc`, { headers });
+  }
+  checkActiveSupport(): Observable<boolean> {
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
+    return this.http.get<boolean>(`${this.apiUrlUser}/active-support`, { headers });
   }
 }

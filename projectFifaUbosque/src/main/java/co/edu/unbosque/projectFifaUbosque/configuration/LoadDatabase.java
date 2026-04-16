@@ -35,7 +35,7 @@ public class LoadDatabase {
 				log.info("El administrador ya existe, omitiendo la creación del administrador...");
 			} else {
 				User adminUser = new User(AESUtil.encrypt("admin"), passwordEncoder.encode("1234567890"), null, null,
-						null, null, null, false, 0, true, true);
+						null, null, null, false, 0, true, true, false);
 				adminUser.setRole(Role.ADMIN);
 				adminUser.setAvailablePacks(50);
 				userRepo.save(adminUser);
@@ -48,7 +48,7 @@ public class LoadDatabase {
 				log.info("El usuario normal ya existe, omitiendo la creación del usuario normal...");
 			} else {
 				User normalUser = new User(AESUtil.encrypt("normaluser"), passwordEncoder.encode("1234567890"), null,
-						null, null, null, null, false, 0, true, true);
+						null, null, null, null, false, 0, true, true, false);
 				normalUser.setRole(Role.USER);
 				normalUser.setAvailablePacks(50);
 				userRepo.save(normalUser);
@@ -61,7 +61,7 @@ public class LoadDatabase {
 				log.info("El soporte ya existe, omitiendo la creación del soporte...");
 			} else {
 				User supportUser = new User(AESUtil.encrypt("support"), passwordEncoder.encode("1234567890"), null, null,
-						null, null, null, false, 0, true, true);
+						null, null, null, false, 0, true, true, false);
 				supportUser.setRole(Role.SUPPORT);
 				supportUser.setAvailablePacks(50);
 				userRepo.save(supportUser);

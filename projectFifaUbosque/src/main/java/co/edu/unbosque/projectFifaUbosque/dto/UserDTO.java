@@ -19,12 +19,14 @@ public class UserDTO {
 	private boolean isVerified = false;
 	private int verificationCode;
 	private boolean tutorialView;
+	private boolean countActive;
 
 	public UserDTO() {
 	}
 
 	public UserDTO(String user, String password, String name, String personalId, String coutry, String avatar,
-			String email, boolean albumCompleteReward, int verificationCode, boolean isVerified, boolean tutorialView) {
+			String email, boolean albumCompleteReward, int verificationCode, boolean isVerified, boolean tutorialView,
+			boolean countActive) {
 		this.user = user;
 		this.password = password;
 		this.name = name;
@@ -35,6 +37,8 @@ public class UserDTO {
 		this.verificationCode = verificationCode;
 		this.isVerified = isVerified;
 		this.tutorialView = tutorialView;
+		this.countActive = countActive;
+
 	}
 
 	public Long getId() {
@@ -43,6 +47,14 @@ public class UserDTO {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public boolean isCountActive() {
+		return countActive;
+	}
+
+	public void setCountActive(boolean countActive) {
+		this.countActive = countActive;
 	}
 
 	public boolean isTutorialView() {
