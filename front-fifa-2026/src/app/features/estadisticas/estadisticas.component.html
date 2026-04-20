@@ -1,0 +1,111 @@
+<div class="stats-wrapper">
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <nav class="top-nav">
+        <button class="back-nav" routerLink="/home">
+            <span class="icon">‹</span> Volver al Hub
+        </button>
+    </nav>
+
+    <header class="header centered fade-in-up">
+        <h1>Líderes del <span class="gradient-text">Torneo</span></h1>
+        <p class="subtitle">Rendimiento y estadísticas en tiempo real.</p>
+    </header>
+
+    <main class="content">
+
+        <div class="tabs-wrapper fade-in-up">
+            <div class="tabs-container">
+                <button class="tab-btn live-tab" [class.active]="activeTab === 'envivo'" (click)="setTab('envivo')">
+                    <span class="pulse-dot"></span> En Vivo
+                </button>
+                <button class="tab-btn" [class.active]="activeTab === 'goles'" (click)="setTab('goles')">
+                    ⚽ Goleadores
+                </button>
+                <button class="tab-btn" [class.active]="activeTab === 'asistencias'" (click)="setTab('asistencias')">
+                    👟 Asistencias
+                </button>
+            </div>
+        </div>
+
+        <div class="ranking-board glass-card-massive fade-in">
+
+            <div *ngIf="isLoading" class="loading-state">
+                <div class="neon-spinner"></div>
+            </div>
+
+            <div class="live-section fade-in" *ngIf="!isLoading && activeTab === 'envivo'">
+                <div class="no-live-matches" *ngIf="liveMatches.length === 0">
+                    <span class="icon-huge">📡</span>
+                    <p>No hay partidos en juego en este momento.</p>
+                </div>
+
+                <div class="live-match-card" *ngFor="let match of liveMatches">
+                    <div class="match-header">
+                        <div class="live-badge">🔴 EN DIRECTO</div>
+                        <div class="match-minute">{{ match.minute }}</div>
+                    </div>
+                    <div class="scoreboard">
+                        <div class="team">
+                            <img [src]="match.homeFlag" [alt]="match.homeTeam">
+                            <span class="team-name">{{ match.homeTeam }}</span>
+                        </div>
+                        <div class="score-container">
+                            <span class="score">{{ match.homeScore }}</span>
+                            <span class="divider">-</span>
+                            <span class="score">{{ match.awayScore }}</span>
+                        </div>
+                        <div class="team">
+                            <img [src]="match.awayFlag" [alt]="match.awayTeam">
+                            <span class="team-name">{{ match.awayTeam }}</span>
+                        </div>
+                    </div>
+                    <div class="match-events">
+                        <div class="event-item" *ngFor="let event of match.events">
+                            {{ event }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ranking-list fade-in" *ngIf="!isLoading && activeTab !== 'envivo'">
+
+                <div class="ranking-header">
+                    <span class="col-rank">#</span>
+                    <span class="col-player">Jugador / Selección</span>
+                    <span class="col-stat">{{ activeTab === 'goles' ? 'GOLES' : 'ASISTENCIAS' }}</span>
+                </div>
+
+                <div class="ranking-item" *ngFor="let player of currentList; let i = index"
+                    [ngClass]="{'rank-1': i === 0, 'rank-2': i === 1, 'rank-3': i === 2}">
+
+                    <div class="col-rank">
+                        <span class="rank-badge">{{ i + 1 }}</span>
+                    </div>
+
+                    <div class="col-player">
+                        <div class="flag-wrapper">
+                            <img [src]="player.flagUrl" [alt]="player.team">
+                        </div>
+                        <div class="player-details">
+                            <h4>{{ player.name }}</h4>
+                            <span class="team-name">{{ player.team }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-stat">
+                        <span class="stat-value">{{ player.value }}</span>
+                    </div>
+
+                </div>
+
+                <div class="no-data" *ngIf="currentList.length === 0">
+                    <span class="icon-huge">📊</span>
+                    <p>Aún no hay estadísticas disponibles para esta categoría.</p>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>

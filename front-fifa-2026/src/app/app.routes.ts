@@ -9,6 +9,8 @@ import { ForgotPasswordComponent } from './features/auth/pages/forgot-password/f
 import { Settings } from './features/settings/settings';
 import { TicketsComponent } from './features/tickets/tickets.component';
 import { TeamsComponent } from './features/teams/teams.component';
+import { EstadisticasComponent } from './features/estadisticas/estadisticas.component';
+import { ApuestasComponent } from './features/apuestas/apuestas.component';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -56,6 +58,18 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { expectedRole: 'SUPPORT' }, // Guarda el acceso solo para soporte
     loadComponent: () => import('./features/support/support.component').then(m => m.SupportComponent)
+  },
+
+  {
+    path: 'estadisticas',
+    canActivate: [AuthGuard],
+    component: EstadisticasComponent
+  },
+
+  {
+    path: 'apuestas',
+    canActivate: [AuthGuard],
+    component: ApuestasComponent
   },
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },

@@ -1,0 +1,191 @@
+<div class="apuestas-wrapper">
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <nav class="top-nav">
+        <button class="back-nav" routerLink="/home">
+            <span class="icon">‹</span> Volver al Hub
+        </button>
+    </nav>
+
+    <header class="header centered fade-in-up">
+        <h1>Mis <span class="gradient-text">Pronósticos</span></h1>
+        <p class="subtitle">Adivina los resultados, acumula puntos y lidera el ranking.</p>
+    </header>
+
+    <main class="content">
+
+        <div class="user-stats-panel glass-card fade-in-up">
+            <div class="stat-box">
+                <span class="stat-label">Mis Puntos</span>
+                <span class="stat-value highlight-gold">{{ userPoints }}</span>
+            </div>
+            <div class="divider"></div>
+            <div class="stat-box">
+                <span class="stat-label">Ranking Global</span>
+                <span class="stat-value">#{{ userRank }}</span>
+            </div>
+            <div class="divider"></div>
+            <div class="stat-box">
+                <span class="stat-label">Precisión</span>
+                <span class="stat-value highlight-cyan">{{ accuracy }}%</span>
+            </div>
+        </div>
+
+        <div class="tabs-wrapper fade-in-up">
+            <div class="tabs-wrapper fade-in-up">
+                <div class="tabs-container">
+                    <button class="tab-btn" [class.active]="activeTab === 'proximos'" (click)="setTab('proximos')">
+                        📅 Próximos Partidos
+                    </button>
+                    <button class="tab-btn" [class.active]="activeTab === 'historial'" (click)="setTab('historial')">
+                        📜 Mi Historial
+                    </button>
+                    <button class="tab-btn" [class.active]="activeTab === 'salas'" (click)="setTab('salas')">
+                        👥 Salas
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="matches-grid fade-in" *ngIf="activeTab === 'proximos'">
+
+            <div class="match-prediction-card glass-card" *ngFor="let match of upcomingMatches"
+                [class.locked]="match.status === 'LOCKED'">
+
+                <div class="match-info">
+                    <span class="group-badge">{{ match.group }}</span>
+                    <span class="match-date">{{ match.date }}</span>
+                    <span class="status-badge" *ngIf="match.status === 'LOCKED'">🔒 Partido en Juego</span>
+                </div>
+
+                <div class="prediction-area">
+                    <div class="team-block">
+                        <img [src]="match.homeFlag" [alt]="match.homeTeam" class="team-flag">
+                        <span class="team-name">{{ match.homeTeam }}</span>
+                    </div>
+
+                    <div class="score-inputs">
+                        <input type="number" min="0" max="15" [(ngModel)]="match.homeScorePred"
+                            [disabled]="match.status === 'LOCKED'" class="score-box" placeholder="-">
+                        <span class="vs-text">VS</span>
+                        <input type="number" min="0" max="15" [(ngModel)]="match.awayScorePred"
+                            [disabled]="match.status === 'LOCKED'" class="score-box" placeholder="-">
+                    </div>
+
+                    <div class="team-block">
+                        <img [src]="match.awayFlag" [alt]="match.awayTeam" class="team-flag">
+                        <span class="team-name">{{ match.awayTeam }}</span>
+                    </div>
+                </div>
+
+                <div class="card-footer" *ngIf="match.status !== 'LOCKED'">
+                    <button [id]="'btn-save-' + match.id" class="btn-predict" (click)="savePrediction(match)"
+                        [class.outline]="match.isSaved">
+                        {{ match.isSaved ? 'Actualizar Pronóstico' : 'Guardar Pronóstico' }}
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="no-data fade-in" *ngIf="activeTab === 'historial'">
+            <span class="icon-huge">🏆</span>
+            <p>Aún no hay partidos finalizados en tu historial.</p>
+        </div>
+
+        <div class="rooms-wrapper fade-in" *ngIf="activeTab === 'salas'">
+
+            <div class="rooms-header glass-card">
+                <div class="header-info">
+                    <h2>🌍 Zona Multijugador</h2>
+                    <p *ngIf="!currentRoom">Únete a una sala existente o crea la tuya para competir con amigos.</p>
+                    <p *ngIf="currentRoom">Estás en la sala: <span class="highlight-cyan">{{ currentRoom.name }}</span>
+                    </p>
+                </div>
+                <button *ngIf="!currentRoom" (click)="openCreateRoomModal()" class="btn-neon">+ Crear Nueva
+                    Sala</button>
+                <button *ngIf="currentRoom" (click)="salirDeSala()" class="btn-outline">Salir de la Sala</button>
+            </div>
+
+            <div class="available-rooms-grid" *ngIf="!currentRoom">
+                <h3 class="section-title">Salas Disponibles</h3>
+
+                <div class="no-data" *ngIf="availableRooms.length === 0">
+                    <span class="icon-huge">🏜️</span>
+                    <p>No hay salas activas en este momento.</p>
+                </div>
+
+                <div class="room-card glass-card fade-in-up" *ngFor="let room of availableRooms">
+                    <div class="room-info">
+                        <h4>{{ room.name }}</h4>
+                        <span class="room-owner">👑 Creada por: {{ room.owner }}</span>
+                    </div>
+                    <button class="btn-join" (click)="requestJoin(room.id)">Solicitar Unirse</button>
+                </div>
+            </div>
+
+            <div class="active-room-view fade-in" *ngIf="currentRoom">
+
+                <div class="admin-panel glass-card border-glow" *ngIf="joinRequests.length > 0">
+                    <h3>🔔 Solicitudes de Acceso ({{ joinRequests.length }})</h3>
+                    <p class="admin-subtitle">Eres el administrador. Decide quién entra a tu sala.</p>
+
+                    <div class="request-item" *ngFor="let req of joinRequests">
+                        <div class="req-user">
+                            <span class="avatar-mini">👤</span>
+                            <strong>{{ req.sender }}</strong> quiere entrar
+                        </div>
+                        <div class="req-actions">
+                            <button class="btn-icon accept" (click)="acceptUser(req, true)" title="Aceptar">✔️</button>
+                            <button class="btn-icon reject" (click)="acceptUser(req, false)"
+                                title="Rechazar">✖️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-title" style="margin-top: 30px;">🔥 Pronósticos en Vivo</h3>
+
+                <div class="no-data" *ngIf="!currentRoom.sharedHistory || currentRoom.sharedHistory.length === 0">
+                    <p>Aún no hay pronósticos en esta sala. ¡Sé el primero en apostar!</p>
+                </div>
+
+                <div class="shared-bets-grid">
+                    <div class="shared-bet-card glass-card fade-in-up" *ngFor="let msg of currentRoom.sharedHistory">
+                        <div class="bet-header">
+                            <span class="bet-author">{{ msg.sender }}</span> apostó:
+                        </div>
+                        <div class="bet-scores" *ngIf="msg.matchInfo">
+                            <span class="team">{{ msg.matchInfo.homeTeam }}</span>
+                            <div class="score-pill">
+                                <span>{{ msg.matchInfo.homeScorePred }}</span>
+                                <span class="divider">-</span>
+                                <span>{{ msg.matchInfo.awayScorePred }}</span>
+                            </div>
+                            <span class="team">{{ msg.matchInfo.awayTeam }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div class="modal-overlay fade-in" *ngIf="isCreateRoomModalOpen">
+        <div class="modal-glass-card fade-in-up">
+            <button class="close-btn" (click)="closeCreateRoomModal()">✕</button>
+            <h2>Crear Sala</h2>
+            <p>Ponle un nombre épico a tu sala para que tus amigos la encuentren.</p>
+
+            <div class="input-group">
+                <span class="input-icon">🏷️</span>
+                <input type="text" [(ngModel)]="newRoomName" placeholder="Ej: Los Galácticos">
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-neon" style="width: 100%;" (click)="confirmCreateRoom()">Crear Sala</button>
+            </div>
+        </div>
+    </div>
+</div>

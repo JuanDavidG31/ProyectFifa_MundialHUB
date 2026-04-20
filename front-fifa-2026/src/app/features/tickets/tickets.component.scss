@@ -8,9 +8,8 @@ $c-success: #10b981;
 $c-warning: #f59e0b;
 $c-error: #ef4444;
 $white: #ffffff;
-$glass-bg: rgba(255, 255, 255, 0.05);
-$glass-border: rgba(255, 255, 255, 0.15);
-
+$glass-bg: rgba(255, 255, 255, 0.03);
+$glass-border: rgba(255, 255, 255, 0.08);
 
 ::ng-deep body {
     margin: 0 !important;
@@ -20,12 +19,10 @@ $glass-border: rgba(255, 255, 255, 0.15);
     overflow-x: hidden;
 }
 
-
 .tickets-wrapper {
     position: relative;
     min-height: 100vh;
     width: 100vw;
-
     box-sizing: border-box;
     margin: 0;
     color: $white;
@@ -33,13 +30,13 @@ $glass-border: rgba(255, 255, 255, 0.15);
     overflow-x: hidden;
 }
 
-
+// Formas de Fondo Animadas
 .bg-shape {
     position: fixed;
     border-radius: 50%;
-    filter: blur(100px);
+    filter: blur(120px); // Desenfoque un poco más suave
     z-index: 0;
-    opacity: 0.4;
+    opacity: 0.35;
     animation: float 15s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
 }
@@ -72,32 +69,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
     animation-delay: -10s;
 }
 
-@keyframes float {
-    0% {
-        transform: translate(0, 0) scale(1);
-    }
-
-    33% {
-        transform: translate(50px, -50px) scale(1.1);
-    }
-
-    66% {
-        transform: translate(-30px, 40px) scale(0.9);
-    }
-
-    100% {
-        transform: translate(0, 0) scale(1);
-    }
-}
-
-::ng-deep body {
-    margin: 0 !important;
-    padding: 0 !important;
-    background-color: $c-bg !important;
-    font-family: 'Poppins', 'Inter', sans-serif;
-    overflow-x: hidden;
-}
-
+// Navegación
 .top-nav {
     position: sticky;
     top: 0;
@@ -106,7 +78,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
     justify-content: flex-start;
     align-items: center;
     padding: 15px 5%;
-    background: rgba($c-bg, 0.7);
+    background: rgba($c-bg, 0.75);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -116,8 +88,8 @@ $glass-border: rgba(255, 255, 255, 0.15);
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
         color: $white;
-        padding: 8px 18px;
-        border-radius: 20px;
+        padding: 8px 20px;
+        border-radius: 30px; // Más redondeado para un look más moderno
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -127,19 +99,21 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
         .icon {
             margin-right: 8px;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            line-height: 1;
         }
 
         &:hover {
             border-color: $c-secondary;
             background: rgba($c-secondary, 0.1);
-            transform: translateX(-5px);
+            transform: translateX(-3px);
             color: $c-secondary;
-            box-shadow: 0 0 15px rgba($c-secondary, 0.3);
+            box-shadow: 0 0 20px rgba($c-secondary, 0.2);
         }
     }
 }
 
+// Contenido Principal
 .main-content {
     position: relative;
     z-index: 10;
@@ -149,116 +123,160 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
     .hero-section {
         text-align: center;
-        margin-bottom: 50px;
-        animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        margin-bottom: 60px;
+        animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 
         .hero-title {
-            font-size: 3rem;
-            margin-bottom: 10px;
+            font-size: 3.5rem;
+            margin-bottom: 12px;
             font-weight: 900;
+            background: linear-gradient(135deg, $white, rgba($white, 0.7));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero-subtitle {
-            color: rgba($white, 0.7);
-            font-size: 1.1rem;
-            font-weight: 500;
+            color: rgba($white, 0.6);
+            font-size: 1.15rem;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
         }
     }
 }
 
+// Estados de Carga
+.loading-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: $c-secondary;
+
+    .spinner {
+        display: inline-block;
+        width: 45px;
+        height: 45px;
+        border: 4px solid rgba($c-secondary, 0.2);
+        border-radius: 50%;
+        border-top-color: $c-secondary;
+        animation: spin 1s ease-in-out infinite;
+        margin-bottom: 15px;
+    }
+
+    p {
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+}
+
+// Títulos de Grupos
+.group-section {
+    margin-bottom: 60px;
+    width: 100%;
+
+    .group-title {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: $white;
+        margin-bottom: 30px;
+        padding-left: 20px;
+        border-left: 4px solid $c-primary;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        background: linear-gradient(90deg, rgba($c-primary, 0.15) 0%, transparent 100%);
+        padding: 12px 25px;
+        border-radius: 0 12px 12px 0;
+        display: inline-flex;
+        align-items: center;
+    }
+}
+
+// Grid y Tarjetas
 .tickets-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 30px;
-    padding-bottom: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); // Ligeramente más ancho
+    gap: 35px;
+    padding-bottom: 20px;
 
     .ticket-card {
-        background: linear-gradient(160deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-top: 1px solid rgba($c-primary, 0.3); // Brillo sutil arriba
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-
+        background: linear-gradient(160deg, $glass-bg 0%, rgba(255, 255, 255, 0.01) 100%);
+        border: 1px solid $glass-border;
+        border-top: 1px solid rgba($c-primary, 0.4);
+        border-radius: 24px; // Bordes un poco más suaves
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         display: flex;
         flex-direction: column;
         position: relative;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         overflow: hidden;
 
         &:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 40px rgba($c-primary, 0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 45px rgba($c-primary, 0.15), 0 0 20px rgba($white, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
             border-top-color: $c-primary;
         }
 
         .card-content {
-            padding: 25px;
-            padding-bottom: 15px;
+            padding: 28px 28px 20px;
         }
 
         .ticket-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 15px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 16px;
 
             .date {
                 font-size: 0.9rem;
                 color: $c-secondary;
-                font-weight: 600;
+                font-weight: 500;
                 display: flex;
                 align-items: center;
                 gap: 8px;
             }
 
-            // 🌟 ESTILOS DINÁMICOS PARA EL INVENTARIO
             .badge {
-                padding: 6px 12px;
-                border-radius: 8px;
-                font-size: 0.8rem;
-                font-weight: 800;
+                padding: 5px 12px;
+                border-radius: 6px;
+                font-size: 0.75rem;
+                font-weight: 700;
                 text-transform: uppercase;
-                letter-spacing: 1px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                letter-spacing: 0.5px;
 
-                // Estado: Disponible (Verde)
                 &.available {
                     background: rgba($c-success, 0.15);
                     color: $c-success;
-                    border: 1px solid rgba($c-success, 0.4);
+                    border: 1px solid rgba($c-success, 0.3);
                 }
 
-                // Estado: Pocos Boletos (Naranja/Oro)
                 &.few-left {
                     background: rgba($c-warning, 0.15);
                     color: $c-warning;
-                    border: 1px solid rgba($c-warning, 0.4);
-                    animation: pulseWarning 2s infinite alternate; // Pequeño latido de urgencia
+                    border: 1px solid rgba($c-warning, 0.3);
+                    animation: pulseWarning 2s infinite alternate;
                 }
 
-                // Estado: Agotado (Rojo)
                 &.sold-out {
-                    background: rgba($c-error, 0.15);
+                    background: rgba($c-error, 0.1);
                     color: $c-error;
-                    border: 1px solid rgba($c-error, 0.4);
-                    opacity: 0.7; // Se ve un poco apagado
+                    border: 1px solid rgba($c-error, 0.2);
                 }
             }
         }
 
         .teams-container {
             display: flex;
-            align-items: flex-start; // Alinea al inicio para que el VS quede arriba
+            align-items: flex-start;
             justify-content: space-between;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.2); // Más sutil
             padding: 20px 15px;
             border-radius: 16px;
             margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             min-height: 120px;
 
             .team {
@@ -266,55 +284,57 @@ $glass-border: rgba(255, 255, 255, 0.15);
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                gap: 10px;
-                width: 0; // Ayuda a que flex-grow funcione correctamente con textos largos
+                gap: 12px;
+                width: 0;
             }
 
-            // 🌟 ESTILO RECTANGULAR PARA LA BANDERA EN EL TICKET
             .team-flag {
-                width: 60px;
-                height: 40px;
-                border-radius: 4px;
-                background: linear-gradient(135deg, $c-primary, $c-tertiary);
+                width: 64px;
+                height: 44px;
+                border-radius: 6px;
+                background: linear-gradient(135deg, rgba($c-primary, 0.8), rgba($c-tertiary, 0.8));
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 overflow: hidden;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
                 flex-shrink: 0;
 
                 img {
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
-                    object-position: center;
-                    background-color: white;
                 }
 
-                span {
+                .fallback-letter {
                     font-weight: 900;
-                    font-size: 1.2rem;
+                    font-size: 1.4rem;
                     color: $white;
+                    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
                 }
             }
 
             .team-name {
                 font-size: 1rem;
-                font-weight: 800;
+                font-weight: 700;
                 margin: 0;
                 text-align: center;
                 text-transform: uppercase;
-                line-height: 1.2;
-                overflow-wrap: break-word;
-                background: linear-gradient(to right, #fff, #cbd5e1);
+                line-height: 1.3;
+                background: linear-gradient(to right, $white, #cbd5e1);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 width: 100%;
+                // Truncar texto si es muy largo
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
             }
 
             .vs-wrapper {
-                padding: 10px 5px 0; // Un poco de padding arriba para alinear con las banderas
+                padding-top: 12px;
                 flex-shrink: 0;
 
                 .vs-badge {
@@ -322,9 +342,11 @@ $glass-border: rgba(255, 255, 255, 0.15);
                     color: $white;
                     font-size: 0.75rem;
                     font-weight: 900;
-                    padding: 6px 8px;
+                    padding: 8px;
                     border-radius: 50%;
-                    box-shadow: 0 0 15px rgba($c-primary, 0.5);
+                    box-shadow: 0 0 15px rgba($c-primary, 0.4);
+                    display: inline-block;
+                    line-height: 1;
                 }
             }
         }
@@ -332,53 +354,56 @@ $glass-border: rgba(255, 255, 255, 0.15);
         .stadium-info {
             text-align: center;
             font-size: 0.85rem;
-            color: rgba($white, 0.6);
+            color: rgba($white, 0.5);
             letter-spacing: 0.5px;
+            font-weight: 400;
         }
 
-
+        // Divisor visual mejorado
         .ticket-divider {
             position: relative;
             display: flex;
             align-items: center;
             width: 100%;
             height: 30px;
+            z-index: 2;
 
             .notch {
                 width: 30px;
                 height: 30px;
-                background-color: $c-bg;
+                background-color: $c-bg; // Simula el recorte tomando el color de fondo
                 border-radius: 50%;
                 position: absolute;
                 z-index: 2;
-                box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
 
                 &.left {
                     left: -15px;
-                    border-right: 1px solid rgba(255, 255, 255, 0.1);
+                    box-shadow: inset -3px 0 5px rgba(0, 0, 0, 0.3);
+                    border-right: 1px solid rgba(255, 255, 255, 0.08);
                 }
 
                 &.right {
                     right: -15px;
-                    border-left: 1px solid rgba(255, 255, 255, 0.1);
+                    box-shadow: inset 3px 0 5px rgba(0, 0, 0, 0.3);
+                    border-left: 1px solid rgba(255, 255, 255, 0.08);
                 }
             }
 
             .line {
                 flex: 1;
                 height: 1px;
-                border-top: 2px dashed rgba(255, 255, 255, 0.2);
+                border-top: 2px dashed rgba(255, 255, 255, 0.15);
                 margin: 0 25px;
             }
         }
 
-
         .ticket-footer {
-            padding: 15px 25px 25px;
+            padding: 20px 28px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.15);
+            background: rgba(0, 0, 0, 0.2); // Separación visual sutil
+            border-radius: 0 0 24px 24px;
 
             .price-box {
                 display: flex;
@@ -389,16 +414,19 @@ $glass-border: rgba(255, 255, 255, 0.15);
                     color: rgba($white, 0.5);
                     text-transform: uppercase;
                     letter-spacing: 1px;
+                    margin-bottom: 2px;
                 }
 
                 .price-value {
-                    font-size: 1.5rem;
+                    font-size: 1.6rem;
                     font-weight: 900;
                     color: $white;
+                    line-height: 1;
 
                     small {
-                        font-size: 0.9rem;
+                        font-size: 0.85rem;
                         color: $c-secondary;
+                        font-weight: 600;
                     }
                 }
             }
@@ -407,17 +435,32 @@ $glass-border: rgba(255, 255, 255, 0.15);
                 background: linear-gradient(135deg, $c-primary, $c-tertiary);
                 border: none;
                 color: $white;
-                padding: 12px 20px;
+                padding: 12px 24px;
                 border-radius: 12px;
-                font-weight: 800;
+                font-weight: 700;
+                font-size: 0.95rem;
                 cursor: pointer;
                 transition: all 0.3s ease;
-                box-shadow: 0 4px 15px rgba($c-primary, 0.3);
+                box-shadow: 0 6px 20px rgba($c-primary, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 145px;
+
+                .btn-text {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                }
 
                 &:hover:not(:disabled) {
-                    transform: scale(1.05) translateY(-2px);
+                    transform: translateY(-2px);
                     box-shadow: 0 8px 25px rgba($c-primary, 0.5);
                     filter: brightness(1.1);
+                }
+
+                &:active:not(:disabled) {
+                    transform: translateY(0);
                 }
 
                 &:disabled {
@@ -425,30 +468,150 @@ $glass-border: rgba(255, 255, 255, 0.15);
                     color: rgba($white, 0.3);
                     box-shadow: none;
                     border: 1px solid rgba(255, 255, 255, 0.1);
+                    cursor: not-allowed;
+                }
+
+                .spinner-small {
+                    display: inline-block;
+                    width: 20px;
+                    height: 20px;
+                    border: 3px solid rgba(255, 255, 255, 0.3);
+                    border-radius: 50%;
+                    border-top-color: #fff;
+                    animation: spin 1s ease-in-out infinite;
                 }
             }
         }
     }
 }
 
-.group-section {
-    margin-bottom: 50px;
-    width: 100%;
+.filters-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 40px;
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 20px;
+    border-radius: 16px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    animation: fadeInDown 0.8s ease forwards;
+
+    .search-box {
+        flex: 1;
+        min-width: 280px;
+        display: flex;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+        padding: 0 15px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+
+        &:focus-within {
+            border-color: $c-primary;
+            box-shadow: 0 0 15px rgba($c-primary, 0.2);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .search-icon {
+            margin-right: 10px;
+            font-size: 1.1rem;
+            opacity: 0.7;
+        }
+
+        input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: $white;
+            padding: 14px 0;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+
+            &::placeholder {
+                color: rgba(255, 255, 255, 0.4);
+            }
+        }
+    }
+
+    .sort-box {
+        min-width: 220px;
+        flex: 0 1 auto;
+
+        select {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: $white;
+            padding: 14px 15px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            cursor: pointer;
+            appearance: none; // Oculta la flecha por defecto
+            transition: all 0.3s ease;
+
+            // Flecha personalizada
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+
+            &:focus {
+                border-color: $c-secondary;
+                box-shadow: 0 0 15px rgba($c-secondary, 0.2);
+                background-color: rgba(0, 0, 0, 0.4);
+            }
+
+            option {
+                background: $c-bg;
+                color: $white;
+                padding: 10px;
+            }
+        }
+    }
 }
 
-.group-title {
-    font-size: 1.8rem;
-    font-weight: 900;
-    color: $white;
-    margin-bottom: 25px;
-    padding-left: 20px;
-    border-left: 5px solid $c-primary;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    background: linear-gradient(90deg, rgba($c-primary, 0.15) 0%, transparent 100%);
-    padding: 10px 20px;
-    border-radius: 0 10px 10px 0;
-    display: inline-block;
+// Estado Vacío (Búsqueda sin resultados)
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    margin-top: 20px;
+
+    p {
+        font-size: 1.2rem;
+        color: rgba($white, 0.7);
+
+        strong {
+            color: $c-primary;
+        }
+    }
+}
+
+// Keyframes
+@keyframes float {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(30px, -40px) scale(1.05);
+    }
+
+    66% {
+        transform: translate(-20px, 30px) scale(0.95);
+    }
+
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
 }
 
 @keyframes spin {
@@ -457,10 +620,22 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
 }
 
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 @keyframes popIn {
     from {
         opacity: 0;
-        transform: scale(0.9) translateY(20px);
+        transform: scale(0.95) translateY(20px);
     }
 
     to {

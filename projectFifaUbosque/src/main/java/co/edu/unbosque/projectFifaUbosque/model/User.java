@@ -42,7 +42,7 @@ public class User implements UserDetails {
 	private boolean isVerified = false;
 
 	@Column(name = "verificationCode")
-	private int verificationCode;
+	private int verificationCode = 0;
 
 	private boolean countActive = false;
 

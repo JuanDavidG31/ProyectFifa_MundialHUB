@@ -18,6 +18,7 @@ export class AuthService {
   private apiTicketsUrl = 'http://localhost:8080/api/tickets';
   private apiFootballUrl = 'http://localhost:8080/api/football';
   private apiMatchesUrl = 'http://localhost:8080/api/matches';
+  private apiStatsUrl = 'http://localhost:8080/api/stats';
   private tokenKey = 'authToken';
   private roleKey = 'role';
   private timeoutHandler: any;
@@ -101,7 +102,7 @@ export class AuthService {
             localStorage.removeItem('verify');
           }
 
-          if (response.role === 'ADMIN' || response.role === 'USER'|| response.role === 'SUPPORT') {
+          if (response.role === 'ADMIN' || response.role === 'USER' || response.role === 'SUPPORT') {
             this.isAuthenticatedSubject.next(true);
             this.autoLogout();
 
@@ -134,22 +135,25 @@ export class AuthService {
   logout(): void {
     if (this.timeoutHandler) clearTimeout(this.timeoutHandler);
 
+    // 🌟 NUEVO: Si el usuario cierra sesión, destruimos su sala de apuestas
+    const currentUsername = localStorage.getItem('username');
+    if (currentUsername) {
+      this.http.delete(`http://localhost:8080/betting-rooms/force-leave?username=${currentUsername}`).subscribe();
+    }
+
     // Limpiamos el almacenamiento local
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.roleKey);
     localStorage.clear();
 
-    // 3. <-- NUEVO: Limpiamos la memoria del álbum para el próximo usuario
+    // Limpiamos la memoria del álbum para el próximo usuario
     this.albumService.clearAlbumState();
 
     this.isAuthenticatedSubject.next(false);
     this.router.navigate(['/login']);
-
-    // Nota del Asistente: Como ya estamos limpiando la memoria de Angular nativamente, 
-    // podrías quitar este window.location.reload() para que la app sea más rápida (Single Page Application).
-    // Sin embargo, si lo prefieres dejar como medida de seguridad extrema, no hay problema.
-    // window.location.reload(); 
   }
+
+
 
   private autoLogout(): void {
     const payload = this.getDecodedToken();
@@ -333,4 +337,16 @@ export class AuthService {
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
     return this.http.get<boolean>(`${this.apiUrlUser}/active-support`, { headers });
   }
+
+  getTopScorers(): Observable<any[]> {
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
+    return this.http.get<any[]>(`${this.apiStatsUrl}/scorers`, { headers });
+  }
+
+  getTopAssists(): Observable<any[]> {
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
+    return this.http.get<any[]>(`${this.apiStatsUrl}/assists`, { headers });
+  }
+
+
 }
