@@ -203,7 +203,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
 
     // 🌟 NUEVO: Reducimos el relleno en celulares para ganar espacio
     @media (max-width: 768px) {
-      padding: 30px 15px; 
+      padding: 30px 15px;
       margin-bottom: 30px;
       border-radius: 16px; // Bordes un poco menos pronunciados
     }
@@ -253,8 +253,8 @@ $glass-border: rgba(255, 255, 255, 0.1);
 
     .fixtures-grid {
       display: grid;
-      // 🌟 CAMBIO: Bajamos de 300px a 260px para que la tarjeta no se desborde en celulares
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+      // 🌟 MEJORA RESPONSIVE: Usa min(100%, 260px) para evitar overflow en celulares pequeños
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
       gap: 20px;
 
       .match-card {
@@ -292,8 +292,15 @@ $glass-border: rgba(255, 255, 255, 0.1);
           align-items: center;
           text-align: center;
 
+          // 🌟 ARREGLO MÓVIL: Espaciado seguro
+          @media (max-width: 480px) {
+            gap: 5px;
+          }
+
           .team {
             flex: 1;
+            // 🌟 ARREGLO MÓVIL: Evitar que el nombre se desborde
+            min-width: 0;
 
             img {
               width: 50px;
@@ -301,12 +308,25 @@ $glass-border: rgba(255, 255, 255, 0.1);
               object-fit: contain;
               margin-bottom: 8px;
               filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.5));
+
+              @media (max-width: 480px) {
+                width: 40px;
+                height: 40px;
+              }
             }
 
             span {
               display: block;
               font-weight: 700;
               font-size: 0.95rem;
+
+              // 🌟 ARREGLO MÓVIL: Letra adaptada
+              @media (max-width: 480px) {
+                font-size: 0.75rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
             }
           }
 
@@ -315,32 +335,37 @@ $glass-border: rgba(255, 255, 255, 0.1);
             font-size: 1.2rem;
             color: rgba($white, 0.3);
             padding: 0 15px;
+
+            @media (max-width: 480px) {
+              padding: 0 5px;
+              font-size: 1rem;
+            }
           }
 
           .team-flag {
-            width: 60px; 
-            height: 40px; 
-            border-radius: 4px; 
+            width: 60px;
+            height: 40px;
+            border-radius: 4px;
             background: linear-gradient(135deg, $c-primary, $c-tertiary);
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 12px auto; // Añadimos margin auto para centrar
             box-shadow: 0 4px 15px rgba($c-primary, 0.4);
-            border: 2px solid rgba(255,255,255,0.2);
-            overflow: hidden; 
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
 
             img {
-                width: 100%; 
-                height: 100%; 
-                object-fit: cover; 
-                background-color: white; 
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              background-color: white;
             }
 
             span {
-                font-weight: 900;
-                font-size: 1.5rem;
-                color: $white;
+              font-weight: 900;
+              font-size: 1.5rem;
+              color: $white;
             }
           }
         }
@@ -359,139 +384,349 @@ $glass-border: rgba(255, 255, 255, 0.1);
 
   // teams.component.scss
 
-// ... (resto de tus estilos)
+  // ... (resto de tus estilos)
 
-    /* Archivo: teams.component.scss */
+  /* Archivo: teams.component.scss */
 
-/* --- GRID DE EQUIPOS CLASIFICADOS (Sección principal) --- */
-.grid-title {
-  font-size: 2.2rem; // Ligeramente más grande
-  font-weight: 800;
-  color: $white;
-  margin-bottom: 30px;
-  text-align: center; // Centrado como en la imagen
-}
-
-.teams-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr); // Default: Pantallas grandes
-  gap: 30px; 
-  margin-top: 20px;
-
-  // 🌟 MAGIA RESPONSIVE AQUÍ 🌟
-  @media (max-width: 1200px) {
-    grid-template-columns: repeat(4, 1fr); // Pantallas medianas/Laptops
-  }
-  
-  @media (max-width: 992px) {
-    grid-template-columns: repeat(3, 1fr); // Tablets
-  }
-  
-  @media (max-width: 650px) {
-    grid-template-columns: repeat(2, 1fr); // Celulares grandes
-    gap: 15px; // Espaciado más pequeño en celular
-  }
-
-  @media (max-width: 400px) {
-    grid-template-columns: 1fr; // Celulares pequeños (1 sola columna)
-  }
-
-  /* --- TARJETA DE EQUIPO INDIVIDUAL (El recuadro) --- */
-  .team-card {
+  // ==========================================
+  // CONTROLES: BÚSQUEDA Y TÍTULO
+  // ==========================================
+  .teams-header-controls {
     display: flex;
-    flex-direction: column;
-    align-items: center; 
-    text-align: center;
-    padding: 30px 20px; 
-    cursor: default; 
-    transition: all 0.3s ease;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+    animation: fadeIn 0.8s ease forwards;
 
-    // 🌟 NUEVO: Reducimos el relleno interno en celulares
-    @media (max-width: 650px) {
-      padding: 20px 10px;
+    // 🌟 NUEVO: Apilamos los controles y los centramos en celular
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 15px;
     }
 
-    background: rgba(255, 255, 255, 0.03); 
-    backdrop-filter: blur(12px); 
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08); 
-    border-radius: 16px; 
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); 
+    .title-group {
+      .grid-title {
+        margin: 0 0 5px 0;
+        text-align: left;
+        font-size: 2.2rem;
+        font-weight: 800;
+        border: none;
+        padding: 0;
 
-    &:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 15px 35px rgba($c-primary, 0.2);
-      border-color: rgba($c-primary, 0.4);
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    /* --- ESTILO RECTANGULAR DE LA BANDERA --- */
-    .team-flag-wrapper {
-      width: 140px; 
-      height: 95px;
-      border-radius: 6px;
-      overflow: hidden;
-      margin-bottom: 20px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-      border: 1px solid rgba(255,255,255,0.1);
-      flex-shrink: 0;
-
-      // 🌟 NUEVO: Bandera un poco más pequeña en celulares muy pequeños
-      @media (max-width: 400px) {
-        width: 120px;
-        height: 80px;
-        margin-bottom: 15px;
+        @media (max-width: 768px) {
+          font-size: 1.8rem;
+          text-align: center;
+        }
       }
 
-      img {
+      .teams-count {
+        color: rgba($white, 0.6);
+        font-size: 0.95rem;
+        font-weight: 500;
+
+        @media (max-width: 768px) {
+          display: block;
+          text-align: center;
+        }
+      }
+    }
+
+    .search-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+
+      @media (max-width: 768px) {
+        flex-direction: column; // Apila los filtros verticalmente
+      }
+
+      .search-box {
+        position: relative;
+
+        @media (max-width: 768px) {
+          width: 100%;
+        }
+
+        // Ancho 100% en móvil
+
+        input {
+          background: rgba(0, 0, 0, 0.4);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
+          padding: 10px 15px 10px 35px;
+          color: $white;
+          width: 250px;
+          font-family: 'Poppins', sans-serif;
+          transition: border-color 0.3s;
+
+          @media (max-width: 768px) {
+            width: 100%;
+          }
+
+          // Ancho 100% en móvil
+
+          &::placeholder {
+            color: rgba($white, 0.4);
+          }
+
+          &:focus {
+            border-color: $c-secondary;
+            outline: none;
+            box-shadow: 0 0 10px rgba($c-secondary, 0.3);
+          }
+        }
+
+        .search-icon {
+          position: absolute;
+          left: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 0.9rem;
+          opacity: 0.6;
+        }
+      }
+
+      .mock-filter {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba($white, 0.7);
+        padding: 10px 15px;
+        border-radius: 8px;
+        outline: none;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+
+        @media (max-width: 768px) {
+          width: 100%;
+        }
+
+        // Ancho 100% en móvil
+
+        &:hover {
+          border-color: rgba(255, 255, 255, 0.3);
+        }
+      }
+    }
+  }
+
+  // ==========================================
+  // GRID ESTILO "TRADING CARDS"
+  // ==========================================
+  .teams-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+
+    // 🌟 ARREGLO MÓVIL: Forzamos EXACTAMENTE 2 columnas para que no se desborde
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .trading-card {
+      position: relative;
+      height: 320px;
+      border-radius: 16px;
+      overflow: hidden;
+      padding: 0;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      background: $c-bg;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+
+      // 🌟 ARREGLO MÓVIL: Altura proporcional para que no se vea estirada
+      @media (max-width: 768px) {
+        height: 200px;
+        border-radius: 12px;
+      }
+
+      &:hover {
+        transform: translateY(-10px) scale(1.02);
+        z-index: 2;
+      }
+
+      // MAGIA: Bordes Neón
+      &:nth-child(4n+1) {
+        border-color: #00d2ff;
+        box-shadow: 0 0 15px rgba(#00d2ff, 0.4);
+
+        &:hover {
+          box-shadow: 0 15px 35px rgba(#00d2ff, 0.6);
+        }
+      }
+
+      &:nth-child(4n+2) {
+        border-color: #f39c12;
+        box-shadow: 0 0 15px rgba(#f39c12, 0.4);
+
+        &:hover {
+          box-shadow: 0 15px 35px rgba(#f39c12, 0.6);
+        }
+      }
+
+      &:nth-child(4n+3) {
+        border-color: #ef4444;
+        box-shadow: 0 0 15px rgba(#ef4444, 0.4);
+
+        &:hover {
+          box-shadow: 0 15px 35px rgba(#ef4444, 0.6);
+        }
+      }
+
+      &:nth-child(4n+4) {
+        border-color: #ec4899;
+        box-shadow: 0 0 15px rgba(#ec4899, 0.4);
+
+        &:hover {
+          box-shadow: 0 15px 35px rgba(#ec4899, 0.6);
+        }
+      }
+
+      .card-bg-flag {
+        position: absolute;
         width: 100%;
         height: 100%;
         object-fit: cover;
         object-position: center;
-        background-color: white;
+        z-index: 1;
+        transition: transform 0.5s ease;
       }
 
-      .fallback-flag {
+      .fallback-bg {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+      }
+
+      &:hover .card-bg-flag {
+        transform: scale(1.1);
+      }
+
+      .card-overlay {
+        position: absolute;
+        bottom: 0;
         width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, $c-primary, $c-tertiary);
-        font-size: 2.2rem;
-        font-weight: 900;
-        color: white;
+        height: 75%;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 50%, transparent 100%);
+        z-index: 2;
       }
-    }
 
-    /* --- DETALLES DE LA TARJETA --- */
-    .card-details {
-      width: 100%;
+      .card-top {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        right: 15px;
+        z-index: 3;
+        display: flex;
+        justify-content: space-between;
 
-      h3 {
-        margin: 0 0 10px 0;
-        font-size: 1.6rem;
-        font-weight: 800;
-        color: $white;
-        
-        @media (max-width: 650px) {
-          font-size: 1.3rem; // Texto un poco más pequeño
+        @media (max-width: 768px) {
+          top: 10px;
+          left: 10px;
+          right: 10px;
+        }
+
+        .mini-crest {
+          width: 35px;
+          height: 35px;
+          background: $white;
+          border-radius: 50%;
+          padding: 3px;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          @media (max-width: 768px) {
+            width: 28px;
+            height: 28px;
+            padding: 2px;
+          }
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+          }
+
+          span {
+            color: #000;
+            font-weight: 800;
+            font-size: 0.8rem;
+          }
+        }
+
+        .mini-icon {
+          font-size: 1.1rem;
+          background: rgba(0, 0, 0, 0.6);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 50%;
+          width: 35px;
+          height: 35px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          backdrop-filter: blur(5px);
+
+          @media (max-width: 768px) {
+            width: 28px;
+            height: 28px;
+            font-size: 0.8rem;
+          }
         }
       }
 
-      .stadium-text {
-        margin: 0;
-        font-size: 0.95rem;
-        color: rgba($white, 0.6);
-        line-height: 1.4;
+      .card-bottom {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        z-index: 3;
+        text-align: left;
 
-        @media (max-width: 650px) {
-          font-size: 0.85rem; // Texto un poco más pequeño
+        @media (max-width: 768px) {
+          bottom: 10px;
+          left: 10px;
+          right: 10px;
+        }
+
+        h3 {
+          font-size: 1.6rem;
+          margin: 0;
+          font-weight: 900;
+          text-transform: uppercase;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+
+          // 🌟 ARREGLO MÓVIL: Evita que nombres muy largos rompan la carta
+          @media (max-width: 768px) {
+            font-size: 1.05rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; // Ej: "ESTADOS UN..."
+          }
+        }
+
+        .card-status {
+          font-size: 0.75rem;
+          color: rgba(255, 255, 255, 0.8);
+          margin: 5px 0 0 0;
+          font-weight: 600;
+
+          // 🌟 ARREGLO MÓVIL: Una sola línea asegurada
+          @media (max-width: 768px) {
+            font-size: 0.6rem;
+            margin: 3px 0 0 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
         }
       }
     }
   }
-}
 
   // --- ALERTAS Y PANTALLA DE CARGA ---
   .alert-box {

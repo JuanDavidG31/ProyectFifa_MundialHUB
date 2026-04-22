@@ -5,7 +5,7 @@
 
   <header class="top-nav">
     <div class="logo-container">
-      <div class="icon-pulse">⚽</div>
+      <img src="assets/mundial.png" alt="Logo MundialHub" class="icon-pulse logo-image">
       <h1 class="logo-text">Mundial<span class="gradient-text">Hub</span></h1>
     </div>
 
@@ -15,7 +15,8 @@
 
         <div class="avatar-group">
           <div class="avatar-container">
-            <img *ngIf="userAvatar" [src]="userAvatar" alt="Avatar" class="avatar-img">
+            <img *ngIf="userAvatar" [src]="userAvatar" alt="Avatar" class="avatar-img" (click)="toggleAvatarModal()"
+              style="cursor: pointer;">
             <div *ngIf="!userAvatar" class="avatar-placeholder">👤</div>
           </div>
 
@@ -31,76 +32,94 @@
     </div>
   </header>
 
-  <main class="main-content">
-    <section class="hero-section">
-      <h2 class="hero-title">¿Qué quieres hacer hoy?</h2>
-      <p class="hero-subtitle">Elige tu próximo movimiento en el torneo más grande del mundo.</p>
+  <main class="main-content app-layout">
+
+    <section class="user-profile-section">
+      <div class="user-details">
+        <h2 class="favorite-team">{{ favoriteTeam }}</h2>
+        <span class="subtitle">Equipo favorito</span>
+      </div>
     </section>
 
-    <div class="modules-grid">
-
-      <a routerLink="/album" class="module-card">
-        <div class="card-icon">📒</div>
-        <div class="card-body">
-          <h3>Mi Álbum</h3>
-          <p>Abre sobres y completa tu equipo ideal.</p>
-        </div>
-
-      </a>
-
-      <a routerLink="/apuestas" class="module-card">
-        <div class="card-icon">🎯</div>
-        <div class="card-body">
-          <h3>Pronósticos</h3>
-          <p>Demuestra cuánto sabes y gana premios.</p>
-        </div>
-
-      </a>
-
-      <a routerLink="/estadisticas" class="module-card">
-        <div class="card-icon">📊</div>
-        <div class="card-body">
-          <h3>Estadísticas</h3>
-          <p>Sigue los resultados en tiempo real.</p>
-        </div>
-
-      </a>
-
-      <a routerLink="/equipos" class="module-card">
-        <div class="card-icon">🌍</div>
-        <div class="card-body">
-          <h3>Equipos</h3>
-          <p>Conoce a las selecciones clasificadas.</p>
-        </div>
-
-      </a>
-
-      <a *ngIf="isAdmin" routerLink="/admin" class="module-card admin-variant">
-        <div class="card-icon">⚙️</div>
-        <div class="card-body">
-          <h3>Panel Admin</h3>
-          <p>Gestionar usuarios y torneos.</p>
-        </div>
-
-      </a>
-
-      <a *ngIf="isSupport" routerLink="/support" class="module-card support-variant" (click)="updateStatusConnect()">
-        <div class="card-icon">🎧</div>
-        <div class="card-body">
-          <h3>Panel Soporte</h3>
-          <p>Atención de casos y auditoría.</p>
-        </div>
-      </a>
-
-      <a routerLink="/tickets" class="module-card">
-        <div class="card-icon">🎟️</div>
-        <div class="card-body">
-          <h3>Entradas</h3>
-          <p>Asegura y gestiona tus pases al estadio.</p>
-        </div>
-      </a>
-
+    <div class="fancy-divider-container">
+      <input type="range" class="fancy-slider" min="0" max="100" [value]="scrollProgress"
+        (input)="onScrollRangeChange($event)">
     </div>
+
+    <section class="cards-carousel" #carousel (scroll)="onCarouselScroll($event)">
+
+      <a routerLink="/album" class="app-card border-cyan">
+        <h4 class="card-title">Album</h4>
+        <div class="card-image-box bg-album">
+          <h2>FIFA</h2>
+        </div>
+        <p class="card-desc">Completa el album del mundial 2026</p>
+      </a>
+
+      <a routerLink="/apuestas" class="app-card border-magenta">
+        <h4 class="card-title">Pronosticos</h4>
+        <div class="card-image-box bg-pronosticos">
+          <img src="assets/pronosticos.png" alt="Logo de Pronosticos" class="logo-image">
+        </div>
+        <p class="card-desc">Apuesta a marcadores y gana puntos</p>
+      </a>
+
+      <a routerLink="/tickets" class="app-card border-cyan">
+        <h4 class="card-title">Entradas</h4>
+        <div class="card-image-box bg-entradas">
+          <span class="icon-big">🎟️</span>
+        </div>
+        <p class="card-desc">Asegura y gestiona tus pases al estadio</p>
+      </a>
+
+      <a routerLink="/estadisticas" class="app-card border-cyan">
+        <h4 class="card-title">Estadísticas</h4>
+        <div class="card-image-box bg-estadisticas">
+          <span class="icon-big">📊</span>
+        </div>
+        <p class="card-desc">Sigue los resultados en tiempo real</p>
+      </a>
+
+      <a routerLink="/equipos" class="app-card border-magenta">
+        <h4 class="card-title">Equipos</h4>
+        <div class="card-image-box bg-equipos">
+          <img src="assets/equipos.png" alt="Logo de Equipos" class="logo-image">
+        </div>
+        <p class="card-desc">Conoce a las selecciones clasificadas</p>
+      </a>
+
+    </section>
+
+    <section class="admin-cards-container" *ngIf="isAdmin || isSupport">
+
+      <a *ngIf="isAdmin" routerLink="/admin" class="app-card border-error">
+        <h4 class="card-title">Admin</h4>
+        <div class="card-image-box bg-admin">
+          <span class="icon-big">⚙️</span>
+        </div>
+        <p class="card-desc">Panel de control del sistema</p>
+      </a>
+
+      <a *ngIf="isSupport" routerLink="/support" class="app-card border-warning" (click)="updateStatusConnect()">
+        <h4 class="card-title">Soporte</h4>
+        <div class="card-image-box bg-support">
+          <span class="icon-big">🎧</span>
+        </div>
+        <p class="card-desc">Atención de casos y auditoría</p>
+      </a>
+
+    </section>
+
+    <section class="news-section">
+      <div class="news-header">
+        <h3>Noticias</h3>
+        <div class="arrow-icon">➔</div>
+      </div>
+      <div class="news-box dashed">
+        <p>No hay noticias por el momento...</p>
+      </div>
+    </section>
+
   </main>
 
   <div class="tutorial-overlay" *ngIf="showTutorial">
@@ -168,6 +187,12 @@
         </button>
       </div>
 
+    </div>
+  </div>
+  <div class="avatar-modal-overlay" *ngIf="isAvatarModalOpen" (click)="toggleAvatarModal()">
+    <div class="avatar-modal-content" (click)="$event.stopPropagation()">
+      <button class="close-modal" (click)="toggleAvatarModal()">✕</button>
+      <img [src]="userAvatar" alt="Avatar Ampliado" class="expanded-avatar">
     </div>
   </div>
 </div>

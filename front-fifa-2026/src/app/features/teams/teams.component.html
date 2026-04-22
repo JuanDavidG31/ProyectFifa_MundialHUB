@@ -50,7 +50,7 @@
 
           </div>
 
-          
+
 
         </div>
       </div>
@@ -61,22 +61,51 @@
       </div>
     </div>
 
-    <h2 class="grid-title">Equipos Clasificados Oficialmente</h2>
+    <div class="teams-header-controls">
+      <div class="title-group">
+        <h2 class="grid-title">Equipos Clasificados</h2>
+        <span class="teams-count">{{ filteredTeams.length }} Selecciones Clasificadas</span>
+      </div>
 
-<div class="teams-grid">
-      <div class="team-card glass-card" *ngFor="let team of qualifiedTeams" (click)="verPartidosDeEquipo(team.name)">
-        
-        <div class="team-flag-wrapper">
-          <img *ngIf="team.crest" [src]="team.crest" alt="Bandera de {{ team.name }}" object-fit="cover">
-          <div *ngIf="!team.crest" class="fallback-flag">{{ team.name.charAt(0) }}</div>
+      <div class="search-filters">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Buscar equipo..." [(ngModel)]="searchTerm" (input)="filterTeams()">
+        </div>
+        <select class="mock-filter">
+          <option>Continente: Todos</option>
+        </select>
+        <select class="mock-filter">
+          <option>Grupo: Todos</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="teams-grid">
+      <div class="team-card trading-card" *ngFor="let team of filteredTeams" (click)="verPartidosDeEquipo(team.name)">
+
+        <img *ngIf="team.crest" [src]="team.crest" class="card-bg-flag" alt="Bandera">
+        <div *ngIf="!team.crest" class="card-bg-flag fallback-bg"></div>
+        <div class="card-overlay"></div>
+        <div class="card-top">
+          <div class="mini-crest">
+            <img *ngIf="team.crest" [src]="team.crest" alt="escudo">
+            <span *ngIf="!team.crest">{{ team.name.charAt(0) }}</span>
+          </div>
+          <div class="mini-icon">🏟️</div>
         </div>
 
-        <div class="card-details">
+        <div class="card-bottom">
           <h3>{{ team.name }}</h3>
-          <span class="country">Mundial 2026</span>
+          <p class="card-status">Clasificado - Mundial 2026</p>
+
         </div>
 
       </div>
+    </div>
+
+    <div class="alert-box error" *ngIf="filteredTeams.length === 0">
+      No se encontraron equipos que coincidan con "{{ searchTerm }}".
     </div>
 
   </main>

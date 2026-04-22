@@ -17,4 +17,9 @@ public class MatchController {
 	public ResponseEntity<?> getWcMatches() {
 		return ResponseEntity.ok(matchService.getWcMatches());
 	}
+	
+	@GetMapping("/all")
+	public ResponseEntity<?> getAllLiveMatches() {
+		return ResponseEntity.ok(matchService.getAllLiveMatches());
+	}
 }

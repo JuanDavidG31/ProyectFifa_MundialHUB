@@ -348,5 +348,10 @@ export class AuthService {
     return this.http.get<any[]>(`${this.apiStatsUrl}/assists`, { headers });
   }
 
+  getAllMatches(): Observable<any[]> {
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
+    return this.http.get<any[]>(`${this.apiMatchesUrl}/all`, { headers });
+  }
+
 
 }

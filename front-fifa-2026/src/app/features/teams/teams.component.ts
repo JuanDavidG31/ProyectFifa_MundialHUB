@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-teams',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './teams.component.html',
   styleUrls: ['./teams.component.scss']
 })
@@ -17,6 +17,9 @@ export class TeamsComponent implements OnInit {
   qualifiedTeams: any[] = [];
   myFixtures: any[] = [];
   todosLosPartidosDelMundial: any[] = [];
+
+  searchTerm: string = '';
+  filteredTeams: any[] = [];
 
   // 🌟 Ya no inyectamos HttpClient, solo usamos tu AuthService
   constructor(private authService: AuthService) {}
@@ -51,6 +54,7 @@ export class TeamsComponent implements OnInit {
               });
 
               this.qualifiedTeams = Array.from(teamsMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+              this.filteredTeams = [...this.qualifiedTeams];
               this.isLoading = false;
             },
             error: (err) => {
@@ -64,6 +68,16 @@ export class TeamsComponent implements OnInit {
           this.isLoading = false;
         }
       });
+  }
+
+  filterTeams() {
+    if (!this.searchTerm) {
+      this.filteredTeams = this.qualifiedTeams;
+    } else {
+      this.filteredTeams = this.qualifiedTeams.filter(t => 
+        t.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
   }
 
   verPartidosDeEquipo(nombreEquipo: string) {

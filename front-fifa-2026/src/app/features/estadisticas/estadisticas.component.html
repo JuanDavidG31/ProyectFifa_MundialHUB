@@ -35,37 +35,68 @@
                 <div class="neon-spinner"></div>
             </div>
 
-            <div class="live-section fade-in" *ngIf="!isLoading && activeTab === 'envivo'">
-                <div class="no-live-matches" *ngIf="liveMatches.length === 0">
-                    <span class="icon-huge">📡</span>
-                    <p>No hay partidos en juego en este momento.</p>
-                </div>
+            <div class="matches-grid fade-in" *ngIf="activeTab === 'envivo'">
 
-                <div class="live-match-card" *ngFor="let match of liveMatches">
+                <div class="match-card" *ngFor="let match of liveMatchesList; trackBy: trackByMatchId"
+                    [ngClass]="match.status.toLowerCase()">
                     <div class="match-header">
-                        <div class="live-badge">🔴 EN DIRECTO</div>
-                        <div class="match-minute">{{ match.minute }}</div>
+                        <span class="status-badge">
+                            <span *ngIf="match.status === 'IN_PLAY' || match.status === 'PAUSED'"
+                                class="pulse-dot"></span>
+                            {{ translateStatus(match.status) }}
+                        </span>
+                        <span class="match-date">{{ match.utcDate | date:'dd MMM, HH:mm' }}</span>
                     </div>
-                    <div class="scoreboard">
-                        <div class="team">
-                            <img [src]="match.homeFlag" [alt]="match.homeTeam">
+
+                    <div class="match-body">
+                        <div class="team-block" [ngClass]="{'tbd': match.homeTeam === 'Por definir'}">
+                            <div class="shield-container">
+                                <div class="shield-placeholder" *ngIf="match.homeTeam === 'Por definir'">?</div>
+                                <img *ngIf="match.homeTeam !== 'Por definir'" [src]="match.homeCrest"
+                                    [alt]="match.homeTeam" class="team-flag">
+                            </div>
                             <span class="team-name">{{ match.homeTeam }}</span>
                         </div>
-                        <div class="score-container">
-                            <span class="score">{{ match.homeScore }}</span>
-                            <span class="divider">-</span>
-                            <span class="score">{{ match.awayScore }}</span>
+
+                        <div class="score-block">
+                            <span class="vs-badge"
+                                *ngIf="match.status === 'SCHEDULED' || match.status === 'TIMED'">VS</span>
+
+                            <div class="score-numbers" *ngIf="match.status !== 'SCHEDULED' && match.status !== 'TIMED'">
+                                <div class="score-box">{{ match.score.fullTime.home !== null ? match.score.fullTime.home
+                                    : 0 }}</div>
+                                <span class="score-divider">-</span>
+                                <div class="score-box">{{ match.score.fullTime.away !== null ? match.score.fullTime.away
+                                    : 0 }}</div>
+                            </div>
                         </div>
-                        <div class="team">
-                            <img [src]="match.awayFlag" [alt]="match.awayTeam">
+
+                        <div class="team-block" [ngClass]="{'tbd': match.awayTeam === 'Por definir'}">
+                            <div class="shield-container">
+                                <div class="shield-placeholder" *ngIf="match.awayTeam === 'Por definir'">?</div>
+                                <img *ngIf="match.awayTeam !== 'Por definir'" [src]="match.awayCrest"
+                                    [alt]="match.awayTeam" class="team-flag">
+                            </div>
                             <span class="team-name">{{ match.awayTeam }}</span>
                         </div>
                     </div>
-                    <div class="match-events">
-                        <div class="event-item" *ngFor="let event of match.events">
-                            {{ event }}
-                        </div>
+
+                    <div class="match-footer" *ngIf="match.status !== 'SCHEDULED' && match.status !== 'TIMED'">
+                        <span class="extra-info" *ngIf="match.score.halfTime.home !== null">
+                            MT: {{ match.score.halfTime.home }} - {{ match.score.halfTime.away }}
+                        </span>
+                        <span class="extra-info highlight"
+                            *ngIf="match.score.duration === 'EXTRA_TIME' || match.score.duration === 'PENALTY_SHOOTOUT'">
+                            TE: {{ match.score.extraTime.home }} - {{ match.score.extraTime.away }}
+                        </span>
+                        <span class="extra-info penalty" *ngIf="match.score.duration === 'PENALTY_SHOOTOUT'">
+                            PEN: {{ match.score.penalties.home }} - {{ match.score.penalties.away }}
+                        </span>
                     </div>
+                </div>
+
+                <div *ngIf="liveMatchesList.length === 0" class="no-data">
+                    <p>No hay partidos disponibles en este momento.</p>
                 </div>
             </div>
 

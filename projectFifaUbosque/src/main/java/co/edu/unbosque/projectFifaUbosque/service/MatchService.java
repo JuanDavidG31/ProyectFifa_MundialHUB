@@ -114,8 +114,6 @@ public class MatchService {
 		return assistsList.stream().limit(10).collect(Collectors.toList());
 	}
 
-	
-
 	private Map<String, String> getTeamCrests() {
 		if (!teamCrestsCache.isEmpty()) {
 			return teamCrestsCache;
@@ -230,5 +228,73 @@ public class MatchService {
 		}
 
 		return matches;
+	}
+
+	// NUEVO MÉTODO PARA OBTENER TODOS LOS PARTIDOS (EN VIVO, TERMINADOS,
+	// PROGRAMADOS)
+	public List<Map<String, Object>> getAllLiveMatches() {
+		// NOTA: Aquí está "CL". Cuando empiece el mundial, cámbialo a "WC"
+		String url = "https://api.football-data.org/v4/competitions/PD/matches";
+		String response = httpHandler.doGetWithAuth(url, "X-Auth-Token", apiKey);
+
+		JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();
+		JsonArray matchesArray = jsonObject.getAsJsonArray("matches");
+
+		List<Map<String, Object>> result = new ArrayList<>();
+
+		for (JsonElement el : matchesArray) {
+			JsonObject m = el.getAsJsonObject();
+			Map<String, Object> matchData = new HashMap<>();
+
+			matchData.put("id", m.get("id").getAsLong());
+			matchData.put("utcDate", m.get("utcDate").getAsString());
+			matchData.put("status", m.get("status").getAsString());
+			matchData.put("stage", m.has("stage") && !m.get("stage").isJsonNull() ? m.get("stage").getAsString() : "");
+
+			JsonObject homeTeam = m.getAsJsonObject("homeTeam");
+			matchData.put("homeTeam",
+					homeTeam.has("name") && !homeTeam.get("name").isJsonNull() ? homeTeam.get("name").getAsString()
+							: "Por definir");
+			matchData.put("homeCrest",
+					homeTeam.has("crest") && !homeTeam.get("crest").isJsonNull() ? homeTeam.get("crest").getAsString()
+							: "https://crests.football-data.org/764.svg"); // Escudo por defecto
+
+			JsonObject awayTeam = m.getAsJsonObject("awayTeam");
+			matchData.put("awayTeam",
+					awayTeam.has("name") && !awayTeam.get("name").isJsonNull() ? awayTeam.get("name").getAsString()
+							: "Por definir");
+			matchData.put("awayCrest",
+					awayTeam.has("crest") && !awayTeam.get("crest").isJsonNull() ? awayTeam.get("crest").getAsString()
+							: "https://crests.football-data.org/764.svg");
+
+			// Procesar el Marcador (Score)
+			JsonObject score = m.getAsJsonObject("score");
+			Map<String, Object> scoreData = new HashMap<>();
+			scoreData.put("duration",
+					score.has("duration") && !score.get("duration").isJsonNull() ? score.get("duration").getAsString()
+							: "REGULAR");
+
+			scoreData.put("fullTime", parseScoreObj(score.getAsJsonObject("fullTime")));
+			scoreData.put("halfTime", parseScoreObj(score.getAsJsonObject("halfTime")));
+			scoreData.put("extraTime", parseScoreObj(score.getAsJsonObject("extraTime")));
+			scoreData.put("penalties", parseScoreObj(score.getAsJsonObject("penalties")));
+
+			matchData.put("score", scoreData);
+			result.add(matchData);
+		}
+		return result;
+	}
+
+	// Función auxiliar para leer los goles de forma segura
+	private Map<String, Integer> parseScoreObj(JsonObject obj) {
+		Map<String, Integer> s = new HashMap<>();
+		if (obj != null && !obj.isJsonNull()) {
+			s.put("home", obj.has("home") && !obj.get("home").isJsonNull() ? obj.get("home").getAsInt() : null);
+			s.put("away", obj.has("away") && !obj.get("away").isJsonNull() ? obj.get("away").getAsInt() : null);
+		} else {
+			s.put("home", null);
+			s.put("away", null);
+		}
+		return s;
 	}
 }

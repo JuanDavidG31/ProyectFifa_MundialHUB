@@ -8,22 +8,40 @@ $c-tertiary: #8b5cf6; // Morado neón
 $c-error: #ef4444; // Rojo Alerta
 $c-warning: #f59e0b;
 $white: #ffffff;
+$c-white: #ffffff;
 $glass-bg: rgba(255, 255, 255, 0.05);
 $glass-border: rgba(255, 255, 255, 0.15);
 
+::ng-deep html,
 ::ng-deep body {
   margin: 0 !important;
+  padding: 0 !important;
   background-color: $c-bg;
   font-family: 'Poppins', 'Inter', sans-serif;
   overflow-x: hidden;
+  height: 100%; // Mantiene la pantalla fija a su tamaño real
+}
+
+::ng-deep * {
+  box-sizing: border-box;
+}
+
+// NUEVO: Le damos forma al contenedor padre de Angular
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
 }
 
 .home-wrapper {
   position: relative;
-  min-height: 100vh;
+  flex: 1; // Ocupa el espacio del host
   width: 100%;
   color: $white;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 // ==========================================
@@ -107,8 +125,14 @@ $glass-border: rgba(255, 255, 255, 0.15);
     gap: 10px;
 
     .icon-pulse {
-      font-size: 2rem;
-      animation: heartbeat 2s infinite;
+      animation: heartbeat 2s infinite; // Mantenemos la animación
+    }
+
+    // NUEVO: Definimos el tamaño de tu imagen
+    .logo-image {
+      width: 40px; // Puedes aumentar o disminuir este valor según prefieras
+      height: auto; // Mantiene la proporción original de la imagen
+      object-fit: contain;
     }
 
     .logo-text {
@@ -255,214 +279,371 @@ $glass-border: rgba(255, 255, 255, 0.15);
 }
 
 // ==========================================
-// CONTENIDO PRINCIPAL
+// CONTENIDO PRINCIPAL: ESTILO APP NATIVA
 // ==========================================
 .main-content {
   position: relative;
   z-index: 10;
-  padding: 60px 5%;
+  padding: 20px 5%;
   max-width: 1200px;
   margin: 0 auto;
-
-  .hero-section {
-    text-align: center;
-    margin-bottom: 60px;
-    animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-
-    .hero-title {
-      font-size: 3.5rem;
-      margin-bottom: 10px;
-      font-weight: 900;
-      letter-spacing: -1px;
-      color: $white;
-
-      @media (max-width: 600px) {
-        font-size: 2.5rem;
-      }
-    }
-
-    .hero-subtitle {
-      color: rgba($white, 0.7);
-      font-size: 1.2rem;
-      font-weight: 500;
-    }
-  }
-}
-
-@keyframes popIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9) translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-// ==========================================
-// GRID DE MÓDULOS (TARJETAS GLASSMORPHISM)
-// ==========================================
-.modules-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
   gap: 30px;
 }
 
-.module-card {
-  background: $glass-bg;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid $glass-border;
-  border-radius: 24px;
-  padding: 35px 30px;
-  text-decoration: none;
-  color: $white;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+// 1. PERFIL DE USUARIO
+.user-profile-section {
   display: flex;
   align-items: center;
+  justify-content: center; // Centramos el contenido
+  padding: 10px 0 20px 0;
+
+  .user-details {
+    text-align: center; // Centramos el texto
+
+    .favorite-team {
+      margin: 0;
+      font-size: 3rem; // Letra más grande para destacar
+      font-weight: 800;
+      color: $c-secondary;
+      letter-spacing: -1px;
+      text-transform: uppercase;
+      text-shadow: 0 0 20px rgba($c-secondary, 0.4); // Brillo de neón sutil
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: rgba($white, 0.6);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+  }
+}
+
+// 2. DIVISOR ELEGANTE (AHORA DESLIZABLE)
+.fancy-divider-container {
+  width: 100%;
+  margin: 10px 0 20px 0;
+  display: flex;
+  align-items: center;
+
+  .fancy-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 2px;
+    background: rgba($white, 0.3);
+    outline: none;
+    border-radius: 2px;
+    cursor: pointer;
+
+    // Disfrazamos el "agarrador" para que parezca tu botón de 3 puntos
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 50px;
+      height: 24px;
+      background-color: rgba(11, 15, 25, 1);
+      border: 2px solid $white;
+      border-radius: 20px;
+      cursor: grab;
+
+      // Dibujamos los "•••" usando SVG directamente en CSS para que quede perfecto
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='24' viewBox='0 0 50 24'%3E%3Ccircle cx='17' cy='12' r='2' fill='white'/%3E%3Ccircle cx='25' cy='12' r='2' fill='white'/%3E%3Ccircle cx='33' cy='12' r='2' fill='white'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      transition: transform 0.1s;
+
+      &:active {
+        cursor: grabbing;
+        transform: scale(1.1); // Efecto al hacer clic y arrastrar
+      }
+    }
+
+    &::-moz-range-thumb {
+      width: 50px;
+      height: 24px;
+      background-color: rgba(11, 15, 25, 1);
+      border: 2px solid $white;
+      border-radius: 20px;
+      cursor: grab;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='24' viewBox='0 0 50 24'%3E%3Ccircle cx='17' cy='12' r='2' fill='white'/%3E%3Ccircle cx='25' cy='12' r='2' fill='white'/%3E%3Ccircle cx='33' cy='12' r='2' fill='white'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+
+      &:active {
+        cursor: grabbing;
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+// 3. CARRUSEL DE TARJETAS
+.cards-carousel {
+  display: flex;
   gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 15px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  // SOLUCIÓN PARA PC: 5 Columnas exactas
+  @media (min-width: 1200px) {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); // NUEVO: 5 columnas
+    overflow-x: visible;
+
+    .app-card {
+      min-width: 0; // Permite que las tarjetas se encojan un poco para encajar las 5 en pantallas medianas
+    }
+  }
+}
+
+// NUEVO: CONTENEDOR PARA PANELES DE ADMIN/SOPORTE
+.admin-cards-container {
+  display: grid;
+  gap: 20px;
+  // Si hay 1 tarjeta, ocupa todo el ancho. Si hay 2, se parten a la mitad (50% cada una).
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  margin-bottom: 10px;
+
+  .app-card {
+
+    // Le damos un poco más de altura a la imagen para que se sienta realmente "Más grande"
+    .card-image-box {
+      height: 150px;
+    }
+
+    // Títulos ligeramente más grandes para denotar jerarquía
+    .card-title {
+      font-size: 1.3rem;
+    }
+  }
+}
+
+.app-card {
+  min-width: 220px;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.03); // Efecto cristal más sutil
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px; // Bordes un poco más redondeados y modernos
+  padding: 20px; // Un poco más de espacio interno para que respiren
+  text-decoration: none;
+  color: $white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-  animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  border: 1px solid rgba(255, 255, 255, 0.05); // Borde base casi invisible
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); // Animación elástica y fluida
 
-  // Efecto de brillo de fondo al pasar el mouse
-  &::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 150px;
-    height: 150px;
-    background: radial-gradient(circle, rgba($c-secondary, 0.4) 0%, transparent 70%);
-    border-radius: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    transition: transform 0.6s ease;
-    z-index: 0;
-    pointer-events: none;
-  }
-
+  // Efecto hover premium
   &:hover {
-    transform: translateY(-10px) scale(1.02);
-    border-color: rgba($c-secondary, 0.5);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba($c-secondary, 0.1);
-    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-8px); // Se eleva en lugar de solo crecer
+    background: rgba(255, 255, 255, 0.06);
 
-    &::after {
-      transform: translate(-50%, -50%) scale(3); // Expande el brillo interno
-    }
-
-    .card-arrow {
-      transform: translateX(8px) scale(1.2);
-      opacity: 1;
-    }
-
-    .card-icon {
-      transform: scale(1.2) rotate(-10deg);
+    .card-image-box {
+      transform: scale(1.05);
     }
   }
 
-  .card-icon {
-    font-size: 3rem;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 1;
-    text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  // Toques de luz en el borde superior en lugar de rodear toda la tarjeta
+  &.border-cyan {
+    border-top: 1px solid rgba($c-secondary, 0.6);
+
+    &:hover {
+      box-shadow: 0 15px 35px rgba($c-secondary, 0.15);
+      border-color: $c-secondary;
+    }
   }
 
-  .card-body {
-    flex: 1;
-    z-index: 1;
+  &.border-magenta {
+    border-top: 1px solid rgba($c-primary, 0.6);
+
+    &:hover {
+      box-shadow: 0 15px 35px rgba($c-primary, 0.15);
+      border-color: $c-primary;
+    }
+  }
+
+  &.border-error {
+    border-top: 1px solid rgba($c-error, 0.6);
+
+    &:hover {
+      box-shadow: 0 15px 35px rgba($c-error, 0.15);
+      border-color: $c-error;
+    }
+  }
+
+  &.border-warning {
+    border-top: 1px solid rgba($c-warning, 0.6);
+
+    &:hover {
+      box-shadow: 0 15px 35px rgba($c-warning, 0.15);
+      border-color: $c-warning;
+    }
+  }
+
+  .card-title {
+    margin: 0 0 15px 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+
+  .card-image-box {
+    width: 100%;
+    height: 130px; // Ligeramente más alto
+    border-radius: 14px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s ease;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5); // Sombra interna para dar profundidad
+
+    // Mejoramos los textos y emojis para que destaquen más
+    h2 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      margin: 0;
+      color: rgba($white, 0.9);
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .icon-big {
+      font-size: 3.5rem;
+      filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.4)); // Sombra al emoji
+    }
+
+    // Mejoramos los textos y emojis para que destaquen más
+    h2 {
+      font-size: 3.2rem;
+      font-weight: 900;
+      margin: 0;
+      color: rgba($white, 0.9);
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .icon-big {
+      font-size: 3.5rem;
+      filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.4)); // Sombra al emoji
+    }
+
+    // 👇 NUEVO: Estilos para la imagen dentro de las tarjetas 👇
+    img.logo-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; // Hace que llene la caja (si quieres que no se recorte absolutamente nada, cámbialo a 'contain')
+      border-radius: 14px; // Mantiene las esquinas redondeadas de la caja
+    }
+
+    // Suavizamos los gradientes de fondo
+    &.bg-album {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+    }
+
+    &.bg-pronosticos {
+      background: linear-gradient(135deg, #0f3443, #34e89e);
+    }
+
+    &.bg-estadisticas {
+      background: linear-gradient(135deg, #2b1055, #7597de);
+    }
+
+    &.bg-equipos {
+      background: linear-gradient(135deg, #021B79, #0575E6);
+    }
+
+    &.bg-entradas {
+      background: linear-gradient(135deg, #4b134f, #c94b4b);
+    }
+
+    &.bg-admin {
+      background: linear-gradient(135deg, rgba($c-error, 0.4), rgba($c-error, 0.1));
+    }
+
+    &.bg-support {
+      background: linear-gradient(135deg, rgba($c-warning, 0.4), rgba($c-warning, 0.1));
+    }
+  }
+
+  .card-desc {
+    margin: 0;
+    font-size: 0.85rem;
+    text-align: center;
+    font-weight: 500;
+    color: rgba($white, 0.65);
+    line-height: 1.4;
+  }
+}
+
+// 4. SECCIÓN NOTICIAS
+.news-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  .news-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     h3 {
-      margin: 0 0 8px 0;
-      font-size: 1.4rem;
-      font-weight: 800;
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .arrow-icon {
+      color: $c-tertiary; // Flecha morada como en tu diseño
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px $c-tertiary;
+    }
+  }
+
+  .news-box {
+    width: 100%;
+    min-height: 180px;
+    background: rgba(45, 15, 65, 0.4); // Fondo morado oscuro sutil
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.dashed {
+      border: 2px dashed $white; // Borde discontinuo blanco
     }
 
     p {
       margin: 0;
-      font-size: 0.95rem;
-      color: rgba($white, 0.6);
-      line-height: 1.4;
-      font-weight: 500;
-    }
-  }
-
-  .card-arrow {
-    font-size: 1.5rem;
-    opacity: 0.4;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    z-index: 1;
-  }
-
-  // Variantes de color personalizadas para cada tarjeta
-  &:nth-child(1):hover {
-    border-color: rgba($c-primary, 0.5);
-
-    &::after {
-      background: radial-gradient(circle, rgba($c-primary, 0.4) 0%, transparent 70%);
-    }
-  }
-
-  &:nth-child(2):hover {
-    border-color: rgba($c-secondary, 0.5);
-
-    &::after {
-      background: radial-gradient(circle, rgba($c-secondary, 0.4) 0%, transparent 70%);
-    }
-  }
-
-  &:nth-child(3):hover {
-    border-color: rgba($c-tertiary, 0.5);
-
-    &::after {
-      background: radial-gradient(circle, rgba($c-tertiary, 0.4) 0%, transparent 70%);
-    }
-  }
-
-  &:nth-child(4):hover {
-    border-color: rgba(#f59e0b, 0.5);
-
-    &::after {
-      background: radial-gradient(circle, rgba(#f59e0b, 0.4) 0%, transparent 70%);
-    }
-  }
-
-  // Tarjeta de Administrador Especial
-  &.admin-variant {
-    border: 1px dashed rgba($c-error, 0.4);
-    background: rgba($c-error, 0.05);
-
-    &:hover {
-      border-style: solid;
-      border-color: $c-error;
-      background: rgba($c-error, 0.1);
-
-      &::after {
-        background: radial-gradient(circle, rgba($c-error, 0.4) 0%, transparent 70%);
-      }
-    }
-
-    &.support-variant {
-      border: 1px dashed rgba($c-warning, 0.4);
-      background: rgba($c-warning, 0.05);
-
-      &:hover {
-        border-style: solid;
-        border-color: $c-warning;
-        background: rgba($c-warning, 0.1);
-
-        &::after {
-          background: radial-gradient(circle, rgba($c-warning, 0.4) 0%, transparent 70%);
-        }
-      }
+      font-weight: 600;
+      font-size: 1rem;
+      text-align: center;
+      max-width: 200px;
     }
   }
 }
 
-.tutorial-overlay {
+s .tutorial-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -598,36 +779,233 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
 // ESTILOS WIDGET DE CHAT
 .chat-widget {
-  position: fixed; bottom: 30px; right: 30px; z-index: 1000;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1000;
+
   .chat-fab {
-    width: 60px; height: 60px; border-radius: 50%; background: $c-secondary; border: none; font-size: 1.8rem; cursor: pointer; box-shadow: 0 10px 20px rgba($c-secondary, 0.4);
-    &:hover { transform: scale(1.1); }
-  }
-  .chat-window {
-    position: absolute; bottom: 80px; right: 0; width: 350px; height: 450px; background: rgba(11, 15, 25, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba($white, 0.2); border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-    .chat-header {
-      background: $c-secondary; padding: 15px; display: flex; justify-content: space-between; align-items: center; color: #000;
-      h4 { margin: 0; font-weight: bold; }
-      .btn-close { background: transparent; border: none; font-size: 1.2rem; cursor: pointer; }
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: $c-secondary;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba($c-secondary, 0.4);
+
+    &:hover {
+      transform: scale(1.1);
     }
-    .chat-status { background: rgba($white, 0.1); padding: 5px; text-align: center; font-size: 0.8rem; color: $c-warning; }
-    .chat-body {
-      flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;
-      .chat-empty { text-align: center; margin-top: 50px; .btn-request { background: $c-primary; border: none; color: white; padding: 10px 20px; border-radius: 10px; cursor: pointer; margin-top: 10px;} }
-      .msg { max-width: 80%; padding: 10px; border-radius: 12px; font-size: 0.9rem;
-        .sender { font-size: 0.7rem; opacity: 0.7; display: block; margin-bottom: 3px; }
-        p { margin: 0; }
-        &.me { background: $c-secondary; color: #000; align-self: flex-end; border-bottom-right-radius: 0; }
-        &.other { background: rgba($white, 0.1); color: $white; align-self: flex-start; border-bottom-left-radius: 0; }
-        &.system { text-align: center; background: transparent; color: $c-warning; font-style: italic; align-self: center; }
+  }
+
+  .chat-window {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 350px;
+    height: 450px;
+    background: rgba(11, 15, 25, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba($white, 0.2);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+
+    .chat-header {
+      background: $c-secondary;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #000;
+
+      h4 {
+        margin: 0;
+        font-weight: bold;
+      }
+
+      .btn-close {
+        background: transparent;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
       }
     }
-    .chat-footer {
-      padding: 10px; border-top: 1px solid rgba($white, 0.1); display: flex; gap: 5px;
-      input { flex: 1; padding: 8px; border-radius: 8px; border: none; outline: none; background: rgba($white, 0.1); color: $white; }
-      button { background: $c-primary; border: none; color: white; border-radius: 8px; padding: 0 15px; cursor: pointer; }
-      .btn-end { background: $c-error; }
+
+    .chat-status {
+      background: rgba($white, 0.1);
+      padding: 5px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: $c-warning;
     }
+
+    .chat-body {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .chat-empty {
+        text-align: center;
+        margin-top: 50px;
+
+        .btn-request {
+          background: $c-primary;
+          border: none;
+          color: white;
+          padding: 10px 20px;
+          border-radius: 10px;
+          cursor: pointer;
+          margin-top: 10px;
+        }
+      }
+
+      .msg {
+        max-width: 80%;
+        padding: 10px;
+        border-radius: 12px;
+        font-size: 0.9rem;
+
+        .sender {
+          font-size: 0.7rem;
+          opacity: 0.7;
+          display: block;
+          margin-bottom: 3px;
+        }
+
+        p {
+          margin: 0;
+        }
+
+        &.me {
+          background: $c-secondary;
+          color: #000;
+          align-self: flex-end;
+          border-bottom-right-radius: 0;
+        }
+
+        &.other {
+          background: rgba($white, 0.1);
+          color: $white;
+          align-self: flex-start;
+          border-bottom-left-radius: 0;
+        }
+
+        &.system {
+          text-align: center;
+          background: transparent;
+          color: $c-warning;
+          font-style: italic;
+          align-self: center;
+        }
+      }
+    }
+
+    .chat-footer {
+      padding: 10px;
+      border-top: 1px solid rgba($white, 0.1);
+      display: flex;
+      gap: 5px;
+
+      input {
+        flex: 1;
+        padding: 8px;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+        background: rgba($white, 0.1);
+        color: $white;
+      }
+
+      button {
+        background: $c-primary;
+        border: none;
+        color: white;
+        border-radius: 8px;
+        padding: 0 15px;
+        cursor: pointer;
+      }
+
+      .btn-end {
+        background: $c-error;
+      }
+    }
+  }
+}
+
+// ==========================================
+// MODAL DE ZOOM PARA EL AVATAR
+// ==========================================
+.avatar-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85); // Fondo muy oscuro para resaltar la foto
+  backdrop-filter: blur(10px); // Efecto de cristal esmerilado
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 2000; // Por encima de todo, incluso del chat
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-out;
+  cursor: zoom-out; // Indica que al hacer clic fuera se cierra
+}
+
+.avatar-modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 80vh;
+  display: flex;
+  justify-content: center;
+  animation: zoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: default;
+
+  .expanded-avatar {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 20px; // Bordes redondeados elegantes
+    border: 3px solid rgba($white, 0.2);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    object-fit: contain;
+  }
+
+  .close-modal {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s;
+
+    &:hover {
+      transform: scale(1.2) rotate(90deg);
+      color: $c-primary;
+    }
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
