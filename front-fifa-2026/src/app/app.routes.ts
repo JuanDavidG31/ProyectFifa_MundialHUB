@@ -11,6 +11,7 @@ import { TicketsComponent } from './features/tickets/tickets.component';
 import { TeamsComponent } from './features/teams/teams.component';
 import { EstadisticasComponent } from './features/estadisticas/estadisticas.component';
 import { ApuestasComponent } from './features/apuestas/apuestas.component';
+import { CalendarioComponent } from './features/calendario/calendario.component';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -43,6 +44,11 @@ export const routes: Routes = [
     path: 'tickets',
     canActivate: [AuthGuard],
     component: TicketsComponent
+  },
+  {
+    path: 'calendario',
+    canActivate: [AuthGuard],
+    component: CalendarioComponent
   },
 
   { path: 'user', redirectTo: 'album', pathMatch: 'full' },

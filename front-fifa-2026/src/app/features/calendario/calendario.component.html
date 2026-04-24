@@ -1,0 +1,162 @@
+<div class="calendar-wrapper">
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <nav class="top-nav">
+        <button class="back-nav" routerLink="/home">
+            <span class="icon">‹</span> Volver al Hub
+        </button>
+    </nav>
+
+    <header class="header centered fade-in-up">
+        <h1>Planificador de <span class="gradient-text">Viaje</span></h1>
+        <p class="subtitle">Arma tu itinerario perfecto o compra paquetes todo incluido.</p>
+    </header>
+
+    <main class="content">
+        <div class="tabs-wrapper fade-in-up">
+            <div class="tabs-container">
+                <button class="tab-btn" [class.active]="activeTab === 'itinerario'" (click)="setTab('itinerario')">
+                    🗺️ Mi Itinerario
+                </button>
+                <button class="tab-btn" [class.active]="activeTab === 'paquetes'" (click)="setTab('paquetes')">
+                    🎒 Paquetes Predefinidos
+                </button>
+            </div>
+        </div>
+
+        <div class="itinerary-view fade-in" *ngIf="activeTab === 'itinerario'">
+
+            <div class="form-card glass-card fade-in" *ngIf="showAddEventForm">
+                <h3>Añadir Nuevo Evento</h3>
+                <div class="form-row">
+                    <select [(ngModel)]="newEvent.type">
+                        <option value="FLIGHT">✈️ Vuelo</option>
+                        <option value="HOTEL">🏨 Hotel</option>
+                        <option value="MATCH">⚽ Partido / Evento</option>
+                    </select>
+                    <input type="date" [(ngModel)]="newEvent.date">
+                </div>
+                <input type="text" placeholder="Título (Ej: Vuelo Bogotá - Miami)" [(ngModel)]="newEvent.title">
+                <input type="text" placeholder="Ubicación / Aeropuerto / Estadio" [(ngModel)]="newEvent.location">
+
+                <div class="form-actions">
+                    <button class="btn-outline" (click)="showAddEventForm = false">Cancelar</button>
+                    <button class="btn-neon" (click)="addEvent()">Guardar</button>
+                </div>
+            </div>
+
+            <div class="calendar-grid-wrapper glass-card fade-in-up">
+
+                <div class="month-header">
+                    <button class="btn-nav-month" (click)="prevMonth()">❮</button>
+                    <h2>{{ currentDate | date:'MMMM yyyy' | uppercase }}</h2>
+                    <button class="btn-nav-month" (click)="nextMonth()">❯</button>
+                </div>
+
+                <div class="weekdays-row">
+                    <div class="weekday" *ngFor="let day of weekDays">{{ day }}</div>
+                </div>
+
+                <div class="days-grid">
+                    <div class="day-cell" *ngFor="let day of calendarDays" [ngClass]="{'empty-cell': !day.dayNum}">
+
+                        <ng-container *ngIf="day.dayNum">
+                            <span class="day-number">{{ day.dayNum }}</span>
+
+                            <div class="day-events-list">
+                                <div class="event-pill fade-in" *ngFor="let ev of day.events" [ngClass]="ev.type"
+                                    title="{{ev.title}} en {{ev.location}}">
+                                    <span class="evt-icon">
+                                        {{ ev.type === 'FLIGHT' ? '✈️' : ev.type === 'HOTEL' ? '🏨' : '⚽' }}
+                                    </span>
+                                    <span class="evt-text">{{ ev.title }}</span>
+                                    <button class="btn-delete-evt"
+                                        (click)="deleteEvent(ev.id); $event.stopPropagation()">✖</button>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="packages-view fade-in" *ngIf="activeTab === 'paquetes'">
+            <div class="packages-grid">
+
+                <div class="package-card glass-card fade-in-up" *ngFor="let pkg of packages">
+                    <div class="pkg-header">
+                        <span class="pkg-icon">{{ pkg.imageIcon }}</span>
+                        <div>
+                            <small
+                                style="color: #ec4899; font-weight: bold; text-transform: uppercase; display: block; font-size: 0.7rem; letter-spacing: 1px; margin-bottom: 2px;">
+                                {{ pkg.category }}
+                            </small>
+                            <h3 style="margin: 0;">{{ pkg.name }}</h3>
+                        </div>
+                    </div>
+
+                    <div class="pkg-footer">
+                        <div class="pkg-price-box">
+                            <span class="pkg-price">${{ pkg.price }} <small>USD</small></span>
+                        </div>
+
+                        <button class="btn-buy" (click)="openPackageDetails(pkg)">
+                            Ver Plan 📋
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+</div>
+
+
+
+<div class="modal-overlay fade-in" *ngIf="isDetailsModalOpen && selectedPackage" (click)="closePackageDetails()">
+    <div class="modal-details-card glass-card fade-in-up" (click)="$event.stopPropagation()">
+        <button class="close-btn" (click)="closePackageDetails()">✕</button>
+
+        <div class="modal-header">
+            <span class="pkg-icon-large">{{ selectedPackage.imageIcon }}</span>
+            <div>
+                <small class="category-label">{{ selectedPackage.category }}</small>
+                <h2>{{ selectedPackage.name }}</h2>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <p class="description">{{ selectedPackage.description }}</p>
+
+            <h3>📋 ¿Qué incluye este plan?</h3>
+            <div class="match-list-scroll">
+                <div class="match-detail-item" *ngFor="let m of selectedPackage.matchesRawData">
+                    <div class="match-info">
+                        <strong>{{ m.local }} vs {{ m.visitante }}</strong>
+                        <span>📅 {{ m.fecha }}</span>
+                        <span>📍 {{ m.estadio }}</span>
+                    </div>
+                    <div class="extra-info">
+                        <span class="flight-badge">✈️ Vuelo incluido ({{
+                            generarFechaVuelo(formatearFechaParaCalendario(m.fecha)) | date:'mediumDate' }})</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <div class="price-info">
+                <span>Precio Total:</span>
+                <span class="total-price">${{ selectedPackage.price }} USD</span>
+            </div>
+            <button class="btn-neon" [disabled]="processingId === selectedPackage.id"
+                (click)="comprarPaquete(selectedPackage)">
+                <span *ngIf="processingId !== selectedPackage.id">Adquirir Todo el Plan</span>
+                <span *ngIf="processingId === selectedPackage.id" class="spinner-small"></span>
+            </button>
+        </div>
+    </div>
+</div>

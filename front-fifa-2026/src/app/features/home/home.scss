@@ -396,14 +396,24 @@ $glass-border: rgba(255, 255, 255, 0.15);
   -ms-overflow-style: none;
   scrollbar-width: none;
 
-  // SOLUCIÓN PARA PC: 5 Columnas exactas
+  // SOLUCIÓN PARA PC: Cambiamos a 6 Columnas exactas
   @media (min-width: 1200px) {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); // NUEVO: 5 columnas
+    grid-template-columns: repeat(6, 1fr); // <-- AHORA SON 6 COLUMNAS
     overflow-x: visible;
+    gap: 15px; // Reducimos un poquito el espacio entre ellas para que no queden apretadas
 
     .app-card {
-      min-width: 0; // Permite que las tarjetas se encojan un poco para encajar las 5 en pantallas medianas
+      min-width: 0;
+      padding: 15px; // Reducimos el relleno interno
+
+      .card-title {
+        font-size: 1.05rem; // Ajustamos levemente el tamaño de la letra
+      }
+
+      .card-image-box {
+        height: 110px; // Ligeramente más bajo para compensar el nuevo ancho
+      }
     }
   }
 }
@@ -566,6 +576,10 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
     &.bg-estadisticas {
       background: linear-gradient(135deg, #2b1055, #7597de);
+    }
+
+    &.bg-calendario {
+      background: linear-gradient(135deg, #f12711, #f5af19);
     }
 
     &.bg-equipos {
