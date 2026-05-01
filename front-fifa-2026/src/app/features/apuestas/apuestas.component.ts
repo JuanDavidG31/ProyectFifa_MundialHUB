@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BettingService, BetMessageDTO } from '../../core/services/betting.service';
 import { Subscription } from 'rxjs';
+
 export interface MatchPrediction {
   id: number;
   homeTeam: string;
@@ -64,11 +65,14 @@ export class ApuestasComponent implements OnInit {
     }
   ];
   private subs: Subscription = new Subscription();
-  constructor(private bettingService: BettingService) { }
-
+  constructor(
+    private bettingService: BettingService,
+    private router: Router // 🌟 Inyectamos el servicio de rutas
+  ) { }
   ngOnInit(): void {
+    alert("⚠️ El apartado de Pronósticos se encuentra actualmente en mantenimiento para mejorar tu experiencia. Serás redirigido al inicio.");
+    this.router.navigate(['/home']);
 
-    
     window.scrollTo(0, 0);
     this.bettingService.connect();
 

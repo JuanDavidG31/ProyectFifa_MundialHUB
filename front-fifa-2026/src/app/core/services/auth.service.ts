@@ -19,6 +19,7 @@ export class AuthService {
   private apiFootballUrl = 'http://localhost:8080/api/football';
   private apiMatchesUrl = 'http://localhost:8080/api/matches';
   private apiStatsUrl = 'http://localhost:8080/api/stats';
+  private apiItineraryUrl = 'http://localhost:8080/api/itinerary';
   private tokenKey = 'authToken';
   private roleKey = 'role';
   private timeoutHandler: any;
@@ -42,7 +43,22 @@ export class AuthService {
     });
   }
 
+  getUserItinerary(email: string): Observable<any[]> {
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
+    return this.http.get<any[]>(`${this.apiItineraryUrl}/${email}`, { headers });
+  }
 
+  // 2. Guardar un array de eventos (Para los paquetes comprados)
+  saveItineraryEvents(events: any[]): Observable<any[]> {
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
+    return this.http.post<any[]>(`${this.apiItineraryUrl}/save`, events, { headers });
+  }
+
+  // 3. Borrar un evento por ID (Para la "X" del calendario)
+  deleteItineraryEvent(id: number): Observable<any> {
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
+    return this.http.delete(`${this.apiItineraryUrl}/delete/${id}`, { headers });
+  }
 
   getAllStickers(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiStickersUrl}/all`, { headers: this.createAuthHeaders() });

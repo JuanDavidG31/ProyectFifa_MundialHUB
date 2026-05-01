@@ -234,7 +234,7 @@ public class MatchService {
 	// PROGRAMADOS)
 	public List<Map<String, Object>> getAllLiveMatches() {
 		// NOTA: Aquí está "CL". Cuando empiece el mundial, cámbialo a "WC"
-		String url = "https://api.football-data.org/v4/competitions/PD/matches";
+		String url = "https://api.football-data.org/v4/competitions/WC/matches";
 		String response = httpHandler.doGetWithAuth(url, "X-Auth-Token", apiKey);
 
 		JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();

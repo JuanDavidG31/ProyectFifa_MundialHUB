@@ -21,12 +21,32 @@ export class TicketsComponent implements OnInit {
   // Variables para filtros
   searchTerm: string = '';
   sortOption: string = 'default';
-
+  private monthMap: { [key: string]: string } = {
+    'ene': '01', 'feb': '02', 'mar': '03', 'abr': '04', 'may': '05', 'jun': '06',
+    'jul': '07', 'ago': '08', 'sep': '09', 'oct': '10', 'nov': '11', 'dic': '12'
+  };
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
     this.cargarPartidosReales();
+  }
+
+  formatearFechaParaBackend(fechaSucia: string): string {
+    try {
+      // Si la fecha es "16 jun 2026 - 20:00", la dividimos por el espacio
+      const partes = fechaSucia.split(' ');
+      const dia = partes[0].padStart(2, '0'); // "16"
+      const mesTexto = partes[1].toLowerCase(); // "jun"
+      const anio = partes[2]; // "2026"
+
+      const mesNumero = this.monthMap[mesTexto] || '01';
+
+      return `${anio}-${mesNumero}-${dia}`; // Retorna "2026-06-16"
+    } catch (e) {
+      console.error("Error formateando fecha:", e);
+      return fechaSucia; // Si falla, devuelve la original por si acaso
+    }
   }
 
   cargarPartidosReales() {
@@ -130,28 +150,52 @@ export class TicketsComponent implements OnInit {
   }
 
   comprar(partidoId: number) {
-    const partido = this.partidos.find(p => p.id === partidoId);
+    const partido = this.partidosRaw.find(p => p.id === partidoId);
     if (!partido) return;
 
     this.processingId = partidoId;
-    const currentUser = localStorage.getItem('userName') || 'usuario_desconocido';
+    const currentUser = localStorage.getItem('username') || 'usuario';
 
+    // --- 1. PREPARAMOS EL TICKET (Formato Original) ---
     const purchasePayload = {
       userEmail: currentUser,
       matchName: `${partido.local} VS ${partido.visitante}`,
       stadium: partido.estadio,
-      date: partido.fecha
+      date: partido.fecha // 🎫 Aquí enviamos "16 jun 2026 - 20:00" tal cual
     };
 
+    // Primero enviamos a la API de Tickets
     this.authService.buyTicket(purchasePayload).subscribe({
-      next: (res: any) => {
-        alert('🎟️ ¡Compra exitosa! ' + res.message);
-        this.processingId = null;
-        this.cargarPartidosReales();
+      next: (res) => {
+
+        // --- 2. PREPARAMOS EL ITINERARIO (Formato Técnico) ---
+        // Solo convertimos la fecha aquí, para el calendario
+        const fechaLimpia = this.formatearFechaParaBackend(partido.fecha);
+
+        const eventoItinerario = [{
+          userEmail: currentUser,
+          eventType: 'MATCH',
+          title: `⚽ Partido: ${partido.local} vs ${partido.visitante}`,
+          eventDate: fechaLimpia, // 📅 Aquí enviamos "2026-06-16"
+          location: partido.estadio
+        }];
+
+        // Guardamos en la tabla de itinerario
+        this.authService.saveItineraryEvents(eventoItinerario).subscribe({
+          next: () => {
+            this.processingId = null;
+            alert("¡Compra exitosa! Ticket enviado y partido agendado.");
+          },
+          error: (err) => {
+            console.error("Error en itinerario:", err);
+            this.processingId = null;
+            alert("Ticket comprado, pero no se pudo reflejar en el calendario.");
+          }
+        });
       },
       error: (err) => {
-        alert('❌ ' + (err.error?.error || err.message));
         this.processingId = null;
+        alert("Error al procesar la compra.");
       }
     });
   }

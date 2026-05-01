@@ -43,7 +43,7 @@ public class SecurityConfig {
 
 						.requestMatchers("/user/showAll", "/user/deletebyuser").hasRole("ADMIN")
 						.requestMatchers("/user/showAll", "/user/deletebyuser").hasRole("SUPPORT")
-						.requestMatchers("/user/getbyuser/**", "/user/updatejson", "/user/eliminarId/**", "/album/**", "/api/stickers")
+						.requestMatchers("/user/getbyuser/**", "/user/updatejson", "/user/eliminarId/**", "/album/**", "/api/stickers", "/api/tickets")
 						.hasAnyRole("USER", "ADMIN", "SUPPORT")
 
 						.anyRequest().authenticated())

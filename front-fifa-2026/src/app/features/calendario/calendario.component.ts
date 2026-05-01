@@ -38,12 +38,15 @@ interface CalendarDay {
   styleUrls: ['./calendario.component.scss']
 })
 export class CalendarioComponent implements OnInit {
+  searchTerm: string = ''; // Texto de búsqueda
+  packagesRaw: TravelPackage[] = []; // Lista original de respaldo
   selectedPackage: any = null;
   isDetailsModalOpen = false;
   allMatches: any[] = [];
   activeTab: 'itinerario' | 'paquetes' = 'itinerario';
   processingId: number | null = null;
-
+  selectedEvent: ItineraryEvent | null = null;
+  isEventModalOpen = false;
   myEvents: ItineraryEvent[] = [];
   showAddEventForm = false;
   newEvent: Partial<ItineraryEvent> = { type: 'MATCH', title: '', date: '', location: '' };
@@ -59,6 +62,16 @@ export class CalendarioComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarDatosIniciales();
+  }
+
+  openEventModal(ev: ItineraryEvent) {
+    this.selectedEvent = ev;
+    this.isEventModalOpen = true;
+  }
+
+  closeEventModal() {
+    this.selectedEvent = null;
+    this.isEventModalOpen = false;
   }
 
   openPackageDetails(pkg: any) {
@@ -82,21 +95,34 @@ export class CalendarioComponent implements OnInit {
   }
 
   cargarDatosIniciales() {
-    const saved = localStorage.getItem('myItinerary');
-    if (saved) this.myEvents = JSON.parse(saved);
+    const currentUser = localStorage.getItem('username') || 'usuario';
 
-    this.authService.getWcMatches().subscribe({
-      next: (data) => {
-        console.log("📡 Datos recibidos del Back:", data); // 🔍 VERIFICA ESTO EN CONSOLA
-        this.allMatches = data;
-        this.generarCatalogoDePaquetes();
+    // 1. Pedimos el itinerario a la base de datos
+    this.authService.getUserItinerary(currentUser).subscribe({
+      next: (eventosGuardados) => {
+        // Transformamos los DTOs que vienen del back a nuestra interfaz interna
+        this.myEvents = eventosGuardados.map(e => ({
+          id: e.id,
+          type: e.eventType,
+          title: e.title,
+          date: e.eventDate,
+          location: e.location
+        }));
         this.generateCalendar();
       },
-      error: (err) => {
-        console.error("❌ Error al traer partidos:", err);
-      }
+      error: (err) => console.error("Error cargando el itinerario:", err)
+    });
+
+    // 2. Traemos los partidos (como ya lo tenías)
+    this.authService.getWcMatches().subscribe({
+      next: (data) => {
+        this.allMatches = data;
+        this.generarCatalogoDePaquetes();
+      },
+      error: (err) => console.error("❌ Error al traer partidos:", err)
     });
   }
+
 
   generarCatalogoDePaquetes() {
     const nuevosPaquetes: TravelPackage[] = [];
@@ -170,8 +196,20 @@ export class CalendarioComponent implements OnInit {
     }
 
     this.packages = nuevosPaquetes;
+    this.packagesRaw = [...this.packages];
   }
-
+  filterPackages() {
+    if (!this.searchTerm) {
+      this.packages = [...this.packagesRaw];
+    } else {
+      const term = this.searchTerm.toLowerCase();
+      this.packages = this.packagesRaw.filter(p =>
+        p.name.toLowerCase().includes(term) ||
+        p.description.toLowerCase().includes(term) ||
+        p.category.toLowerCase().includes(term)
+      );
+    }
+  }
   // 🌟 FUNCIÓN CLAVE: Convierte '11 jun 2026' en '2026-06-11' para que el calendario lo reconozca
   formatearFechaParaCalendario(fechaRaw: string): string {
     if (!fechaRaw) return '';
@@ -206,45 +244,55 @@ export class CalendarioComponent implements OnInit {
       date: 'Múltiples Fechas'
     };
 
+    // 1. Ejecutar la compra (tickets)
     this.authService.buyTicket(purchasePayload).subscribe({
       next: () => {
         if (pkg.matchesRawData && pkg.matchesRawData.length > 0) {
+
+          // Creamos un array temporal para enviar al backend
+          const eventosAGuardar: any[] = [];
+
           pkg.matchesRawData.forEach((match: any) => {
             const fechaPartido = this.formatearFechaParaCalendario(match.fecha);
 
-            // 1. Agregar el Partido
-            const eventoPartido: ItineraryEvent = {
-              id: match.id,
-              type: 'MATCH',
+            // Evento 1: Partido
+            eventosAGuardar.push({
+              userEmail: currentUser,
+              eventType: 'MATCH',
               title: `${match.local} vs ${match.visitante}`,
-              date: fechaPartido,
+              eventDate: fechaPartido,
               location: match.estadio
-            };
+            });
 
-            // 2. ✈️ CREAR EL VUELO IMAGINARIO (Una semana antes)
+            // Evento 2: Vuelo (7 días antes)
             const fechaVuelo = this.generarFechaVuelo(fechaPartido);
-            const eventoVuelo: ItineraryEvent = {
-              id: Math.floor(Math.random() * 1000000), // ID aleatorio para el vuelo
-              type: 'FLIGHT',
+            eventosAGuardar.push({
+              userEmail: currentUser,
+              eventType: 'FLIGHT',
               title: `✈️ Vuelo de ida: Destino ${match.estadio}`,
-              date: fechaVuelo,
+              eventDate: fechaVuelo,
               location: `Aeropuerto Intl. cercano a ${match.estadio}`
-            };
-
-            // Evitar duplicados y añadir
-            if (!this.myEvents.find(e => e.id === eventoPartido.id)) {
-              this.myEvents.push(eventoPartido);
-            }
-            this.myEvents.push(eventoVuelo);
+            });
           });
 
-          localStorage.setItem('myItinerary', JSON.stringify(this.myEvents));
-          this.generateCalendar();
+          // 2. Guardamos todos los eventos masivamente en la base de datos
+          this.authService.saveItineraryEvents(eventosAGuardar).subscribe({
+            next: (savedEvents) => {
+              // Recargamos el itinerario desde el back para tener los IDs reales de la DB
+              this.cargarDatosIniciales();
+
+              this.isDetailsModalOpen = false;
+              this.processingId = null;
+              this.closePackageDetails();
+              alert(`¡Paquete ${pkg.name} adquirido! Todo se ha guardado en tu itinerario oficial.`);
+            },
+            error: (err) => {
+              console.error("Error guardando itinerario masivo:", err);
+              alert("Se compró el ticket, pero hubo un error armando el itinerario.");
+              this.processingId = null;
+            }
+          });
         }
-        this.isDetailsModalOpen = false;
-        this.processingId = null;
-        this.closePackageDetails();
-        alert(`¡Paquete ${pkg.name} adquirido! Se han generado vuelos de ida una semana antes de tus partidos.`);
       },
       error: () => {
         this.processingId = null;
@@ -299,28 +347,39 @@ export class CalendarioComponent implements OnInit {
   // ==========================================
   addEvent() {
     if (!this.newEvent.title || !this.newEvent.date) return;
-    this.myEvents.push({
-      id: Date.now(),
-      type: this.newEvent.type as 'FLIGHT' | 'HOTEL' | 'MATCH',
+
+    const currentUser = localStorage.getItem('username') || 'usuario';
+
+    // Formateamos como el backend lo espera
+    const eventToSave = [{
+      userEmail: currentUser,
+      eventType: this.newEvent.type,
       title: this.newEvent.title,
-      date: this.newEvent.date,
+      eventDate: this.newEvent.date,
       location: this.newEvent.location || ''
+    }];
+
+    // Guardamos en BD y recargamos
+    this.authService.saveItineraryEvents(eventToSave).subscribe({
+      next: () => {
+        this.showAddEventForm = false;
+        this.newEvent = { type: 'MATCH', title: '', date: '', location: '' };
+        this.cargarDatosIniciales(); // Recargamos para obtener el ID generado por la BD
+      },
+      error: (err) => console.error("Error añadiendo evento individual", err)
     });
-    this.myEvents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-    localStorage.setItem('myItinerary', JSON.stringify(this.myEvents));
-
-    this.showAddEventForm = false;
-    this.newEvent = { type: 'MATCH', title: '', date: '', location: '' };
-
-    // 🌟 ACTUALIZAR VISTA
-    this.generateCalendar();
   }
 
   deleteEvent(id: number) {
-    this.myEvents = this.myEvents.filter(e => e.id !== id);
-    localStorage.setItem('myItinerary', JSON.stringify(this.myEvents));
-    // 🌟 ACTUALIZAR VISTA
-    this.generateCalendar();
+    // Borramos el evento por su ID real en la base de datos
+    this.authService.deleteItineraryEvent(id).subscribe({
+      next: () => {
+        // Lo quitamos visualmente sin tener que recargar todo
+        this.myEvents = this.myEvents.filter(e => e.id !== id);
+        this.generateCalendar();
+      },
+      error: (err) => console.error("Error al borrar evento", err)
+    });
   }
 
 

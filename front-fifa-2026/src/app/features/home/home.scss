@@ -657,7 +657,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-s .tutorial-overlay {
+.tutorial-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -787,6 +787,23 @@ s .tutorial-overlay {
         transform: translateY(-2px);
         box-shadow: 0 8px 25px rgba($c-primary, 0.6);
       }
+    }
+  }
+
+  .btn-skip {
+    background: transparent;
+    border: none;
+    color: rgba($white, 0.4); // Un gris sutil para que no resalte demasiado
+    margin-top: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: underline; // Subrayado clásico de "enlace"
+    transition: all 0.3s ease;
+    display: inline-block;
+
+    &:hover {
+      color: $white; // Se ilumina al pasar el mouse
+      transform: translateY(-2px);
     }
   }
 }

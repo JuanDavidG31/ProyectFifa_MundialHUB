@@ -307,7 +307,8 @@ $white: #ffffff;
         gap: 10px;
 
         .day-cell {
-            min-height: 120px;
+            // 🌟 CLAVE 1: Forzamos una altura fija para que la cuadrícula jamás se deforme
+            height: 140px;
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 12px;
@@ -315,6 +316,7 @@ $white: #ffffff;
             display: flex;
             flex-direction: column;
             transition: border-color 0.3s, background 0.3s;
+            overflow: hidden; // Previene desbordamientos si hay demasiados eventos
 
             &:hover:not(.empty-cell) {
                 border-color: rgba($c-secondary, 0.5);
@@ -340,6 +342,24 @@ $white: #ffffff;
                 gap: 5px;
                 flex-grow: 1;
 
+                // 🌟 CLAVE 2: Si el usuario tiene 5 partidos el mismo día, 
+                // hacemos que la celda tenga un mini-scroll en lugar de estirarse.
+                overflow-y: auto;
+
+                // Estilizamos el scrollbar para que se vea premium
+                &::-webkit-scrollbar {
+                    width: 4px;
+                }
+
+                &::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background: rgba($c-secondary, 0.3);
+                    border-radius: 2px;
+                }
+
                 .event-pill {
                     font-size: 0.75rem;
                     padding: 5px 8px;
@@ -352,6 +372,7 @@ $white: #ffffff;
                     border-left: 3px solid $c-primary;
                     color: $white;
                     cursor: help;
+                    flex-shrink: 0; // Evita que las píldoras se aplasten entre sí
 
                     // Colores por tipo
                     &.FLIGHT {
@@ -375,6 +396,7 @@ $white: #ffffff;
                         text-overflow: ellipsis;
                         flex-grow: 1;
                         font-weight: 600;
+                        font-size: 0.7rem; // 🌟 Letra un pelín más pequeña para que quepa más texto
                     }
 
                     .btn-delete-evt {
@@ -789,6 +811,150 @@ $white: #ffffff;
             background: $c-secondary;
             color: $c-bg;
             box-shadow: 0 0 15px rgba($c-secondary, 0.4);
+        }
+    }
+}
+
+// ==========================================
+// 🌟 ESTILOS ESPECÍFICOS: MODAL DE EVENTO
+// ==========================================
+.event-modal-card {
+    max-width: 450px !important; // Lo hacemos más angosto que el de paquetes
+    text-align: center;
+
+    .event-modal-header {
+        flex-direction: column;
+        justify-content: center;
+        padding-right: 0 !important;
+        margin-top: 10px;
+
+        .pkg-icon-large {
+            font-size: 4rem;
+            padding: 20px 25px;
+
+            // Colores dinámicos para el ícono gigante
+            &.FLIGHT {
+                background: rgba($c-secondary, 0.2);
+                border-color: rgba($c-secondary, 0.4);
+            }
+
+            &.HOTEL {
+                background: rgba($c-tertiary, 0.2);
+                border-color: rgba($c-tertiary, 0.4);
+            }
+
+            &.MATCH {
+                background: rgba($c-primary, 0.2);
+                border-color: rgba($c-primary, 0.4);
+            }
+        }
+
+        .event-title {
+            font-size: 1.8rem !important;
+            margin-top: 15px !important;
+            line-height: 1.2;
+        }
+    }
+
+    .event-info-box {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        text-align: left;
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            .icon-big {
+                font-size: 2rem;
+                background: rgba(0, 0, 0, 0.3);
+                padding: 10px;
+                border-radius: 12px;
+            }
+
+            .info-text {
+                display: flex;
+                flex-direction: column;
+
+                small {
+                    color: rgba($white, 0.5);
+                    font-size: 0.8rem;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    margin-bottom: 3px;
+                }
+
+                strong {
+                    color: $white;
+                    font-size: 1.1rem;
+                }
+            }
+        }
+    }
+
+    .delete-action {
+        border-color: rgba($c-error, 0.5);
+        color: #fca5a5;
+
+        &:hover {
+            background: rgba($c-error, 0.2);
+            border-color: $c-error;
+            color: $white;
+            transform: translateY(-2px);
+        }
+    }
+}
+
+// ==========================================
+// 🔍 ESTILOS DE LA BARRA DE BÚSQUEDA
+// ==========================================
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 35px;
+    width: 100%;
+}
+
+.search-box {
+    position: relative;
+    width: 100%;
+    max-width: 550px; // Tamaño ideal para el buscador
+
+    .search-icon {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.2rem;
+        opacity: 0.5;
+    }
+
+    input {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px; // Bordes suaves como los de tus tarjetas
+        padding: 14px 15px 14px 50px;
+        color: $white;
+        font-family: inherit;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+
+        &:focus {
+            outline: none;
+            border-color: $c-secondary;
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px rgba($c-secondary, 0.2);
+        }
+
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.3);
         }
     }
 }

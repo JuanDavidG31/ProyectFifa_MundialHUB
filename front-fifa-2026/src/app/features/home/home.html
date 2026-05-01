@@ -64,20 +64,20 @@
         <p class="card-desc">Apuesta a marcadores y gana puntos</p>
       </a>
 
-      <a routerLink="/tickets" class="app-card border-cyan">
+      <a routerLink="/tickets" class="app-card border-magenta">
         <h4 class="card-title">Entradas</h4>
         <div class="card-image-box bg-entradas">
-          <span class="icon-big">🎟️</span>
+          <img src="assets/entradas.png" alt="Logo Entradas" class="logo-image">
         </div>
-        <p class="card-desc">Asegura y gestiona tus pases al estadio</p>
+        <p class="card-desc">Compra y gestiona tus boletos</p>
       </a>
 
-      <a routerLink="/estadisticas" class="app-card border-cyan">
-        <h4 class="card-title">Estadísticas</h4>
+      <a routerLink="/estadisticas" class="app-card border-magenta">
+        <h4 class="card-title">Estadisticas</h4>
         <div class="card-image-box bg-estadisticas">
-          <span class="icon-big">📊</span>
+          <img src="assets/estadisticas.png" alt="Logo Estadísticas" class="logo-image">
         </div>
-        <p class="card-desc">Sigue los resultados en tiempo real</p>
+        <p class="card-desc">Consulta los líderes en vivo</p>
       </a>
 
       <a routerLink="/equipos" class="app-card border-magenta">
@@ -91,7 +91,7 @@
       <a routerLink="/calendario" class="app-card border-warning">
         <h4 class="card-title">Planificador</h4>
         <div class="card-image-box bg-calendario">
-          <span class="icon-big">✈️</span>
+          <img src="assets/calendario.png" alt="Logo de Calendario" class="logo-image">
         </div>
         <p class="card-desc">Arma tu itinerario y compra paquetes</p>
       </a>
@@ -130,33 +130,65 @@
 
   </main>
 
-  <div class="tutorial-overlay" *ngIf="showTutorial">
-    <div class="tutorial-modal">
+  <div class="tutorial-overlay fade-in" *ngIf="showTutorial">
+    <div class="tutorial-modal fade-in-up">
 
-      <button class="skip-btn" (click)="finishTutorial()">Saltar tutorial ✕</button>
-
-      <div class="tutorial-content">
-        <div class="tutorial-icon icon-pulse">
-          {{ tutorialSteps[currentTutorialStep].icon }}
-        </div>
-        <h2 class="gradient-text">{{ tutorialSteps[currentTutorialStep].title }}</h2>
-        <p>{{ tutorialSteps[currentTutorialStep].desc }}</p>
+      <div *ngIf="currentTutorialStep === 0">
+        <span class="tutorial-icon">🌍</span>
+        <h2>¡Bienvenido a MundialHub!</h2>
+        <p>Tu plataforma definitiva para vivir la Copa del Mundo. Te daremos un recorrido rápido por todo lo que puedes
+          hacer.</p>
       </div>
 
-      <div class="tutorial-dots">
-        <span class="dot" *ngFor="let step of tutorialSteps; let i = index"
-          [class.active]="i === currentTutorialStep"></span>
+      <div *ngIf="currentTutorialStep === 1">
+        <span class="tutorial-icon">📖</span>
+        <h2>Álbum Virtual</h2>
+        <p>Abre sobres diariamente, colecciona a tus jugadores favoritos y completa tu álbum antes que nadie.</p>
+      </div>
+
+      <div *ngIf="currentTutorialStep === 2">
+        <span class="tutorial-icon">⚽</span>
+        <h2>Pronósticos y Apuestas</h2>
+        <p>Adivina los resultados de los partidos, acumula puntos y compite en salas privadas con tus amigos.</p>
+      </div>
+
+      <div *ngIf="currentTutorialStep === 3">
+        <span class="tutorial-icon">📊</span>
+        <h2>Estadísticas en Vivo</h2>
+        <p>Consulta la tabla de Goleadores y Asistencias actualizada al instante durante todo el torneo.</p>
+      </div>
+
+      <div *ngIf="currentTutorialStep === 4">
+        <span class="tutorial-icon">🎫</span>
+        <h2>Compra de Entradas</h2>
+        <p>Consigue tus tickets para los partidos. Recibirás un código QR en tu correo listo para entrar al estadio.</p>
+      </div>
+
+      <div *ngIf="currentTutorialStep === 5">
+        <span class="tutorial-icon">✈️</span>
+        <h2>Planificador de Viaje</h2>
+        <p>Arma tu itinerario ideal o compra paquetes completos. ¡Tus boletos comprados se agendarán aquí
+          automáticamente!</p>
+      </div>
+
+      <div class="tutorial-indicators">
+        <span class="dot" [class.active]="currentTutorialStep === 0"></span>
+        <span class="dot" [class.active]="currentTutorialStep === 1"></span>
+        <span class="dot" [class.active]="currentTutorialStep === 2"></span>
+        <span class="dot" [class.active]="currentTutorialStep === 3"></span>
+        <span class="dot" [class.active]="currentTutorialStep === 4"></span>
+        <span class="dot" [class.active]="currentTutorialStep === 5"></span>
       </div>
 
       <div class="tutorial-actions">
-        <button class="btn-prev" (click)="prevTutorialStep()"
-          [style.visibility]="currentTutorialStep === 0 ? 'hidden' : 'visible'">
-          Anterior
-        </button>
+        <button class="btn-prev" (click)="prevTutorialStep()" *ngIf="currentTutorialStep > 0">Anterior</button>
         <button class="btn-next" (click)="nextTutorialStep()">
-          {{ currentTutorialStep === tutorialSteps.length - 1 ? '¡Empezar!' : 'Siguiente ➔' }}
+          {{ currentTutorialStep === 5 ? '¡Empezar a explorar!' : 'Siguiente' }}
         </button>
       </div>
+      <button class="btn-skip" (click)="finishTutorial()" *ngIf="currentTutorialStep < 5">
+        Saltar tutorial
+      </button>
 
     </div>
   </div>

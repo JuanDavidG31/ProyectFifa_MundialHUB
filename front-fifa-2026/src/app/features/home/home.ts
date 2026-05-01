@@ -241,7 +241,7 @@ export class HomeComponent implements OnInit {
   }
 
   nextTutorialStep() {
-    if (this.currentTutorialStep < this.tutorialSteps.length - 1) {
+    if (this.currentTutorialStep < 5) { 
       this.currentTutorialStep++;
     } else {
       this.finishTutorial();

@@ -13,12 +13,15 @@ import co.edu.unbosque.projectFifaUbosque.dto.LoginUserDTO;
 import co.edu.unbosque.projectFifaUbosque.dto.UserDTO;
 import co.edu.unbosque.projectFifaUbosque.model.User;
 import co.edu.unbosque.projectFifaUbosque.model.User.Role;
+import co.edu.unbosque.projectFifaUbosque.repository.ItineraryEventRepository;
+import co.edu.unbosque.projectFifaUbosque.repository.TicketRepository;
 import co.edu.unbosque.projectFifaUbosque.repository.TransactionRepository;
 import co.edu.unbosque.projectFifaUbosque.repository.UserRepository;
 import co.edu.unbosque.projectFifaUbosque.repository.UserStickerRepository;
 import co.edu.unbosque.projectFifaUbosque.util.AESUtil;
 import jakarta.transaction.Transactional;
 import java.security.SecureRandom;
+import co.edu.unbosque.projectFifaUbosque.util.AESUtil;
 
 @Service
 public class UserService implements CRUDOperation<UserDTO, User> {
@@ -37,6 +40,12 @@ public class UserService implements CRUDOperation<UserDTO, User> {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private TicketRepository ticketRepo;
+
+	@Autowired
+	private ItineraryEventRepository itineraryRepo;
 
 	public UserService() {
 	}
@@ -172,7 +181,6 @@ public class UserService implements CRUDOperation<UserDTO, User> {
 		int numeroAleatorio = random.nextInt(900000) + minimo;
 
 		entity.setVerificationCode(numeroAleatorio);
-		
 
 		userRepo.save(entity);
 		return 0;
@@ -218,6 +226,29 @@ public class UserService implements CRUDOperation<UserDTO, User> {
 			User user = found.get();
 
 			try {
+				String emailDesencriptado = null;
+				String usernameDesencriptado = null;
+				try {
+					if (user.getEmail() != null) {
+						emailDesencriptado = AESUtil.decrypt(user.getEmail());
+					}
+					if (user.getUser() != null) {
+						usernameDesencriptado = AESUtil.decrypt(user.getUser());
+					}
+				} catch (Exception e) {
+					emailDesencriptado = user.getEmail();
+					usernameDesencriptado = user.getUser();
+				}
+
+				if (emailDesencriptado != null)
+					itineraryRepo.deleteByUserEmail(emailDesencriptado);
+				if (usernameDesencriptado != null)
+					itineraryRepo.deleteByUserEmail(usernameDesencriptado);
+
+				if (emailDesencriptado != null)
+					ticketRepo.deleteByUserEmail(emailDesencriptado);
+				if (usernameDesencriptado != null)
+					ticketRepo.deleteByUserEmail(usernameDesencriptado);
 				transactionRepo.deleteByUser(user);
 				userStickerRepo.deleteByUser(user);
 
@@ -352,7 +383,7 @@ public class UserService implements CRUDOperation<UserDTO, User> {
 		}
 		return 2;
 	}
-	
+
 	@Override
 	public int updateStatusConnectFalse(Long id) {
 		Optional<User> found = userRepo.findById(id);
@@ -363,7 +394,7 @@ public class UserService implements CRUDOperation<UserDTO, User> {
 		}
 		return 2;
 	}
-	
+
 	public boolean hasActiveSupport() {
 		List<User> users = userRepo.findAll();
 		for (User u : users) {

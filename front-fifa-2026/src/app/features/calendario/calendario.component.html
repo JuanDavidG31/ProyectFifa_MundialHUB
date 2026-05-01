@@ -66,7 +66,8 @@
 
                             <div class="day-events-list">
                                 <div class="event-pill fade-in" *ngFor="let ev of day.events" [ngClass]="ev.type"
-                                    title="{{ev.title}} en {{ev.location}}">
+                                    title="{{ev.title}} en {{ev.location}}" (click)="openEventModal(ev)"
+                                    style="cursor: pointer;">
                                     <span class="evt-icon">
                                         {{ ev.type === 'FLIGHT' ? '✈️' : ev.type === 'HOTEL' ? '🏨' : '⚽' }}
                                     </span>
@@ -83,6 +84,13 @@
         </div>
 
         <div class="packages-view fade-in" *ngIf="activeTab === 'paquetes'">
+            <div class="search-container fade-in-up">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Buscar paquetes (ej: Argentina, Grupo A...)"
+                        [(ngModel)]="searchTerm" (input)="filterPackages()">
+                </div>
+            </div>
             <div class="packages-grid">
 
                 <div class="package-card glass-card fade-in-up" *ngFor="let pkg of packages">
@@ -156,6 +164,45 @@
                 (click)="comprarPaquete(selectedPackage)">
                 <span *ngIf="processingId !== selectedPackage.id">Adquirir Todo el Plan</span>
                 <span *ngIf="processingId === selectedPackage.id" class="spinner-small"></span>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="modal-overlay fade-in" *ngIf="isEventModalOpen && selectedEvent" (click)="closeEventModal()">
+    <div class="modal-details-card glass-card fade-in-up event-modal-card" (click)="$event.stopPropagation()">
+        <button class="close-btn" (click)="closeEventModal()">✕</button>
+
+        <div class="modal-header event-modal-header">
+            <span class="pkg-icon-large" [ngClass]="selectedEvent.type">
+                {{ selectedEvent.type === 'FLIGHT' ? '✈️' : selectedEvent.type === 'HOTEL' ? '🏨' : '⚽' }}
+            </span>
+            <h2 class="event-title">{{ selectedEvent.title }}</h2>
+            <small class="category-label">{{ selectedEvent.type === 'MATCH' ? 'Partido / Evento' : selectedEvent.type
+                === 'FLIGHT' ? 'Vuelo' : 'Alojamiento' }}</small>
+        </div>
+
+        <div class="modal-body">
+            <div class="event-info-box">
+                <div class="info-row">
+                    <span class="icon-big">📅</span>
+                    <div class="info-text">
+                        <small>Fecha Programada</small>
+                        <strong>{{ selectedEvent.date | date:'fullDate' }}</strong>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <span class="icon-big">📍</span>
+                    <div class="info-text">
+                        <small>Ubicación</small>
+                        <strong>{{ selectedEvent.location || 'Ubicación no especificada' }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="justify-content: center; border-top: none;">
+            <button class="btn-outline delete-action" (click)="deleteEvent(selectedEvent.id); closeEventModal()">
+                Eliminar de mi Itinerario ✖
             </button>
         </div>
     </div>
