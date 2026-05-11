@@ -20,8 +20,9 @@ public class FootballController {
 
 	@Autowired
 	private FootballService footballService;
+
 	@Autowired
-	private UserRepository userRepo; 
+	private UserRepository userRepo;
 
 	@GetMapping("/dashboard")
 	public ResponseEntity<?> getDashboardData(@RequestParam String username) {
@@ -35,18 +36,19 @@ public class FootballController {
 			String fixturesData = footballService.getTeamFixtures(userCountry);
 
 			Map<String, Object> response = new HashMap<>();
+			response.put("teams", teamsData);
+			response.put("fixtures", fixturesData);
 			response.put("userCountry", userCountry);
-			response.put("teamsData", teamsData);
-			response.put("fixturesData", fixturesData);
 
 			return ResponseEntity.ok(response);
+
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(Map.of("error", "Error al procesar la solicitud"));
+					.body(Map.of("error", "Error al procesar la solicitud del Dashboard"));
 		}
 	}
 
-	@GetMapping("/worldcup2026")
+	@GetMapping("/worldcup")
 	public ResponseEntity<?> getWorldCupData(@RequestParam String username) {
 		try {
 			User user = userRepo.findByUser(AESUtil.encrypt(username))
@@ -55,7 +57,7 @@ public class FootballController {
 			String apiResponse = footballService.getWorldCupTeams();
 
 			Map<String, Object> response = new HashMap<>();
-			response.put("userCountry", user.getCoutry()); 
+			response.put("userCountry", AESUtil.decrypt(user.getCoutry()));
 			response.put("apiData", apiResponse);
 
 			return ResponseEntity.ok(response);
@@ -82,11 +84,10 @@ public class FootballController {
 	}
 
 	private ResponseEntity<String> processResponse(String response) {
-		if (response != null && !response.isEmpty()) {
+		if (response != null && !response.isEmpty() && !response.equals("{\"response\":[]}")) {
 			return ResponseEntity.ok(response);
 		} else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("{\"error\": \"Error al conectar con la API de Fútbol\"}");
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("{\"message\": \"No se encontraron datos\"}");
 		}
 	}
 }

@@ -10,7 +10,6 @@ public class ChatMessageDTO {
 	private String recipient;
 	private String content;
 
-	// Constructores
 	public ChatMessageDTO() {
 	}
 
@@ -21,7 +20,6 @@ public class ChatMessageDTO {
 		this.content = content;
 	}
 
-	// Getters y Setters
 	public MessageType getType() {
 		return type;
 	}

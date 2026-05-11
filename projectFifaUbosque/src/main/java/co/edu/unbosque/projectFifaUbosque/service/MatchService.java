@@ -36,8 +36,7 @@ public class MatchService {
 	private Map<String, String> teamCrestsCache = new HashMap<>();
 
 	public List<PlayerStatDTO> getTopScorers() {
-		String url = "https://api.football-data.org/v4/competitions/CL/scorers?limit=15";
-		String jsonResponse = httpHandler.doGetWithAuth(url, "X-Auth-Token", apiKey);
+		String jsonResponse = httpHandler.getFromFootballDataApi("competitions/WC/scorers?limit=15", apiKey);
 		List<PlayerStatDTO> scorers = new ArrayList<>();
 
 		if (jsonResponse == null || jsonResponse.isBlank())
@@ -65,14 +64,13 @@ public class MatchService {
 				scorers.add(new PlayerStatDTO(playerName, teamName, crestUrl, goals));
 			}
 		} catch (Exception e) {
-			System.err.println("Error procesando goleadores: " + e.getMessage());
 		}
+
 		return scorers;
 	}
 
 	public List<PlayerStatDTO> getTopAssists() {
-		String url = "https://api.football-data.org/v4/competitions/CL/scorers?limit=30";
-		String jsonResponse = httpHandler.doGetWithAuth(url, "X-Auth-Token", apiKey);
+		String jsonResponse = httpHandler.getFromFootballDataApi("competitions/WC/scorers?limit=30", apiKey);
 		List<PlayerStatDTO> assistsList = new ArrayList<>();
 
 		if (jsonResponse == null || jsonResponse.isBlank())
@@ -104,11 +102,9 @@ public class MatchService {
 					assistsList.add(new PlayerStatDTO(playerName, teamName, crestUrl, assists));
 				}
 			}
-
 			assistsList.sort((a, b) -> Integer.compare(b.getValue(), a.getValue()));
 
 		} catch (Exception e) {
-			System.err.println("Error procesando asistencias: " + e.getMessage());
 		}
 
 		return assistsList.stream().limit(10).collect(Collectors.toList());
@@ -119,8 +115,7 @@ public class MatchService {
 			return teamCrestsCache;
 		}
 
-		String url = "https://api.football-data.org/v4/competitions/WC/teams";
-		String jsonResponse = httpHandler.doGetWithAuth(url, "X-Auth-Token", apiKey);
+		String jsonResponse = httpHandler.getFromFootballDataApi("competitions/WC/teams", apiKey);
 
 		if (jsonResponse != null && !jsonResponse.isBlank()) {
 			try {
@@ -136,16 +131,13 @@ public class MatchService {
 					}
 				}
 			} catch (Exception e) {
-				System.err.println("Error descargando banderas: " + e.getMessage());
 			}
 		}
 		return teamCrestsCache;
 	}
 
 	public List<TicketMatchDTO> getWcMatches() {
-		String url = "https://api.football-data.org/v4/competitions/WC/matches";
-
-		String jsonResponse = httpHandler.doGetWithAuth(url, "X-Auth-Token", apiKey);
+		String jsonResponse = httpHandler.getFromFootballDataApi("competitions/WC/matches", apiKey);
 
 		List<TicketMatchDTO> matches = new ArrayList<>();
 		if (jsonResponse == null || jsonResponse.isBlank())
@@ -161,9 +153,7 @@ public class MatchService {
 					.withZone(ZoneId.systemDefault());
 
 			Map<String, String> crests = getTeamCrests();
-
 			List<Object[]> ventasBrutas = ticketRepository.countAllTicketsGroupedByMatch();
-
 			Map<String, Long> ventasPorPartido = ventasBrutas.stream()
 					.collect(Collectors.toMap(fila -> (String) fila[0], fila -> (Long) fila[1]));
 
@@ -187,7 +177,6 @@ public class MatchService {
 
 				String matchNameStr = localName + " VS " + awayName;
 				long boletosVendidos = ventasPorPartido.getOrDefault(matchNameStr, 0L);
-
 				long MAX_BOLETOS = 50;
 
 				dto.setLocal(localName);
@@ -224,18 +213,13 @@ public class MatchService {
 				matches.add(dto);
 			}
 		} catch (Exception e) {
-			System.err.println("Error parseando partidos del mundial: " + e.getMessage());
 		}
 
 		return matches;
 	}
 
-	// NUEVO MÉTODO PARA OBTENER TODOS LOS PARTIDOS (EN VIVO, TERMINADOS,
-	// PROGRAMADOS)
 	public List<Map<String, Object>> getAllLiveMatches() {
-		// NOTA: Aquí está "CL". Cuando empiece el mundial, cámbialo a "WC"
-		String url = "https://api.football-data.org/v4/competitions/WC/matches";
-		String response = httpHandler.doGetWithAuth(url, "X-Auth-Token", apiKey);
+		String response = httpHandler.getFromFootballDataApi("competitions/WC/matches", apiKey);
 
 		JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();
 		JsonArray matchesArray = jsonObject.getAsJsonArray("matches");
@@ -257,7 +241,7 @@ public class MatchService {
 							: "Por definir");
 			matchData.put("homeCrest",
 					homeTeam.has("crest") && !homeTeam.get("crest").isJsonNull() ? homeTeam.get("crest").getAsString()
-							: "https://crests.football-data.org/764.svg"); // Escudo por defecto
+							: "https://crests.football-data.org/764.svg");
 
 			JsonObject awayTeam = m.getAsJsonObject("awayTeam");
 			matchData.put("awayTeam",
@@ -267,7 +251,6 @@ public class MatchService {
 					awayTeam.has("crest") && !awayTeam.get("crest").isJsonNull() ? awayTeam.get("crest").getAsString()
 							: "https://crests.football-data.org/764.svg");
 
-			// Procesar el Marcador (Score)
 			JsonObject score = m.getAsJsonObject("score");
 			Map<String, Object> scoreData = new HashMap<>();
 			scoreData.put("duration",
@@ -285,7 +268,6 @@ public class MatchService {
 		return result;
 	}
 
-	// Función auxiliar para leer los goles de forma segura
 	private Map<String, Integer> parseScoreObj(JsonObject obj) {
 		Map<String, Integer> s = new HashMap<>();
 		if (obj != null && !obj.isJsonNull()) {

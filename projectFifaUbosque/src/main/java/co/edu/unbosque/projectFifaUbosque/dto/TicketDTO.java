@@ -14,7 +14,6 @@ public class TicketDTO {
 	public TicketDTO() {
 	}
 
-	// Getters y Setters
 	public String getUuid() {
 		return uuid;
 	}

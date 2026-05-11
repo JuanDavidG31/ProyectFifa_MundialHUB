@@ -5,7 +5,6 @@ import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { AuthResponse, LoginRequest, RegisterRequest } from '../models/auth.models';
 
-// 1. <-- NUEVO: Importa el AlbumService (ajusta la ruta según la ubicación real de tu archivo)
 import { AlbumService } from '../../features/album/services/album.service';
 
 @Injectable({
@@ -13,13 +12,6 @@ import { AlbumService } from '../../features/album/services/album.service';
 })
 export class AuthService {
   private apiUrl = 'http://localhost:8080/auth';
-  private apiUrlUser = 'http://localhost:8080/user';
-  private apiStickersUrl = 'http://localhost:8080/api/stickers';
-  private apiTicketsUrl = 'http://localhost:8080/api/tickets';
-  private apiFootballUrl = 'http://localhost:8080/api/football';
-  private apiMatchesUrl = 'http://localhost:8080/api/matches';
-  private apiStatsUrl = 'http://localhost:8080/api/stats';
-  private apiItineraryUrl = 'http://localhost:8080/api/itinerary';
   private tokenKey = 'authToken';
   private roleKey = 'role';
   private timeoutHandler: any;
@@ -30,54 +22,13 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private albumService: AlbumService // 2. <-- NUEVO: Inyectamos el servicio del álbum
+    private albumService: AlbumService
   ) {
     if (this.hasToken()) {
       this.autoLogout();
     }
   }
-  // Asegúrate de tener un método de actualización que envíe el objeto completo
-  updateUserAdmin(id: number, userData: any): Observable<any> {
-    return this.http.put(`${this.apiUrlUser}/update/${id}`, userData, {
-      headers: this.createAuthHeaders()
-    });
-  }
-
-  getUserItinerary(email: string): Observable<any[]> {
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
-    return this.http.get<any[]>(`${this.apiItineraryUrl}/${email}`, { headers });
-  }
-
-  // 2. Guardar un array de eventos (Para los paquetes comprados)
-  saveItineraryEvents(events: any[]): Observable<any[]> {
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
-    return this.http.post<any[]>(`${this.apiItineraryUrl}/save`, events, { headers });
-  }
-
-  // 3. Borrar un evento por ID (Para la "X" del calendario)
-  deleteItineraryEvent(id: number): Observable<any> {
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
-    return this.http.delete(`${this.apiItineraryUrl}/delete/${id}`, { headers });
-  }
-
-  getAllStickers(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiStickersUrl}/all`, { headers: this.createAuthHeaders() });
-  }
-
-  createSticker(formData: FormData): Observable<any> {
-    // Solo enviamos el Token. El navegador pondrá el Content-Type automáticamente para el archivo.
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
-    return this.http.post(`${this.apiStickersUrl}/create`, formData, { headers });
-  }
-
-  updateSticker(id: number, formData: FormData): Observable<any> {
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
-    return this.http.put(`${this.apiStickersUrl}/update/${id}`, formData, { headers });
-  }
-
-  deleteSticker(id: number): Observable<any> {
-    return this.http.delete(`${this.apiStickersUrl}/delete/${id}`, { headers: this.createAuthHeaders() });
-  }
+  
 
   login(credentials: LoginRequest): Observable<{ success: boolean, verify?: boolean }> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
@@ -151,27 +102,22 @@ export class AuthService {
   logout(): void {
     if (this.timeoutHandler) clearTimeout(this.timeoutHandler);
 
-    // 🌟 NUEVO: Si el usuario cierra sesión, destruimos su sala de apuestas
     const currentUsername = localStorage.getItem('username');
     if (currentUsername) {
       this.http.delete(`http://localhost:8080/betting-rooms/force-leave?username=${currentUsername}`).subscribe();
     }
 
-    // Limpiamos el almacenamiento local
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.roleKey);
     localStorage.clear();
 
-    // Limpiamos la memoria del álbum para el próximo usuario
     this.albumService.clearAlbumState();
 
     this.isAuthenticatedSubject.next(false);
     this.router.navigate(['/login']);
   }
 
-
-
-  private autoLogout(): void {
+  public autoLogout(): void {
     const payload = this.getDecodedToken();
     if (!payload?.exp) return;
 
@@ -204,14 +150,6 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, formData, { params });
   }
 
-
-  updateProfile(id: number, payload: any): Observable<any> {
-    return this.http.put(`${this.apiUrlUser}/updatejson?id=${id}`, payload, {
-      headers: this.createAuthHeaders(),
-      responseType: 'text' // SpringBoot devuelve un texto, no un JSON estructurado
-    });
-  }
-
   sendVerificationEmail(to: string, subject: string, body: string): Observable<any> {
     const payload = { to, subject, body };
     return this.http.post('http://localhost:8080/api/email/send', payload, {
@@ -219,78 +157,7 @@ export class AuthService {
       responseType: 'text' // Spring Boot devuelve un String
     });
   }
-  getUserByUsername(username: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrlUser}/getbyuser/${username}`, {
-      headers: this.createAuthHeaders()
-    });
-  }
-  deleteAccount(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrlUser}/eliminarId/${id}`, {
-      headers: this.createAuthHeaders(),
-      responseType: 'text'
-    });
-  }
-  actualizarFotoDePerfil(id: number, archivo: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('id', id.toString());
-    formData.append('archivo', archivo, archivo.name);
-
-    const token = this.getToken();
-    const headers = token
-      ? new HttpHeaders({ Authorization: `Bearer ${token}` })
-      : new HttpHeaders();
-
-    return this.http.put(`${this.apiUrlUser}/actualizar-foto-perfil`, formData, { headers });
-  }
-
-  updateTutorialStatus(id: number): Observable<any> {
-    const formData = new FormData();
-    formData.append('id', id.toString());
-    const token = this.getToken();
-    const headers = token
-      ? new HttpHeaders({ Authorization: `Bearer ${token}` })
-      : new HttpHeaders();
-    return this.http.put(`${this.apiUrlUser}/updateStatusView`, formData, { headers });
-  }
-
-  updateStatusConnectFalse(id: number): Observable<any> {
-    const formData = new FormData();
-    formData.append('id', id.toString());
-    const token = this.getToken();
-    const headers = token
-      ? new HttpHeaders({ Authorization: `Bearer ${token}` })
-      : new HttpHeaders();
-    return this.http.put(`${this.apiUrlUser}/updateStatusConnectFalse`, formData, { headers });
-  }
-
-  updateStatusConnectTrue(id: number): Observable<any> {
-    const formData = new FormData();
-    formData.append('id', id.toString());
-    const token = this.getToken();
-    const headers = token
-      ? new HttpHeaders({ Authorization: `Bearer ${token}` })
-      : new HttpHeaders();
-    return this.http.put(`${this.apiUrlUser}/updateStatusConnectTrue`, formData, { headers });
-  }
-
-  updateUser(updateData: { id?: number; user?: string; password?: string }): Observable<any> {
-    let params = new HttpParams();
-    if (updateData.id) params = params.set('id', updateData.id);
-    if (updateData.user) params = params.set('newUsername', updateData.user);
-    if (updateData.password) params = params.set('newPassword', updateData.password);
-
-    return this.http.put(`${this.apiUrlUser}/update`, null, {
-      params,
-      headers: this.createAuthHeaders()
-    });
-  }
-
-  getAllUsers(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrlUser}/showAll`, {
-      headers: this.createAuthHeaders()
-    });
-  }
-
+  
   obtenerUrlArchivo(nombreArchivo: string): string {
     return `${this.apiUrl}/archivo/${nombreArchivo}`;
   }
@@ -303,7 +170,7 @@ export class AuthService {
     return localStorage.getItem(this.roleKey);
   }
 
-  private hasToken(): boolean {
+  public hasToken(): boolean {
     return !!localStorage.getItem(this.tokenKey);
   }
 
@@ -326,48 +193,12 @@ export class AuthService {
     return this.getDecodedToken()?.sub ?? null;
   }
 
-  private createAuthHeaders(): HttpHeaders {
+  public createAuthHeaders(): HttpHeaders {
     const token = this.getToken();
     return new HttpHeaders({
       Authorization: token ? `Bearer ${token}` : '',
       'Content-Type': 'application/json'
     });
   }
-
-  buyTicket(purchaseData: any): Observable<any> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.getToken()}`
-    });
-    return this.http.post(`${this.apiTicketsUrl}/buy`, purchaseData, { headers });
-  }
-
-  getUserDashboard(username: string): Observable<any> {
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
-    return this.http.get<any>(`${this.apiFootballUrl}/dashboard?username=${username}`, { headers });
-  }
-  getWcMatches(): Observable<any[]> {
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
-    return this.http.get<any[]>(`${this.apiMatchesUrl}/wc`, { headers });
-  }
-  checkActiveSupport(): Observable<boolean> {
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
-    return this.http.get<boolean>(`${this.apiUrlUser}/active-support`, { headers });
-  }
-
-  getTopScorers(): Observable<any[]> {
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
-    return this.http.get<any[]>(`${this.apiStatsUrl}/scorers`, { headers });
-  }
-
-  getTopAssists(): Observable<any[]> {
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
-    return this.http.get<any[]>(`${this.apiStatsUrl}/assists`, { headers });
-  }
-
-  getAllMatches(): Observable<any[]> {
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getToken()}` });
-    return this.http.get<any[]>(`${this.apiMatchesUrl}/all`, { headers });
-  }
-
 
 }

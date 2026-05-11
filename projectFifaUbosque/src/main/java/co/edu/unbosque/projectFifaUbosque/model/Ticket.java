@@ -12,10 +12,10 @@ public class Ticket {
 	private Long id;
 
 	@Column(unique = true, nullable = false)
-	private String uuid; // El identificador único para el QR
+	private String uuid; 
 
 	@Column(nullable = false)
-	private String userEmail; // Correo al que se envió y pertenece
+	private String userEmail; 
 
 	@Column(nullable = false)
 	private String matchName;
@@ -27,11 +27,9 @@ public class Ticket {
 	@Column(name = "purchase_date")
 	private LocalDateTime purchaseDate;
 
-	// Constructor vacío requerido por JPA
 	public Ticket() {
 	}
 
-	// Constructor con parámetros
 	public Ticket(String uuid, String userEmail, String matchName, String stadium, String matchDate,
 			LocalDateTime purchaseDate) {
 		this.uuid = uuid;
@@ -42,7 +40,6 @@ public class Ticket {
 		this.purchaseDate = purchaseDate;
 	}
 
-	// Getters y Setters
 	public Long getId() {
 		return id;
 	}

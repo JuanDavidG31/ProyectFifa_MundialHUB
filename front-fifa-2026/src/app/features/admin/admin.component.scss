@@ -1,6 +1,5 @@
 @use "sass:color";
 
-// --- PALETA VIBRANTE Y GAMER ---
 $c-bg: #0b0f19;
 $c-primary: #ec4899;
 $c-secondary: #06b6d4;
@@ -33,11 +32,9 @@ $glass-border: rgba(255, 255, 255, 0.15);
     flex-direction: column;
     align-items: center;
 
-    // ==========================================
-    // FONDOS ANIMADOS (Idénticos al Login)
-    // ==========================================
+    
     .bg-shape {
-        position: fixed; // Fixed para que no se mueva al scrollear
+        position: fixed; 
         border-radius: 50%;
         filter: blur(90px);
         z-index: 0;
@@ -133,7 +130,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
 
     // ==========================================
-    // LAYOUT PRINCIPAL (Sidebar + Contenido)
+    // LAYOUT PRINCIPAL 
     // ==========================================
     .admin-layout {
         width: 100%;
@@ -146,7 +143,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
             flex-direction: column;
         }
 
-        // TARJETA DE CRISTAL GLOBAL
         .glass-card {
             background: $glass-bg;
             backdrop-filter: blur(16px);
@@ -157,7 +153,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
             padding: 30px;
         }
 
-        // BARRA LATERAL
         .sidebar {
             width: 280px;
             flex-shrink: 0;
@@ -295,7 +290,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
                 }
             }
 
-            // FORMULARIOS (Misma estética que Login)
+            // FORMULARIOS 
             .form-grid {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
@@ -413,7 +408,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
 }
 
-// Botón Play idéntico al Login
+
 .btn-play {
     width: 100%;
     background: linear-gradient(135deg, $c-primary, #f43f5e);
@@ -468,7 +463,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
 
 // ==========================================
-// ESTILOS DEL MODAL FLOTANTE (OVERLAY)
+// ESTILOS DEL MODAL FLOTANTE 
 // ==========================================
 
 .overlay {
@@ -491,11 +486,11 @@ $glass-border: rgba(255, 255, 255, 0.15);
 .edit-modal {
 
     background: linear-gradient(145deg, rgba(30, 41, 59, 0.95) 0%, rgba(11, 15, 25, 0.98) 100%);
-    border: 1px solid rgba($c-accent, 0.3); // Borde sutil color cian para que resalte
+    border: 1px solid rgba($c-accent, 0.3); 
     box-shadow:
-        0 30px 60px rgba(0, 0, 0, 0.8), // Sombra oscura profunda para separarlo
-        0 0 20px rgba($c-accent, 0.1); // Resplandor cian muy suave alrededor
-    backdrop-filter: blur(15px); // Mantiene un ligero desenfoque por si acaso
+        0 30px 60px rgba(0, 0, 0, 0.8), 
+        0 0 20px rgba($c-accent, 0.1); 
+    backdrop-filter: blur(15px); 
     border-radius: 20px;
 
     width: 90%;
@@ -607,10 +602,10 @@ $glass-border: rgba(255, 255, 255, 0.15);
 // ==========================================
 
 .table-container {
-    background: rgba(0, 0, 0, 0.25); // Fondo un poco más oscuro para que resalte del panel
+    background: rgba(0, 0, 0, 0.25); 
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    overflow-x: auto; // Agrega scroll si la pantalla es muy pequeña
+    overflow-x: auto; 
     margin-top: 15px;
 }
 
@@ -618,22 +613,22 @@ $glass-border: rgba(255, 255, 255, 0.15);
     width: 100%;
     border-collapse: collapse;
     text-align: left;
-    white-space: nowrap; // Evita que los textos se apilen en varias líneas
+    white-space: nowrap; 
 
     th {
         padding: 16px 20px;
-        background: rgba(0, 0, 0, 0.4); // Cabecera bien oscura para contrastar
-        color: $c-accent; // Letras color cian
+        background: rgba(0, 0, 0, 0.4); 
+        color: $c-accent; 
         font-weight: 600;
         text-transform: uppercase;
         font-size: 0.85rem;
         letter-spacing: 1px;
-        border-bottom: 2px solid rgba(6, 182, 212, 0.3); // Línea cian sutil debajo de la cabecera
+        border-bottom: 2px solid rgba(6, 182, 212, 0.3); 
     }
 
     td {
         padding: 16px 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05); // Divisiones horizontales claras y sutiles
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
         color: rgba(255, 255, 255, 0.85);
         vertical-align: middle;
     }
@@ -641,18 +636,15 @@ $glass-border: rgba(255, 255, 255, 0.15);
     tbody tr {
         transition: background-color 0.2s ease;
 
-        // Efecto cuando pasas el mouse por encima de la fila
         &:hover {
             background-color: rgba(255, 255, 255, 0.04);
         }
 
-        // Le quitamos la línea al último para que no choque con el borde redondeado del contenedor
         &:last-child td {
             border-bottom: none;
         }
     }
 
-    // Alineación perfecta para los botones de editar/borrar
     .table-actions {
         display: flex;
         gap: 8px;
@@ -663,7 +655,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
             &:hover {
                 transform: translateY(-2px);
-                filter: brightness(1.2); // Hace que el botón brille un poquito más al tocarlo
+                filter: brightness(1.2); 
             }
         }
     }

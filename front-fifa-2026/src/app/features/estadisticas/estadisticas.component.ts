@@ -2,8 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-import { interval, Subscription } from 'rxjs'; // <-- NUEVOS IMPORTS
+import { interval, Subscription } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
+import { MatchesService } from '../../core/services/matches.service';
+import { StatsService } from '../../core/services/stats.service';
 export interface PlayerStat {
   name: string;
   team: string;
@@ -37,7 +39,6 @@ export interface LiveMatch {
 })
 export class EstadisticasComponent implements OnInit, OnDestroy {
 
-  // 🌟 CAMBIO 1: Ahora el tab por defecto es 'goles'
   activeTab: 'envivo' | 'goles' | 'asistencias' = 'goles';
   isLoading = false;
 
@@ -45,10 +46,11 @@ export class EstadisticasComponent implements OnInit, OnDestroy {
   topAssists: PlayerStat[] = [];
   currentList: PlayerStat[] = [];
   private refreshSubscription!: Subscription;
-  // Mantenemos el partido en vivo simulado
   liveMatchesList: LiveMatch[] = [];
+  selectedMatch: LiveMatch | null = null;
 
-  constructor(private authService: AuthService) { }
+
+  constructor(private authService: AuthService, private matchesService: MatchesService, private statsService: StatsService) { }
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
@@ -57,10 +59,25 @@ export class EstadisticasComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+
     if (this.refreshSubscription) {
       this.refreshSubscription.unsubscribe();
     }
   }
+  cerrarSesion() {
+    this.authService.logout();
+  }
+  openMatchDetails(match: LiveMatch) {
+    this.selectedMatch = match;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeMatchDetails() {
+    this.selectedMatch = null;
+    document.body.style.overflow = 'auto';
+  }
+
+
 
   cargarEstadisticas() {
     this.isLoading = true;
@@ -73,8 +90,7 @@ export class EstadisticasComponent implements OnInit, OnDestroy {
       }
     };
 
-    // A) Traer Goleadores
-    this.authService.getTopScorers().subscribe({
+    this.statsService.getTopScorers().subscribe({
       next: (data) => {
         this.topScorers = data;
         if (this.activeTab === 'goles') this.updateList();
@@ -86,8 +102,7 @@ export class EstadisticasComponent implements OnInit, OnDestroy {
       }
     });
 
-    // B) Traer Asistencias
-    this.authService.getTopAssists().subscribe({
+    this.statsService.getTopAssists().subscribe({
       next: (data) => {
         this.topAssists = data;
         if (this.activeTab === 'asistencias') this.updateList();
@@ -99,8 +114,7 @@ export class EstadisticasComponent implements OnInit, OnDestroy {
       }
     });
 
-    // C) Traer Partidos en Vivo (Carga Inicial)
-    this.authService.getAllMatches().subscribe({
+    this.matchesService.getAllMatches().subscribe({
       next: (data: LiveMatch[]) => {
         this.ordenarPartidos(data); // <-- Llamamos a la función recicable
         checkCompletion();
@@ -113,14 +127,12 @@ export class EstadisticasComponent implements OnInit, OnDestroy {
   }
 
   iniciarActualizacionAutomatica() {
-    this.refreshSubscription = interval(60000)
+    this.refreshSubscription = interval(30000)
       .pipe(
-        // 1. FILTER: Detiene el reloj instantáneamente si no estamos en la pestaña correcta
         filter(() => this.activeTab === 'envivo'),
 
-        // 2. SWITCHMAP: Hace la petición HTTP. Si por casualidad la petición anterior
-        // aún no terminaba, la cancela automáticamente para no saturar la red.
-        switchMap(() => this.authService.getAllMatches())
+
+        switchMap(() => this.matchesService.getAllMatches())
       )
       .subscribe({
         next: (data: LiveMatch[]) => {
@@ -130,7 +142,6 @@ export class EstadisticasComponent implements OnInit, OnDestroy {
       });
   }
 
-  // 🌟 NUEVO MÉTODO: Centraliza tu excelente lógica de ordenamiento
   ordenarPartidos(data: LiveMatch[]) {
     const statusPriority: { [key: string]: number } = {
       'IN_PLAY': 1,

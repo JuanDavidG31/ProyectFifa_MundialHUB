@@ -1,13 +1,12 @@
 @use "sass:color";
 
-// --- PALETA VIBRANTE Y GAMER ---
-$c-bg: #0b0f19; // Azul ultra oscuro
-$c-primary: #ec4899; // Magenta brillante
-$c-secondary: #06b6d4; // Cian eléctrico
-$c-tertiary: #8b5cf6; // Morado neón
-$c-success: #10b981; // Verde éxito
-$c-error: #ef4444; // Rojo alerta
-$c-warning: #f59e0b; // Naranja alerta
+$c-bg: #0b0f19; 
+$c-primary: #ec4899; 
+$c-secondary: #06b6d4; 
+$c-tertiary: #8b5cf6; 
+$c-success: #10b981; 
+$c-error: #ef4444; 
+$c-warning: #f59e0b; 
 $white: #ffffff;
 $glass-bg: rgba(255, 255, 255, 0.05);
 $glass-border: rgba(255, 255, 255, 0.15);
@@ -16,7 +15,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   margin: 0 !important;
   background-color: $c-bg;
   font-family: 'Poppins', 'Inter', sans-serif;
-  // Permitimos scroll vertical por la altura del formulario
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -28,15 +26,13 @@ $glass-border: rgba(255, 255, 255, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px; // Espaciado extra para cuando haya scroll
+  padding: 40px 20px; 
   box-sizing: border-box;
 }
 
-// ==========================================
-// FONDOS ANIMADOS (Fijos para el scroll)
-// ==========================================
+// FONDOS ANIMADOS 
 .bg-shape {
-  position: fixed; // Fixed para que no se muevan al hacer scroll
+  position: fixed; 
   border-radius: 50%;
   filter: blur(80px);
   z-index: 0;
@@ -90,14 +86,12 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ==========================================
 // TARJETA DE CRISTAL
-// ==========================================
 .register-glass-card {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 650px; // Más ancha que el login para soportar el grid de 2 columnas
+  max-width: 650px; 
   background: $glass-bg;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -124,17 +118,24 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// --- CABECERA ---
+// CABECERA 
 .card-header {
   text-align: center;
   margin-bottom: 30px;
 
   .logo-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    margin-bottom: 10px;
+    gap: 10px;
+
+    .logo-image {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 15px rgba($c-secondary, 0.4));
+    }
 
     .icon-pulse {
       font-size: 2.5rem;
@@ -146,6 +147,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
 
     h1 {
+      margin: 0;
       font-size: 2.5rem;
       font-weight: 900;
       color: $white;
@@ -193,7 +195,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// --- FORMULARIO Y GRID ---
+// FORMULARIO Y GRID 
 .register-form {
   display: flex;
   flex-direction: column;
@@ -205,13 +207,12 @@ $glass-border: rgba(255, 255, 255, 0.15);
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 
-  // En móviles, se apilan los campos uno debajo del otro
   @media (max-width: 576px) {
     grid-template-columns: 1fr;
   }
 }
 
-// --- INPUTS ESTILO GAMER ---
+// INPUTS 
 .input-group {
   position: relative;
   display: flex;
@@ -250,7 +251,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
       font-weight: 500;
     }
 
-    // Autofill fix del navegador
     &:-webkit-autofill,
     &:-webkit-autofill:hover,
     &:-webkit-autofill:focus,
@@ -278,22 +278,27 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
   .btn-eye {
     position: absolute;
-    right: 15px;
-    background: none;
+    right: 8px;
+    background: rgba(255, 255, 255, 0.1);
     border: none;
+    color: rgba($white, 0.8);
     cursor: pointer;
-    font-size: 1.3rem;
-    transition: 0.2s;
-    opacity: 0.5;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: 0.3s;
 
     &:hover {
-      opacity: 1;
-      transform: scale(1.2);
+      background: rgba(255, 255, 255, 0.2);
+      color: $white;
     }
   }
 }
 
-// --- MEDIDOR DE CONTRASEÑA ---
+// MEDIDOR DE CONTRASEÑA 
 .password-container {
   display: flex;
   flex-direction: column;
@@ -341,7 +346,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// --- SUBIDA DE IMAGEN ---
+// SUBIDA DE IMAGEN 
 .file-upload-container {
   cursor: pointer;
   background: rgba(0, 0, 0, 0.25);
@@ -378,7 +383,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// --- ALERTAS ---
+// ALERTAS 
 .alert-box {
   display: flex;
   align-items: center;
@@ -427,7 +432,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// --- BOTÓN PRINCIPAL ---
+// BOTÓN PRINCIPAL 
 .btn-play {
   width: 100%;
   background: linear-gradient(135deg, $c-primary, #f43f5e);
@@ -472,7 +477,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
   animation: spin 0.8s linear infinite;
 }
 
-// --- FOOTER ---
+// FOOTER 
 .card-footer {
   margin-top: 30px;
   text-align: center;
@@ -492,7 +497,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
       transition: 0.3s;
 
       &:hover {
-        color:color.adjust($c-secondary, $lightness: 15%);
+        color: color.adjust($c-secondary, $lightness: 15%);
         text-shadow: 0 0 10px rgba($c-secondary, 0.5);
       }
     }

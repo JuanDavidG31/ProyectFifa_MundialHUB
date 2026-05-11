@@ -62,7 +62,7 @@ export const routes: Routes = [
   {
     path: 'support',
     canActivate: [AuthGuard],
-    data: { expectedRole: 'SUPPORT' }, // Guarda el acceso solo para soporte
+    data: { expectedRole: 'SUPPORT' }, 
     loadComponent: () => import('./features/support/support.component').then(m => m.SupportComponent)
   },
 
@@ -79,5 +79,5 @@ export const routes: Routes = [
   },
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' }, // Ruta comodín
+  { path: '**', redirectTo: 'login' }, 
 ];

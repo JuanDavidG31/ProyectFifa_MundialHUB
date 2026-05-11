@@ -4,10 +4,11 @@ import co.edu.unbosque.projectFifaUbosque.dto.TicketDTO;
 import co.edu.unbosque.projectFifaUbosque.dto.UserDTO;
 import co.edu.unbosque.projectFifaUbosque.model.Ticket;
 import co.edu.unbosque.projectFifaUbosque.repository.TicketRepository;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import java.util.Map;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -26,16 +27,17 @@ public class TicketService {
 	@Autowired
 	private QRService qrService;
 
+	@Autowired
+	private ExternalHTTPRequestHandler httpHandler;
+
 	public TicketDTO processTicketPurchase(String username, String matchName, String stadium, String matchDate) {
 
-		long MAX_BOLETOS = 50; 
+		long MAX_BOLETOS = 50;
 		if (ticketRepository.countByMatchName(matchName) >= MAX_BOLETOS) {
-			throw new RuntimeException("SOLD_OUT"); 
+			throw new RuntimeException("SOLD_OUT");
 		}
 
 		UserDTO user = userService.getByUser(username);
-		
-		
 
 		if (user == null) {
 			throw new RuntimeException("Usuario no encontrado en la base de datos: " + username);
@@ -57,7 +59,6 @@ public class TicketService {
 		try {
 			qrBase64 = qrService.generateQRCodeBase64(qrContent);
 		} catch (Exception e) {
-			System.err.println("Error al generar el QR localmente: " + e.getMessage());
 		}
 
 		Ticket ticket = new Ticket(ticketUuid, realEmail, matchName, stadium, matchDate, LocalDateTime.now());
@@ -67,7 +68,6 @@ public class TicketService {
 				qrBase64);
 
 		if (!emailSent) {
-			System.err.println("El ticket se guardó pero el correo falló para: " + realEmail);
 		}
 
 		TicketDTO dto = new TicketDTO();
@@ -83,17 +83,15 @@ public class TicketService {
 
 	private String obtenerContenidoQrDesdeApi(String uuid) {
 		try {
-			RestTemplate restTemplate = new RestTemplate();
-			String url = "https://veltrixpassqrgen.onrender.com/qr-" + uuid;
+			String jsonResponse = httpHandler.getFromQrApi("qr-" + uuid);
 
-			@SuppressWarnings("unchecked")
-			Map<String, Object> response = restTemplate.getForObject(url, Map.class);
-
-			if (response != null && response.containsKey("qr_content")) {
-				return (String) response.get("qr_content");
+			if (jsonResponse != null && !jsonResponse.isBlank()) {
+				JsonObject root = JsonParser.parseString(jsonResponse).getAsJsonObject();
+				if (root.has("qr_content") && !root.get("qr_content").isJsonNull()) {
+					return root.get("qr_content").getAsString();
+				}
 			}
 		} catch (Exception e) {
-			System.err.println("Error descargando contenido desde la API: " + e.getMessage());
 		}
 		return "";
 	}

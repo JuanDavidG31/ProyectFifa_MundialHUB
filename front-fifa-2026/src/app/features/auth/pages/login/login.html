@@ -5,25 +5,26 @@
 
   <div class="login-glass-card">
 
-    <div class="card-header">
+    <div class="card-header" *ngIf="!needsVerification">
       <div class="logo-container">
-        <div class="icon-pulse">⚽</div>
+        <img src="assets/mundial.png" alt="Logo MundialHub" class="icon-pulse logo-image">
         <h1>Mundial<span class="gradient-text">Hub</span></h1>
       </div>
+
+
       <p class="subtitle">¡Colecciona, pronostica y vive la fiesta del Mundial!</p>
     </div>
 
     <form *ngIf="!needsVerification" (ngSubmit)="login()" #loginForm="ngForm" class="login-form fade-in">
       <div class="input-group">
-        <span class="input-icon">👤</span> 
         <input name="user" [(ngModel)]="credentials.user" required placeholder="Tu Usuario" type="text">
       </div>
 
       <div class="input-group">
-        <span class="input-icon">🔑</span>
-        <input name="password" [(ngModel)]="credentials.password" required [type]="showPassword ? 'text' : 'password'" placeholder="Tu contraseña">
+        <input name="password" [(ngModel)]="credentials.password" required [type]="showPassword ? 'text' : 'password'"
+          placeholder="Tu contraseña">
         <button type="button" class="btn-eye" (click)="togglePassword()">
-          {{ showPassword ? '🔓' : '🔒' }}
+          {{ showPassword ? 'ꗃ' : '🔒︎' }}
         </button>
       </div>
 
@@ -32,7 +33,7 @@
       </div>
 
       <div *ngIf="loginError" class="alert-box">
-        <span class="alert-icon">⚠️</span>
+        <span class="alert-icon">!</span>
         <p>{{ loginError }}</p>
       </div>
 
@@ -41,40 +42,36 @@
         <span *ngIf="isLoading" class="spinner"></span>
       </button>
 
-      
+
     </form>
 
 
-    <form *ngIf="needsVerification" (ngSubmit)="verifyUser()" #verifyForm="ngForm" class="login-form fade-in">
-      
-      <div style="text-align: center; margin-bottom: 25px;">
-        <div class="icon-pulse" style="font-size: 3rem; margin-bottom: 10px;">✉️</div>
-        <h2 style="margin: 0; color: white;">Verifica tu Cuenta</h2>
-        <p style="font-size: 0.9rem; color: #94a3b8; margin-top: 5px;">Hemos enviado un código a tu correo.</p>
+    <form *ngIf="needsVerification" (ngSubmit)="verifyUser()" #verifyForm="ngForm" class="login-form verification-step fade-in">
+
+      <div class="step-header">
+        <div class="pin-icon">PIN</div>
+        <h2>Verifica tu Cuenta</h2>
+        <p>Hemos enviado un código a tu correo.</p>
       </div>
 
-      <div class="input-group">
-       
-        <input name="code" [(ngModel)]="verificationCode" required placeholder="Ingresa el código" type="text" 
-               style="text-align: center; letter-spacing: 5px; font-weight: bold; font-size: 1.2rem;">
+      <div class="input-group pin-group">
+        <input name="code" [(ngModel)]="verificationCode" required placeholder="000000" type="text" class="pin-input" maxlength="6" autocomplete="off">
       </div>
 
       <div *ngIf="loginError" class="alert-box">
-        <span class="alert-icon">⚠️</span>
+        <span class="alert-icon">!</span>
         <p>{{ loginError }}</p>
       </div>
 
-      <button type="submit" class="btn-play" [disabled]="!verificationCode || isLoading" style="background: linear-gradient(135deg, #10b981, #059669);">
+      <button type="submit" class="btn-play btn-verify" [disabled]="!verificationCode || isLoading">
         <span *ngIf="!isLoading" class="btn-text">VERIFICAR Y ENTRAR</span>
         <span *ngIf="isLoading" class="spinner"></span>
       </button>
-      
-      <button type="button" class="btn-neutral" (click)="needsVerification = false" 
-              style="margin-top: 15px; width: 100%; padding: 15px; border-radius: 16px; background: transparent; border: 1px solid #475569; color: white; cursor: pointer; transition: all 0.3s;"
-              onmouseover="this.style.background='rgba(255,255,255,0.05)'" 
-              onmouseout="this.style.background='transparent'">
+
+      <button type="button" class="btn-neutral btn-cancel" (click)="needsVerification = false">
         Cancelar
       </button>
+      
     </form>
 
     <div class="card-footer">

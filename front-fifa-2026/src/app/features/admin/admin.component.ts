@@ -5,7 +5,9 @@ import { RouterLink } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../core/services/auth.service';
 import { RegisterRequest } from '../../core/models/auth.models';
-
+import { StickersService } from '../../core/services/stickers.service';
+import { UserService } from '../../core/services/user.service';
+import { NoticeService } from '../../core/services/notice.service';
 @Component({
   selector: 'app-admin',
   standalone: true,
@@ -14,17 +16,11 @@ import { RegisterRequest } from '../../core/models/auth.models';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit {
-  activeTab: 'users' | 'stickers' = 'users';
+  activeTab: 'users' | 'stickers' | 'notices' = 'users';
 
-  // ================= VARIABLES USUARIOS =================
   users: any[] = [];
   selectedUser: any = null;
   isLoadingUsers = false;
-
-  // ================= VARIABLES STICKERS =================
-
-
-
 
   stickers: any[] = [];
   selectedStickerToEdit: any = null;
@@ -32,19 +28,17 @@ export class AdminComponent implements OnInit {
   isCreatingSticker = false;
   isUpdatingSticker = false;
 
-  // Variables para la imagen del Nuevo Sticker
   selectedFile: File | null = null;
   imagePreview: string | null = null;
 
-  // Variables para la imagen del Sticker a Editar
   editSelectedFile: File | null = null;
   editImagePreview: string | null = null;
-
+  notices: any[] = [];
+  newNotice = { title: '', content: '', imageUrl: '' };
   newSticker = {
     code: '', title: '', sectionId: '', pageTitle: '', rarity: 'Común', type: 'CURRENT_PLAYER', exchangeValue: 10, imageUrl: ''
   };
 
-  // Para crear un nuevo usuario
   isCreatingUser = false;
   registerData: RegisterRequest = {
     user: '', password: '', name: '', personalId: '',
@@ -54,17 +48,35 @@ export class AdminComponent implements OnInit {
   userSelectedFile: File | null = null;
   userImagePreview: string | null = null;
 
-  constructor(private authService: AuthService, private http: HttpClient) { }
+  constructor(private authService: AuthService, private userService: UserService, private stickersService: StickersService, private noticeService: NoticeService, private http: HttpClient) { }
 
   ngOnInit() {
     this.loadUsers();
     this.loadStickers();
+    this.loadNotices();
+  }
 
+  loadNotices() {
+    this.noticeService.getNotices().subscribe(data => this.notices = data);
+  }
+
+  onCreateNotice() {
+    this.noticeService.createNotice(this.newNotice).subscribe(() => {
+      alert('Noticia creada');
+      this.loadNotices();
+      this.newNotice = { title: '', content: '', imageUrl: '' };
+    });
+  }
+
+  deleteNotice(id: number) {
+    if (confirm('¿Borrar noticia?')) {
+      this.noticeService.deleteNotice(id).subscribe(() => this.loadNotices());
+    }
   }
 
   loadStickers() {
     this.isLoadingStickers = true;
-    this.authService.getAllStickers().subscribe({
+    this.stickersService.getAllStickers().subscribe({
       next: (data) => {
         this.stickers = data;
         this.isLoadingStickers = false;
@@ -80,7 +92,7 @@ export class AdminComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = () => this.imagePreview = reader.result as string;
       reader.readAsDataURL(file);
-      this.newSticker.imageUrl = ''; // Limpiamos la URL si sube archivo
+      this.newSticker.imageUrl = '';
     }
   }
 
@@ -91,7 +103,7 @@ export class AdminComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = () => this.editImagePreview = reader.result as string;
       reader.readAsDataURL(file);
-      this.selectedStickerToEdit.imageUrl = ''; // Limpiamos la URL si sube archivo
+      this.selectedStickerToEdit.imageUrl = '';
     }
   }
 
@@ -99,7 +111,6 @@ export class AdminComponent implements OnInit {
     this.isCreatingSticker = true;
     const formData = new FormData();
 
-    // Armamos el "Paquete" de datos
     formData.append('code', this.newSticker.code);
     formData.append('title', this.newSticker.title);
     formData.append('sectionId', this.newSticker.sectionId);
@@ -108,15 +119,13 @@ export class AdminComponent implements OnInit {
     formData.append('type', this.newSticker.type);
     formData.append('exchangeValue', this.newSticker.exchangeValue.toString());
 
-    // Agregamos la URL manual si existe, o el Archivo físico si se seleccionó
     if (this.newSticker.imageUrl) formData.append('imageUrl', this.newSticker.imageUrl);
     if (this.selectedFile) formData.append('image', this.selectedFile);
 
-    this.authService.createSticker(formData).subscribe({
+    this.stickersService.createSticker(formData).subscribe({
       next: () => {
         alert('¡Sticker creado con éxito!');
         this.isCreatingSticker = false;
-        // Reiniciamos todo
         this.newSticker = { code: '', title: '', sectionId: '', pageTitle: '', rarity: 'Común', type: 'CURRENT_PLAYER', exchangeValue: 10, imageUrl: '' };
         this.selectedFile = null;
         this.imagePreview = null;
@@ -130,7 +139,7 @@ export class AdminComponent implements OnInit {
   }
 
   editSticker(sticker: any) {
-    this.selectedStickerToEdit = { ...sticker }; // Clonamos para no editar directamente
+    this.selectedStickerToEdit = { ...sticker };
   }
 
   saveStickerEdit() {
@@ -148,11 +157,11 @@ export class AdminComponent implements OnInit {
     if (this.selectedStickerToEdit.imageUrl) formData.append('imageUrl', this.selectedStickerToEdit.imageUrl);
     if (this.editSelectedFile) formData.append('image', this.editSelectedFile);
 
-    this.authService.updateSticker(this.selectedStickerToEdit.id, formData).subscribe({
+    this.stickersService.updateSticker(this.selectedStickerToEdit.id, formData).subscribe({
       next: () => {
         alert('Sticker actualizado con éxito');
         this.isUpdatingSticker = false;
-        this.cancelStickerEdit(); // Cerramos modal y limpiamos
+        this.cancelStickerEdit();
         this.loadStickers();
       },
       error: (err) => {
@@ -168,21 +177,20 @@ export class AdminComponent implements OnInit {
   }
 
   deleteSticker(id: number) {
-    if (confirm('⚠️ ¿Estás completamente seguro de eliminar este sticker del juego?')) {
-      this.authService.deleteSticker(id).subscribe({
+    if (confirm('¿Estás completamente seguro de eliminar este sticker del juego?')) {
+      this.stickersService.deleteSticker(id).subscribe({
         next: () => {
           alert('Sticker eliminado exitosamente');
-          this.loadStickers(); // Refrescamos la tabla
+          this.loadStickers();
         },
         error: (err) => alert('Error al eliminar: ' + (err.error?.error || err.message))
       });
     }
   }
 
-  // --- LÓGICA DE USUARIOS ---
   loadUsers() {
     this.isLoadingUsers = true;
-    this.authService.getAllUsers().subscribe({
+    this.userService.getAllUsers().subscribe({
       next: (data) => {
         this.users = data;
         this.isLoadingUsers = false;
@@ -195,7 +203,6 @@ export class AdminComponent implements OnInit {
   }
 
   editUser(user: any) {
-    // Clonamos el usuario para no editar la tabla directamente hasta guardar
     this.selectedUser = { ...user };
   }
 
@@ -206,11 +213,11 @@ export class AdminComponent implements OnInit {
 
     delete userToUpdate.password;
 
-    this.authService.updateProfile(userToUpdate.id, userToUpdate).subscribe({
+    this.userService.updateProfile(userToUpdate.id, userToUpdate).subscribe({
       next: () => {
         alert('Usuario actualizado con éxito');
         this.selectedUser = null;
-        this.loadUsers(); // Recargamos la tabla
+        this.loadUsers();
       },
       error: (err) => alert('Error al actualizar usuario: ' + (err.error?.error || err.message))
     });
@@ -241,7 +248,6 @@ export class AdminComponent implements OnInit {
     this.isCreatingUser = true;
     const formData = new FormData();
 
-    // El backend espera estos campos exactos según tu AuthController
     formData.append('name', this.registerData.name);
     formData.append('user', this.registerData.user);
     formData.append('email', this.registerData.email);
@@ -276,7 +282,7 @@ export class AdminComponent implements OnInit {
 
   deleteUser(id: number) {
     if (confirm('¿Estás completamente seguro de eliminar a este usuario de la base de datos?')) {
-      this.authService.deleteAccount(id).subscribe({
+      this.userService.deleteAccount(id).subscribe({
         next: () => {
           alert('Usuario eliminado exitosamente');
           this.loadUsers();

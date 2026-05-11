@@ -30,7 +30,7 @@ export class ChatService {
     this.stompClient = new Client({
       webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
       connectHeaders: {
-        Authorization: `Bearer ${token}` // Tu backend pide el token aquí
+        Authorization: `Bearer ${token}` 
       },
       debug: (str) => { console.log(str); },
       reconnectDelay: 5000,
@@ -40,14 +40,14 @@ export class ChatService {
 
     this.stompClient.onConnect = (frame) => {
       console.log('✅ Conectado al WS');
-      const username = localStorage.getItem('username'); // Obtenemos el usuario actual
+      const username = localStorage.getItem('username'); 
       
       // Suscribirse a la cola privada
       this.stompClient?.subscribe(`/queue/chat/${username}`, (message: Message) => {
         const payload = JSON.parse(message.body) as ChatMessage;
         
         if (payload.type === 'ASSIGN') {
-          this.currentPeer = payload.content; // El server manda el nombre de la otra persona en el content
+          this.currentPeer = payload.content;
         } else if (payload.type === 'DISCONNECT') {
           this.currentPeer = '';
         }
@@ -55,7 +55,6 @@ export class ChatService {
         this.messageSubject.next(payload);
       });
 
-      // Si es rol de soporte, avisar inmediatamente que está disponible
       if (this.authService.getRole() === 'SUPPORT' && username) {
         this.stompClient?.publish({
           destination: '/app/chat.agentAvailable',
@@ -67,7 +66,6 @@ export class ChatService {
     this.stompClient.activate();
   }
 
-  // Llamado por el usuario en Home
   requestSupport(username: string): void {
     this.stompClient?.publish({
       destination: '/app/chat.requestSupport',
@@ -75,7 +73,6 @@ export class ChatService {
     });
   }
 
-  // Enviar mensaje de texto
   sendMessage(sender: string, content: string): void {
     if (!this.currentPeer) return;
     const msg: ChatMessage = { type: 'CHAT', sender, recipient: this.currentPeer, content };
@@ -86,7 +83,6 @@ export class ChatService {
     });
   }
 
-  // Cerrar el chat
   closeSession(sender: string, role: string): void {
     this.stompClient?.publish({
       destination: '/app/chat.closeSession',

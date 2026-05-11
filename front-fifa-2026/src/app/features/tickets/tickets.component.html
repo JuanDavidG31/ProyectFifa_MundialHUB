@@ -3,10 +3,21 @@
     <div class="bg-shape shape-2"></div>
     <div class="bg-shape shape-3"></div>
 
-    <header class="top-nav">
-        <button class="back-nav" routerLink="/home">
-            <span class="icon">‹</span> Volver al Hub
-        </button>
+    <header class="top-nav fade-in-up">
+        <div class="logo-container" routerLink="/home" title="Ir al Inicio" style="cursor: pointer;">
+            <img src="assets/mundial.png" alt="Logo MundialHub" class="logo-image">
+            <h1 class="logo-text">Mundial<span class="gradient-text">Hub</span></h1>
+        </div>
+
+        <div class="nav-actions">
+            <button class="back-nav" routerLink="/home" title="Volver al panel principal">
+                <span class="icon">‹</span> Volver
+            </button>
+
+            <button class="btn-logout-nav" (click)="cerrarSesion()">
+                Cerrar Sesión
+            </button>
+        </div>
     </header>
 
     <main class="main-content">
@@ -17,7 +28,7 @@
 
         <div class="filters-toolbar" *ngIf="!isLoadingMatches">
             <div class="search-box">
-                <span class="search-icon">🔍</span>
+                <span class="search-icon">⌕</span>
                 <input type="text" placeholder="Buscar por equipo..." [(ngModel)]="searchTerm"
                     (input)="aplicarFiltros()">
             </div>
@@ -53,7 +64,7 @@
                         <div class="card-content">
                             <div class="ticket-header">
                                 <span class="date">
-                                    <i class="icon-calendar">📅</i> {{ partido.fecha }}
+                                    <i class="icon-calendar">🗒</i> {{ partido.fecha }}
                                 </span>
                                 <span class="badge"
                                     [ngClass]="{'sold-out': partido.estado === 'Agotado', 'few-left': partido.estado === 'Pocos boletos', 'available': partido.estado === 'Disponible'}">
@@ -88,7 +99,7 @@
                             </div>
 
                             <div class="stadium-info">
-                                <span>📍 Estadio {{ partido.estadio }}</span>
+                                <span>Estadio {{ partido.estadio }}</span>
                             </div>
                         </div>
 
@@ -109,7 +120,7 @@
                                 (click)="comprar(partido.id)">
 
                                 <span *ngIf="processingId !== partido.id" class="btn-text">
-                                    {{ partido.estado === 'Agotado' ? 'Agotado ❌' : 'Comprar Ticket 🎟️' }}
+                                    {{ partido.estado === 'Agotado' ? 'Agotado ⛌' : 'Comprar Ticket' }}
                                 </span>
 
                                 <span *ngIf="processingId === partido.id" class="spinner-small"></span>

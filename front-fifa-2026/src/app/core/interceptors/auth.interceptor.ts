@@ -7,7 +7,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getToken();
 
-  // Clonamos la petición para añadir el token si existe
   let authReq = req;
   if (token) {
     authReq = req.clone({
@@ -19,7 +18,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((error) => {
-      // Si el servidor responde 401 (vencido/inválido), cerramos sesión
       if (error.status === 401) {
         authService.logout();
       }

@@ -13,7 +13,7 @@
         <span class="stat-icon" style="margin-left: 10px;">📦</span>
         <span>Tienes <strong>{{ availablePacks }}</strong> Paquetes</span>
 
-        <span class="stat-icon" style="margin-left: 10px;">🪙</span>
+        <span class="stat-icon" style="margin-left: 10px;">$</span>
         <span>Tienes <strong>{{ coins }}</strong> Coins</span>
       </div>
       <button class="btn-buy" (click)="buyPack()" [disabled]="coins < 10 || isBuyingPack">

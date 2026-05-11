@@ -14,6 +14,7 @@ import co.edu.unbosque.projectFifaUbosque.dto.UserDTO;
 import co.edu.unbosque.projectFifaUbosque.model.User;
 import co.edu.unbosque.projectFifaUbosque.model.User.Role;
 import co.edu.unbosque.projectFifaUbosque.repository.ItineraryEventRepository;
+import co.edu.unbosque.projectFifaUbosque.repository.PackageReportRepository;
 import co.edu.unbosque.projectFifaUbosque.repository.TicketRepository;
 import co.edu.unbosque.projectFifaUbosque.repository.TransactionRepository;
 import co.edu.unbosque.projectFifaUbosque.repository.UserRepository;
@@ -46,6 +47,9 @@ public class UserService implements CRUDOperation<UserDTO, User> {
 
 	@Autowired
 	private ItineraryEventRepository itineraryRepo;
+	
+	@Autowired
+	private PackageReportRepository packageReportRepo;
 
 	public UserService() {
 	}
@@ -72,29 +76,25 @@ public class UserService implements CRUDOperation<UserDTO, User> {
 			if (dto.getUser() != null && !dto.getUser().isEmpty())
 				dto.setUser(AESUtil.decrypt(dto.getUser()));
 		} catch (Exception e) {
-			if (idForLog != null)
-				System.err.println("No se pudo desencriptar el campo 'user' del ID: " + idForLog);
+			
 		}
 		try {
 			if (dto.getName() != null && !dto.getName().isEmpty())
 				dto.setName(AESUtil.decrypt(dto.getName()));
 		} catch (Exception e) {
-			if (idForLog != null)
-				System.err.println("No se pudo desencriptar el campo 'name' del ID: " + idForLog);
+			
 		}
 		try {
 			if (dto.getEmail() != null && !dto.getEmail().isEmpty())
 				dto.setEmail(AESUtil.decrypt(dto.getEmail()));
 		} catch (Exception e) {
-			if (idForLog != null)
-				System.err.println("No se pudo desencriptar el campo 'email' del ID: " + idForLog);
+			
 		}
 		try {
 			if (dto.getCoutry() != null && !dto.getCoutry().isEmpty())
 				dto.setCoutry(AESUtil.decrypt(dto.getCoutry()));
 		} catch (Exception e) {
-			if (idForLog != null)
-				System.err.println("No se pudo desencriptar el campo 'pais' del ID: " + idForLog);
+			
 		}
 	}
 
@@ -106,6 +106,17 @@ public class UserService implements CRUDOperation<UserDTO, User> {
 				return false;
 		}
 		return true;
+	}
+	
+	public int rechargeCoins(String username, int amount) {
+	    Optional<User> found = userRepo.findByUser(AESUtil.encrypt(username));
+	    if (found.isPresent()) {
+	        User u = found.get();
+	        u.setCoins(u.getCoins() + amount); 
+	        userRepo.save(u);
+	        return u.getCoins(); 
+	    }
+	    return 0;
 	}
 
 	private boolean isValidPassword(String password) {
@@ -249,6 +260,10 @@ public class UserService implements CRUDOperation<UserDTO, User> {
 					ticketRepo.deleteByUserEmail(emailDesencriptado);
 				if (usernameDesencriptado != null)
 					ticketRepo.deleteByUserEmail(usernameDesencriptado);
+				if (emailDesencriptado != null)
+					packageReportRepo.deleteByUserEmail(emailDesencriptado);
+				if (usernameDesencriptado != null)
+					packageReportRepo.deleteByUserEmail(usernameDesencriptado);
 				transactionRepo.deleteByUser(user);
 				userStickerRepo.deleteByUser(user);
 
@@ -399,9 +414,9 @@ public class UserService implements CRUDOperation<UserDTO, User> {
 		List<User> users = userRepo.findAll();
 		for (User u : users) {
 			if (u.getRole() != null && u.getRole().name().equals("SUPPORT") && u.isCountActive()) {
-				return true; // Encontró al menos uno
+				return true; 
 			}
 		}
-		return false; // No hay nadie conectado
+		return false; 
 	}
 }

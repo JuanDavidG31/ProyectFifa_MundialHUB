@@ -2,11 +2,22 @@
   <div class="bg-shape shape-1"></div>
   <div class="bg-shape shape-2"></div>
 
-  <nav class="top-nav">
-    <button class="back-nav" routerLink="/home">
-      <span class="icon">‹</span> Volver al Hub
-    </button>
-  </nav>
+  <header class="top-nav fade-in-up">
+    <div class="logo-container" routerLink="/home" title="Ir al Inicio" style="cursor: pointer;">
+      <img src="assets/mundial.png" alt="Logo MundialHub" class="logo-image">
+      <h1 class="logo-text">Mundial<span class="gradient-text">Hub</span></h1>
+    </div>
+
+    <div class="nav-actions">
+      <button class="back-nav" routerLink="/home" title="Volver al panel principal">
+        <span class="icon">‹</span> Volver
+      </button>
+
+      <button class="btn-logout-nav" (click)="cerrarSesion()">
+        Cerrar Sesión
+      </button>
+    </div>
+  </header>
 
   <header class="header centered">
     <h1>Rumbo al Mundial <span class="gradient-text">2026</span></h1>
@@ -24,8 +35,8 @@
         <div class="match-card glass-card" *ngFor="let match of myFixtures">
 
           <div class="match-header">
-            <span class="league">🏆 {{ match.grupo }}</span>
-            <span class="date">📅 {{ match.fecha }}</span>
+            <span class="league">{{ match.grupo }}</span>
+            <span class="date">🗒 {{ match.fecha }}</span>
           </div>
 
           <div class="match-body">
@@ -56,7 +67,7 @@
       </div>
 
       <div class="alert-box error" *ngIf="myFixtures.length === 0">
-        ⚠️ No hay partidos próximos programados en la API para "{{ userCountry }}" o el país no está en el catálogo
+        No hay partidos próximos programados en la API para "{{ userCountry }}" o el país no está en el catálogo
         rápido.
       </div>
     </div>
@@ -69,7 +80,7 @@
 
       <div class="search-filters">
         <div class="search-box">
-          <span class="search-icon">🔍</span>
+          <span class="search-icon">⌕</span>
           <input type="text" placeholder="Buscar equipo..." [(ngModel)]="searchTerm" (input)="filterTeams()">
         </div>
         <select class="mock-filter">
@@ -92,7 +103,7 @@
             <img *ngIf="team.crest" [src]="team.crest" alt="escudo">
             <span *ngIf="!team.crest">{{ team.name.charAt(0) }}</span>
           </div>
-          <div class="mini-icon">🏟️</div>
+
         </div>
 
         <div class="card-bottom">

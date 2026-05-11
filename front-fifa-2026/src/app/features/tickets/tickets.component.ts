@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms'; // <-- Importamos FormsModule
 import { AuthService } from '../../core/services/auth.service';
-
+import { TicketsService } from '../../core/services/ticket.service';
+import { MatchesService } from '../../core/services/matches.service';
+import { ItineraryService } from '../../core/services/itinerary.service';
 @Component({
   selector: 'app-tickets',
   standalone: true,
@@ -25,7 +27,7 @@ export class TicketsComponent implements OnInit {
     'ene': '01', 'feb': '02', 'mar': '03', 'abr': '04', 'may': '05', 'jun': '06',
     'jul': '07', 'ago': '08', 'sep': '09', 'oct': '10', 'nov': '11', 'dic': '12'
   };
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private ticketsService: TicketsService, private matchesService: MatchesService, private itineraryService: ItineraryService) { }
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
@@ -51,7 +53,7 @@ export class TicketsComponent implements OnInit {
 
   cargarPartidosReales() {
     this.isLoadingMatches = true;
-    this.authService.getWcMatches().subscribe({
+    this.matchesService.getWcMatches().subscribe({
       next: (data) => {
         this.partidosRaw = data; // Guardamos la data original
         this.aplicarFiltros(); // Llamamos a los filtros en lugar de agrupar directamente
@@ -148,7 +150,9 @@ export class TicketsComponent implements OnInit {
     if (nombreUpper.includes('FINAL')) return 7;
     return 99;
   }
-
+  cerrarSesion() {
+    this.authService.logout();
+  }
   comprar(partidoId: number) {
     const partido = this.partidosRaw.find(p => p.id === partidoId);
     if (!partido) return;
@@ -165,7 +169,7 @@ export class TicketsComponent implements OnInit {
     };
 
     // Primero enviamos a la API de Tickets
-    this.authService.buyTicket(purchasePayload).subscribe({
+    this.ticketsService.buyTicket(purchasePayload).subscribe({
       next: (res) => {
 
         // --- 2. PREPARAMOS EL ITINERARIO (Formato Técnico) ---
@@ -181,7 +185,7 @@ export class TicketsComponent implements OnInit {
         }];
 
         // Guardamos en la tabla de itinerario
-        this.authService.saveItineraryEvents(eventoItinerario).subscribe({
+        this.itineraryService.saveItineraryEvents(eventoItinerario).subscribe({
           next: () => {
             this.processingId = null;
             alert("¡Compra exitosa! Ticket enviado y partido agendado.");

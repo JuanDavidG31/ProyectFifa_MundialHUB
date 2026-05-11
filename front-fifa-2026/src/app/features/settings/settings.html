@@ -13,8 +13,12 @@
 
   <main class="settings-content">
 
-    <div *ngIf="successMsg" class="alert success-alert">✅ {{ successMsg }}</div>
-    <div *ngIf="errorMsg" class="alert error-alert">⚠️ {{ errorMsg }}</div>
+    <div *ngIf="successMsg" class="alert success-alert">
+      <span class="alert-icon">✓</span> {{ successMsg }}
+    </div>
+    <div *ngIf="errorMsg" class="alert error-alert">
+      <span class="alert-icon">!</span> {{ errorMsg }}
+    </div>
 
     <div class="settings-grid">
       <div class="column-left">
@@ -23,13 +27,13 @@
           <h3>Foto de Perfil</h3>
           <div class="avatar-preview">
             <img *ngIf="currentAvatar" [src]="currentAvatar" alt="Avatar">
-            <div *ngIf="!currentAvatar" class="placeholder-avatar">👤</div>
+            <div *ngIf="!currentAvatar" class="placeholder-avatar">U</div>
           </div>
 
           <label class="file-upload-container">
             <input type="file" (change)="onImageSelected($event)" accept="image/*">
             <div class="file-info">
-              <span class="icon">📸</span>
+              <span class="icon">⇪</span>
               <span>{{ selectedImage ? selectedImage.name : 'Elegir nueva foto' }}</span>
             </div>
           </label>
@@ -45,7 +49,7 @@
           <p>Una vez elimines tu cuenta, no hay vuelta atrás. Perderás tus láminas y progreso.</p>
 
           <button class="btn-danger" (click)="eliminarCuenta()" [disabled]="isDeleting">
-            <span *ngIf="!isDeleting">🗑️ Eliminar Cuenta</span>
+            <span *ngIf="!isDeleting">Eliminar Cuenta</span>
             <span *ngIf="isDeleting" class="loading-content">
               <span class="loader"></span> Eliminando cuenta...
             </span>
@@ -86,32 +90,33 @@
               <input type="text" name="user" [(ngModel)]="formData.user">
             </div>
 
-            
+
             <div class="field password-field">
               <label>Nueva Contraseña (Opcional)</label>
-              
+
               <div class="input-wrapper">
                 <input [type]="showPassword ? 'text' : 'password'" name="password" [(ngModel)]="formData.password"
                   placeholder="Escribe aquí para cambiarla" (input)="checkPasswordStrength()">
                 <button type="button" class="btn-eye" (click)="togglePassword()">
-                  {{ showPassword ? '🔓' : '🔒' }}
+                  {{ showPassword ? 'ꗃ' : '🔒︎' }}
                 </button>
               </div>
 
               <div class="strength-meter" *ngIf="formData.password">
                 <div class="bar-background">
-                  <div class="bar-fill" [style.width.%]="passwordStrength * 25" [attr.data-strength]="passwordStrength"></div>
+                  <div class="bar-fill" [style.width.%]="passwordStrength * 25" [attr.data-strength]="passwordStrength">
+                  </div>
                 </div>
                 <span class="strength-text">{{ passwordFeedback }}</span>
               </div>
             </div>
 
             <div class="verification-block" *ngIf="formData.password">
-              <p class="warning-text">⚠️ Para cambiar tu contraseña, verifica tu correo.</p>
+              <p class="warning-text"><span class="warn-dot"></span> Para cambiar tu contraseña, verifica tu correo.</p>
 
               <button type="button" class="btn-action email-btn" (click)="enviarCodigoVerificacion()"
                 *ngIf="!isCodeSent" [disabled]="isSendingCode">
-                <span *ngIf="!isSendingCode">📧 Enviar código al correo</span>
+                <span *ngIf="!isSendingCode">Enviar código al correo</span>
                 <span *ngIf="isSendingCode" class="loader"></span>
               </button>
 

@@ -1,6 +1,5 @@
 @use "sass:color";
 
-// --- PALETA VIBRANTE Y GAMER ---
 $c-bg: #0b0f19;
 $c-primary: #ec4899;
 $c-secondary: #06b6d4;
@@ -22,15 +21,13 @@ $white: #ffffff;
 .stats-wrapper {
     position: relative;
     min-height: 100vh;
-    width: 100vw;
+    width: 100%;
     color: $white;
     padding-bottom: 60px;
     overflow-x: hidden;
 }
 
-// ==========================================
-// 🌟 FONDOS ANIMADOS
-// ==========================================
+// FONDOS ANIMADOS
 .bg-shape {
     position: fixed;
     border-radius: 50%;
@@ -57,32 +54,95 @@ $white: #ffffff;
     }
 }
 
-// ==========================================
-// 🌟 NAVEGACIÓN Y HEADER
-// ==========================================
+// BARRA DE NAVEGACIÓN SUPERIOR 
 .top-nav {
-    padding: 20px;
-    z-index: 10;
-    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 
-    .back-nav {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        color: $white;
-        padding: 10px 20px;
-        border-radius: 12px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 0.9rem;
-        display: inline-flex;
+    .logo-container {
+        display: flex;
         align-items: center;
-        gap: 8px;
-        transition: all 0.3s ease;
+        gap: 12px;
+        transition: transform 0.3s ease;
 
         &:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateX(-5px);
+            transform: scale(1.05);
+        }
+
+        .logo-image {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba($c-secondary, 0.5));
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: $white;
+            margin: 0;
+            letter-spacing: -0.5px;
+
+            .gradient-text {
+                background: linear-gradient(135deg, $c-primary, $c-secondary);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        }
+    }
+
+    .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+
+        .back-nav {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+
+            &:hover {
+                background: rgba($c-secondary, 0.1);
+                border-color: rgba($c-secondary, 0.3);
+                transform: translateX(-3px);
+            }
+        }
+
+        .btn-logout-nav {
+            background: rgba($c-error, 0.1);
+            border: 1px solid rgba($c-error, 0.3);
+            color: lighten($c-error, 10%);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+                background: $c-error;
+                color: $white;
+                box-shadow: 0 0 15px rgba($c-error, 0.4);
+                transform: translateY(-2px);
+            }
         }
     }
 }
@@ -114,9 +174,7 @@ $white: #ffffff;
     }
 }
 
-// ==========================================
-// 🌟 TABS ESTILO PÍLDORA (Segmented Control)
-// ==========================================
+// Segmented Control
 .tabs-wrapper {
     display: flex;
     justify-content: center;
@@ -129,7 +187,7 @@ $white: #ffffff;
     display: inline-flex;
     background: rgba(0, 0, 0, 0.4);
     padding: 6px;
-    border-radius: 50px; // Forma de píldora
+    border-radius: 50px;
     border: 1px solid rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
@@ -139,7 +197,7 @@ $white: #ffffff;
         border: none;
         color: rgba($white, 0.5);
         padding: 12px 24px;
-        border-radius: 40px; // Forma de píldora para el botón
+        border-radius: 40px;
         font-weight: 700;
         font-size: 0.95rem;
         cursor: pointer;
@@ -170,9 +228,7 @@ $white: #ffffff;
     }
 }
 
-// ==========================================
-// 🌟 TABLA DE CLASIFICACIÓN (Glass Card)
-// ==========================================
+// TABLA DE CLASIFICACIÓN 
 .ranking-board {
     max-width: 850px;
     margin: 0 auto;
@@ -291,7 +347,6 @@ $white: #ffffff;
             font-family: monospace;
         }
 
-        // 🌟 ESTILOS PREMIUM PARA EL TOP 3
         &.rank-1 .rank-badge {
             background: linear-gradient(135deg, #fde047, $c-gold);
             color: #000;
@@ -337,13 +392,10 @@ $white: #ffffff;
     }
 }
 
-// ==========================================
-// 🌟 SECCIÓN PARTIDOS (EN VIVO / PROGRAMADOS)
-// ==========================================
+// SECCIÓN PARTIDOS
 .matches-grid {
     display: grid;
     gap: 20px;
-    // Esto hace que las tarjetas se adapten solas. Si la pantalla es grande, caben 2. Si es móvil, 1.
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
 
@@ -359,13 +411,39 @@ $white: #ffffff;
     gap: 15px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
     &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        background: rgba(255, 255, 255, 0.05);
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 15px 35px rgba($c-secondary, 0.2);
+        border-color: rgba($c-secondary, 0.5);
     }
 
-    // 🎨 Estilos dinámicos según el estado del partido
+    &.is-live {
+        background: linear-gradient(135deg, rgba($c-error, 0.15) 0%, rgba(0, 0, 0, 0.4) 100%);
+        border: 2px solid rgba($c-error, 0.8);
+        box-shadow: 0 0 20px rgba($c-error, 0.2);
+
+        .status-badge {
+            background: rgba($c-error, 0.2);
+            color: lighten($c-error, 15%);
+            border: 1px solid rgba($c-error, 0.5);
+            animation: pulseRed 2s infinite;
+        }
+    }
+
+    &.is-scheduled {
+        background: linear-gradient(135deg, rgba($c-secondary, 0.12) 0%, rgba(0, 0, 0, 0.4) 100%);
+        border: 2px solid rgba($c-secondary, 0.6);
+
+        .status-badge {
+            background: rgba($c-secondary, 0.1);
+            color: $c-secondary;
+            border: 1px solid rgba($c-secondary, 0.3);
+        }
+    }
+
     &.in_play,
     &.paused {
         border-top: 2px solid $c-error;
@@ -389,7 +467,7 @@ $white: #ffffff;
 
     &.finished {
         border-top: 2px solid rgba($white, 0.2);
-        opacity: 0.7; // Los finalizados se ven ligeramente más apagados para no robar atención
+        opacity: 0.7;
 
         .status-badge {
             color: rgba($white, 0.6);
@@ -542,9 +620,7 @@ $white: #ffffff;
     }
 }
 
-// ==========================================
-// 🌟 ESTADOS VACÍOS Y CARGA
-// ==========================================
+// ESTADOS VACÍOS Y CARGA
 .no-data,
 .no-live-matches {
     text-align: center;
@@ -583,7 +659,6 @@ $white: #ffffff;
     }
 }
 
-// Colores dinámicos para el estado del partido
 .status-badge {
     &.finished {
         color: $c-silver;
@@ -605,9 +680,7 @@ $white: #ffffff;
 
 
 
-// ==========================================
-// 🌟 ANIMACIONES Y UTILIDADES
-// ==========================================
+// ANIMACIONES Y UTILIDADES
 .fade-in {
     animation: fadeIn 0.4s ease-out forwards;
 }
@@ -616,9 +689,7 @@ $white: #ffffff;
     animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-// ==========================================
-// 🌟 ESTILOS PARA EQUIPOS POR DEFINIR (TBD)
-// ==========================================
+// ESTILOS PARA EQUIPOS POR DEFINIR 
 .shield-placeholder {
     width: 50px;
     height: 50px;
@@ -631,12 +702,210 @@ $white: #ffffff;
     font-size: 1.5rem;
     color: rgba(255, 255, 255, 0.5);
     margin: 0 auto;
-    /* Lo centra horizontalmente */
 }
 
 .team-block.tbd .team-name {
     color: rgba(255, 255, 255, 0.5);
     font-style: italic;
+}
+
+// ESTILOS DEL MODAL DE PARTIDO
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-details-card {
+    position: relative;
+    width: 90%;
+    max-width: 700px;
+    background: rgba(15, 20, 30, 0.95);
+    border-top: 4px solid $c-secondary;
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+
+    .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: $white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: $c-error;
+            border-color: $c-error;
+            transform: rotate(90deg) scale(1.1);
+        }
+    }
+
+    .modal-match-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 30px;
+
+        .match-status-badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+
+            &.IN_PLAY,
+            &.PAUSED {
+                background: rgba($c-error, 0.2);
+                color: #fca5a5;
+                border: 1px solid rgba($c-error, 0.5);
+            }
+
+            &.FINISHED {
+                background: rgba($c-success, 0.2);
+                color: #6ee7b7;
+                border: 1px solid rgba($c-success, 0.5);
+            }
+
+            &.SCHEDULED,
+            &.TIMED {
+                background: rgba($white, 0.1);
+                color: $white;
+                border: 1px solid rgba($white, 0.2);
+            }
+        }
+
+        .match-stage {
+            color: $c-secondary;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .match-date {
+            color: rgba($white, 0.5);
+            font-size: 0.9rem;
+        }
+    }
+
+    .modal-match-scoreboard {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        padding: 30px 20px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        margin-bottom: 30px;
+
+        .team-side {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 30%;
+            text-align: center;
+
+            .big-crest {
+                width: 100px;
+                height: 100px;
+                object-fit: contain;
+                margin-bottom: 15px;
+                filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5));
+            }
+
+            h3 {
+                margin: 0;
+                font-size: 1.2rem;
+                font-weight: 700;
+            }
+        }
+
+        .score-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            .main-score {
+                font-size: 4rem;
+                font-weight: 900;
+                color: $white;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+
+                .vs {
+                    font-size: 1.5rem;
+                    color: rgba($white, 0.3);
+                    font-weight: 700;
+                }
+            }
+
+            .live-indicator {
+                color: $c-error;
+                font-weight: bold;
+                font-size: 0.9rem;
+                margin-top: 10px;
+            }
+        }
+    }
+
+    .modal-match-details {
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+
+        h4 {
+            margin: 0 0 15px 0;
+            color: rgba($white, 0.6);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 1rem;
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            &.penalties {
+                color: $c-gold;
+                font-weight: bold;
+                background: rgba($c-gold, 0.1);
+                border-radius: 8px;
+                border: 1px solid rgba($c-gold, 0.2);
+            }
+
+            strong {
+                font-size: 1.1rem;
+                letter-spacing: 2px;
+            }
+        }
+    }
 }
 
 @keyframes fadeIn {

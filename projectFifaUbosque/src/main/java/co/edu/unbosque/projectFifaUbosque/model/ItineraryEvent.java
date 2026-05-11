@@ -14,13 +14,13 @@ public class ItineraryEvent {
 	private String userEmail;
 
 	@Column(nullable = false)
-	private String eventType; // FLIGHT, HOTEL, MATCH
+	private String eventType; 
 
 	@Column(nullable = false)
 	private String title;
 
 	@Column(nullable = false)
-	private String eventDate; // Lo guardamos como String (YYYY-MM-DD) para coincidir con tu frontend
+	private String eventDate; 
 
 	private String location;
 
@@ -35,7 +35,6 @@ public class ItineraryEvent {
 		this.location = location;
 	}
 
-	// Getters y Setters
 	public Long getId() {
 		return id;
 	}

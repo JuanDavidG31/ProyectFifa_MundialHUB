@@ -16,19 +16,16 @@ public class ItineraryController {
 	@Autowired
 	private ItineraryEventService service;
 
-	// Traer los eventos del usuario
 	@GetMapping("/{email}")
 	public ResponseEntity<List<ItineraryEventDTO>> getUserItinerary(@PathVariable String email) {
 		return ResponseEntity.ok(service.getUserItinerary(email));
 	}
 
-	// Guardar eventos masivamente (Paquetes o eventos individuales)
 	@PostMapping("/save")
 	public ResponseEntity<List<ItineraryEventDTO>> saveEvents(@RequestBody List<ItineraryEventDTO> events) {
 		return ResponseEntity.ok(service.saveEvents(events));
 	}
 
-	// Borrar un evento
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> deleteEvent(@PathVariable Long id) {
 		service.deleteEvent(id);

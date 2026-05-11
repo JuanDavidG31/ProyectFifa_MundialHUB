@@ -23,6 +23,9 @@
       <button class="tab-btn" [class.active]="activeTab === 'stickers'" (click)="activeTab = 'stickers'">
         <span class="tab-icon"></span> Gestionar Stickers
       </button>
+      <button class="tab-btn" [class.active]="activeTab === 'notices'" (click)="activeTab = 'notices'">
+        <span class="tab-icon"></span> Noticias
+      </button>
     </aside>
 
     <main class="content-area">
@@ -35,7 +38,7 @@
 
         <div
           style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.05);">
-          <h3 style="margin-top: 0; color: #ec4899; margin-bottom: 15px;">➕ Añadir Nuevo Usuario</h3>
+          <h3 style="margin-top: 0; color: #ec4899; margin-bottom: 15px;">Añadir Nuevo Usuario</h3>
           <form (ngSubmit)="createUser()" #userForm="ngForm">
             <div class="form-grid">
               <div class="input-group">
@@ -76,7 +79,7 @@
               </div>
 
               <div class="input-group">
-                <label>Foto de Perfil (Avatar) 📸</label>
+                <label>Foto de Perfil (Avatar) </label>
                 <input type="file" (change)="onImageSelected($event)" accept="image/*" class="file-input">
                 <div class="file-info">
                 </div>
@@ -158,7 +161,7 @@
               <input type="text" [(ngModel)]="selectedUser.coutry">
             </div>
             <div class="input-group">
-              <label>URL del Avatar 🖼️</label>
+              <label>URL del Avatar </label>
               <input type="text" [(ngModel)]="selectedUser.avatar" placeholder="https://...">
             </div>
             <div class="input-group">
@@ -186,7 +189,7 @@
 
         <div
           style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.05);">
-          <h3 style="margin-top: 0; color: #f9c74f; margin-bottom: 15px;">➕ Añadir Nuevo Sticker</h3>
+          <h3 style="margin-top: 0; color: #f9c74f; margin-bottom: 15px;">Añadir Nuevo Sticker</h3>
           <form (ngSubmit)="createSticker()" #stickerForm="ngForm">
             <div class="form-grid">
               <div class="input-group">
@@ -222,11 +225,11 @@
 
               <div class="input-group" style="flex: 1 1 100%; flex-direction: row; gap: 15px;">
                 <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
-                  <label>Subir Imagen (PC) 💻</label>
+                  <label>Subir Imagen (PC) </label>
                   <input type="file" (change)="onFileSelected($event)" accept="image/*" class="file-input">
                 </div>
                 <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
-                  <label>O pegar URL de imagen 🔗</label>
+                  <label>O pegar URL de imagen </label>
                   <input type="text" [(ngModel)]="newSticker.imageUrl" name="imageUrl" placeholder="https://..."
                     [disabled]="selectedFile !== null">
                 </div>
@@ -277,7 +280,7 @@
                     {{ s.rarity }}
                   </span>
                 </td>
-                <td>{{ s.exchangeValue }} 🪙</td>
+                <td>{{ s.exchangeValue }} $</td>
                 <td class="table-actions">
                   <button class="btn-edit" (click)="editSticker(s)"
                     style="padding: 6px 12px; font-size: 0.8rem; background: rgba(6, 182, 212, 0.2); border: 1px solid #06b6d4; color: white; border-radius: 6px; cursor: pointer; margin-right: 5px;">✏️
@@ -295,7 +298,62 @@
           </div>
         </div>
 
+
+
       </div>
+      <div *ngIf="activeTab === 'notices'" class="tab-content glass-card fade-in">
+        <div class="content-header">
+          <h2>Portal de <span class="highlight">Noticias</span></h2>
+          <p class="section-desc">Publica novedades para que los usuarios las vean en el Home.</p>
+        </div>
+
+        <div class="sticker-form"
+          style="margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 30px;">
+          <div class="form-grid">
+            <div class="input-group">
+              <label>Título de la Noticia</label>
+              <input [(ngModel)]="newNotice.title" placeholder="Ej: ¡Nuevo sobre de leyendas disponible!">
+            </div>
+            <div class="input-group">
+              <label>URL de la Imagen</label>
+              <input [(ngModel)]="newNotice.imageUrl" placeholder="https://link-de-la-imagen.jpg">
+            </div>
+          </div>
+          <div class="input-group" style="margin-top: 15px;">
+            <label>Contenido</label>
+            <textarea [(ngModel)]="newNotice.content" placeholder="Escribe aquí el cuerpo de la noticia..."
+              style="width: 100%; min-height: 100px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; padding: 10px;"></textarea>
+          </div>
+          <button class="btn-success" (click)="onCreateNotice()" style="margin-top: 20px; width: 100%;">
+            Publicar Noticia Oficial
+          </button>
+        </div>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Fecha de Creación</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let n of notices">
+                <td style="font-weight: 600;">{{ n.title }}</td>
+                <td>{{ n.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td>
+                  <button class="btn-delete" (click)="deleteNotice(n.id)">Eliminar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="notices.length === 0" class="empty-state" style="text-align: center; padding: 40px;">
+            <p>No hay noticias publicadas todavía.</p>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
 
@@ -336,11 +394,11 @@
 
         <div class="input-group" style="flex: 1 1 100%; flex-direction: row; gap: 15px;">
           <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
-            <label>Subir Nueva Imagen (PC) 💻</label>
+            <label>Subir Nueva Imagen (PC) </label>
             <input type="file" (change)="onEditFileSelected($event)" accept="image/*" class="file-input">
           </div>
           <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
-            <label>O pegar URL de imagen 🔗</label>
+            <label>O pegar URL de imagen </label>
             <input type="text" [(ngModel)]="selectedStickerToEdit.imageUrl" name="editImageUrl"
               placeholder="https://..." [disabled]="editSelectedFile !== null">
           </div>
@@ -364,6 +422,7 @@
           <span *ngIf="isUpdatingSticker" class="spinner"></span>
         </button>
       </div>
+
     </div>
   </div>
 </div>

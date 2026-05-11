@@ -1,4 +1,4 @@
-import { Component , OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -19,14 +19,14 @@ export class Login implements OnInit {
   credentials: LoginRequest = {
     user: '',
     password: '',
-   
+
   };
   needsVerification = false;
   verificationCode = '';
   serverCode = '';
   loginError = '';
   isLoading = false;
-  showPassword = false; 
+  showPassword = false;
 
   constructor(
     public authService: AuthService,
@@ -37,7 +37,7 @@ export class Login implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
-login(): void {
+  login(): void {
     this.loginError = '';
     this.isLoading = true;
 
@@ -45,20 +45,20 @@ login(): void {
       next: (res: any) => {
         if (res.success) {
           localStorage.setItem('userName', this.credentials.user);
-          
+
           if (localStorage.getItem('verify') === 'false') {
             // Requiere verificación
             this.needsVerification = true;
             this.isLoading = false;
-            
+
             this.authService.sendEmailVerifyCode(this.credentials.user).subscribe();
-            
+
             this.authService.getVerificationCode(this.credentials.user).subscribe({
               next: (code: number) => this.serverCode = code.toString(), // Convertimos el int a texto
               error: (err) => console.error("Error obteniendo código", err)
             });
 
-          } else  {
+          } else {
             // Ya está verificado, entra normal
             this.router.navigate(['/home']);
           }
@@ -79,7 +79,7 @@ login(): void {
 
     if (this.verificationCode.trim() === this.serverCode.trim()) {
       this.isLoading = true;
-      
+
       this.authService.updateVerificationStatus(this.credentials.user).subscribe({
         next: () => {
           localStorage.setItem('verify', "true");

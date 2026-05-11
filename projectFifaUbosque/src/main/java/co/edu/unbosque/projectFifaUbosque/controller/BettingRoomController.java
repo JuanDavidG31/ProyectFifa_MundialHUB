@@ -21,18 +21,15 @@ public class BettingRoomController {
 	@Autowired
 	private BettingRoomService bettingRoomService;
 
-	// --- ENDPOINTS REST PARA EL LOBBY ---
 	@GetMapping("/my-room")
 	public ResponseEntity<?> getMyRoom(@RequestParam String username) {
 		BettingRoomService.Room room = bettingRoomService.getRoomForUser(username);
 		if (room != null) {
 			return ResponseEntity.ok(room);
 		}
-		return ResponseEntity.noContent().build(); // 204 si no está en ninguna sala
+		return ResponseEntity.noContent().build();
 	}
 
-	// 🌟 NUEVO: Endpoint de emergencia para expulsar al usuario cuando Cierra
-	// Sesión
 	@DeleteMapping("/force-leave")
 	public ResponseEntity<?> forceLeave(@RequestParam String username) {
 		BettingRoomService.Room room = bettingRoomService.getRoomForUser(username);
@@ -50,7 +47,6 @@ public class BettingRoomController {
 	@PostMapping("/create")
 	public ResponseEntity<?> createRoom(@RequestParam String roomName, @RequestParam String owner) {
 		try {
-			// Eliminamos AESUtil.decrypt porque el frontend ya envía el nombre limpio
 			BettingRoomService.Room newRoom = bettingRoomService.createRoom(roomName, owner);
 			return ResponseEntity.ok(newRoom);
 		} catch (Exception e) {
@@ -58,12 +54,9 @@ public class BettingRoomController {
 		}
 	}
 
-	// --- ENDPOINTS WEBSOCKET PARA INTERACCIÓN EN TIEMPO REAL ---
-
 	@MessageMapping("/betting.join")
 	public void joinRoomWebSocket(@Payload BetMessageDTO message) {
-		// En este caso, el 'sender' ya debe venir desencriptado o desencriptarse aquí
-		// si es necesario.
+
 		bettingRoomService.joinRoom(message.getRoomId(), message.getSender());
 	}
 

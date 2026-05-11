@@ -34,7 +34,6 @@ public class EmailService {
 			mailSender.send(message);
 			return true;
 		} catch (Exception ex) {
-			System.err.println("Error enviando correo simple: " + ex.getMessage());
 			return false;
 		}
 	}
@@ -78,7 +77,6 @@ public class EmailService {
 			mailSender.send(message);
 			return true;
 		} catch (Exception e) {
-			System.err.println("Error enviando el correo con QR: " + e.getMessage());
 			return false;
 		}
 	}

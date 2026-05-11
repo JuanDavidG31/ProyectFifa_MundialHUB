@@ -56,6 +56,12 @@ public class UserController {
 	public UserController() {
 	}
 	
+	@PutMapping("/recharge")
+	public ResponseEntity<Integer> rechargeCoins(@RequestParam String username, @RequestParam int amount) {
+	    int newBalance = userServ.rechargeCoins(username, amount);
+	    return new ResponseEntity<>(newBalance, HttpStatus.OK);
+	}
+	
 	@GetMapping("/active-support")
 	public ResponseEntity<Boolean> checkActiveSupport() {
 		return ResponseEntity.ok(userServ.hasActiveSupport());

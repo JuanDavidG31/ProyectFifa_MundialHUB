@@ -46,8 +46,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = { "http://localhost:8080", "http://localhost:8081", "http://localhost:8082",
-		"http://localhost:4200" })
+@CrossOrigin(origins = { "*" })
 @Tag(name = "Autenticación", description = "API para autenticación de usuarios (login y registro)")
 public class AuthController {
 
@@ -217,8 +216,7 @@ public class AuthController {
 
 			} catch (IOException e) {
 
-				System.err.println(
-						"Error al subir foto de perfil para usuario ID " + userCreado.getId() + ": " + e.getMessage());
+				
 			}
 		}
 

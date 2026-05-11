@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
+import { FootballService } from '../../core/services/football.service';
+import { MatchesService } from '../../core/services/matches.service';
 @Component({
   selector: 'app-teams',
   standalone: true,
@@ -22,21 +24,24 @@ export class TeamsComponent implements OnInit {
   filteredTeams: any[] = [];
 
   // 🌟 Ya no inyectamos HttpClient, solo usamos tu AuthService
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private footballService: FootballService, private matchesService: MatchesService) {}
 
   ngOnInit() {
     this.loadDashboardData();
+  }
+  cerrarSesion() {
+    this.authService.logout();
   }
 
   loadDashboardData() {
     const username = localStorage.getItem('userName') || 'normaluser';
 
-    this.authService.getUserDashboard(username).subscribe({
+    this.footballService.getUserDashboard(username).subscribe({
         next: (data) => {
           // El país inicial es el favorito del usuario
           this.userCountry = data.userCountry || 'Colombia'; 
           
-          this.authService.getWcMatches().subscribe({
+          this.matchesService.getWcMatches().subscribe({
             next: (matches: any[]) => {
               
               this.todosLosPartidosDelMundial = matches;

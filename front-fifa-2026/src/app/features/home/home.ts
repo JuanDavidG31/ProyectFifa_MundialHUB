@@ -7,6 +7,9 @@ import { ChatService, ChatMessage } from '../../core/services/chat.service';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ViewChild, ElementRef } from '@angular/core';
+import { FootballService } from '../../core/services/football.service';
+import { UserService } from '../../core/services/user.service';
+import { NoticeService } from '../../core/services/notice.service';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -15,6 +18,10 @@ import { ViewChild, ElementRef } from '@angular/core';
   styleUrls: ['./home.scss']
 })
 export class HomeComponent implements OnInit {
+  userCoins: number = 0;
+  isRechargeModalOpen = false;
+  rechargeAmount: number | null = null;
+  isProcessingPayment = false;
   isAvatarModalOpen = false;
   @ViewChild('carousel') carousel!: ElementRef;
   scrollProgress: number = 0;
@@ -28,7 +35,7 @@ export class HomeComponent implements OnInit {
   chatStatus = 'Inicia un chat con soporte';
   chatSubscription!: Subscription;
   userId: number | null = null;
-
+  noticias: any[] = [];
   showTutorial = false;
   currentTutorialStep = 0;
   favoriteTeam: string = 'Cargando...';
@@ -64,12 +71,20 @@ export class HomeComponent implements OnInit {
     private albumService: AlbumService,
     private authService: AuthService,
     private router: Router,
-    private chatService: ChatService, // <-- INYECTAR
+    private chatService: ChatService,
+    private footballService: FootballService,
+    private userService: UserService,
+    private noticeService: NoticeService
   ) { }
 
   ngOnInit(): void {
 
     this.loadUserData();
+    if (localStorage.getItem('verify') !== 'true') {
+      alert('Acceso denegado. Debes completar la verificación de seguridad.');
+      this.authService.logout();
+      return;
+    }
     window.scrollTo(0, 0);
     const role = this.authService.getRole();
     this.isAdmin = role === 'ADMIN';
@@ -111,13 +126,23 @@ export class HomeComponent implements OnInit {
       }
     });
     this.loadFavoriteTeam();
+    this.cargarNoticias();
+  }
+
+  cargarNoticias() {
+    this.noticeService.getNotices().subscribe({
+      next: (data) => {
+        this.noticias = data;
+      },
+      error: (err) => console.error('Error cargando noticias:', err)
+    });
   }
 
   toggleAvatarModal() {
-  if (this.userAvatar) { // Solo abrimos si realmente hay una imagen
-    this.isAvatarModalOpen = !this.isAvatarModalOpen;
+    if (this.userAvatar) { // Solo abrimos si realmente hay una imagen
+      this.isAvatarModalOpen = !this.isAvatarModalOpen;
+    }
   }
-}
 
   // Mueve el carrusel cuando el usuario arrastra la barra superior
   onScrollRangeChange(event: any) {
@@ -139,7 +164,7 @@ export class HomeComponent implements OnInit {
 
   loadFavoriteTeam(): void {
     const username = localStorage.getItem('userName') || 'normaluser';
-    this.authService.getUserDashboard(username).subscribe({
+    this.footballService.getUserDashboard(username).subscribe({
       next: (data) => {
         // Igual que en TeamsComponent, usamos userCountry
         this.favoriteTeam = data.userCountry || 'Ninguno';
@@ -169,7 +194,7 @@ export class HomeComponent implements OnInit {
     this.chatStatus = 'Verificando disponibilidad de agentes...';
 
     // 2. Llamamos a nuestro nuevo endpoint
-    this.authService.checkActiveSupport().subscribe({
+    this.userService.checkActiveSupport().subscribe({
       next: (hasSupport: boolean) => {
         if (hasSupport) {
           // ✅ SÍ HAY SOPORTE: Procedemos a conectarnos al WebSocket
@@ -241,7 +266,7 @@ export class HomeComponent implements OnInit {
   }
 
   nextTutorialStep() {
-    if (this.currentTutorialStep < 5) { 
+    if (this.currentTutorialStep < 5) {
       this.currentTutorialStep++;
     } else {
       this.finishTutorial();
@@ -257,7 +282,7 @@ export class HomeComponent implements OnInit {
   updateStatusConnectTrue() {
 
     if (this.userId !== null) {
-      this.authService.updateStatusConnectTrue(this.userId).subscribe({
+      this.userService.updateStatusConnectTrue(this.userId).subscribe({
         next: () => {
           localStorage.setItem('countActive', 'true');
           console.log('Connect status updated on server');
@@ -270,7 +295,7 @@ export class HomeComponent implements OnInit {
   updateStatusConnectFalse() {
 
     if (this.userId !== null) {
-      this.authService.updateStatusConnectFalse(this.userId).subscribe({
+      this.userService.updateStatusConnectFalse(this.userId).subscribe({
         next: () => {
           localStorage.setItem('countActive', 'false');
           console.log('Connect status updated on server');
@@ -284,7 +309,7 @@ export class HomeComponent implements OnInit {
     this.showTutorial = false;
 
     if (this.userId !== null) {
-      this.authService.updateTutorialStatus(this.userId).subscribe({
+      this.userService.updateTutorialStatus(this.userId).subscribe({
         next: () => {
           console.log('Tutorial status updated on server');
         }
@@ -296,14 +321,52 @@ export class HomeComponent implements OnInit {
   loadUserData(): void {
     const currentUsername = localStorage.getItem('username');
     if (currentUsername) {
-      this.authService.getUserByUsername(currentUsername).subscribe({
+      this.userService.getUserByUsername(currentUsername).subscribe({
         next: (me) => {
           if (me) {
+            this.userCoins = me.coins || 0;
+
             this.userId = me.id;
           }
         },
         error: () => console.error('Error cargando los datos del usuario')
       });
     }
+  }
+
+  openRechargeModal() {
+    this.isRechargeModalOpen = true;
+    this.rechargeAmount = null; // Limpiamos el input
+  }
+
+  closeRechargeModal() {
+    this.isRechargeModalOpen = false;
+  }
+
+  processPayment() {
+    if (!this.rechargeAmount || this.rechargeAmount <= 0) {
+      alert("Por favor, ingresa un monto válido.");
+      return;
+    }
+
+    this.isProcessingPayment = true;
+    const currentUsername = localStorage.getItem('username') || '';
+
+    // Simulamos un retraso de 2 segundos para que parezca que el banco está procesando
+    setTimeout(() => {
+      this.userService.rechargeUserCoins(currentUsername, this.rechargeAmount!).subscribe({
+        next: (newBalance) => {
+          this.userCoins = newBalance; // Actualizamos la UI al instante
+          this.isProcessingPayment = false;
+          this.closeRechargeModal();
+          alert(`¡Pago Exitoso! Has recargado ${this.rechargeAmount} 🪙 a tu cuenta.`);
+        },
+        error: (err) => {
+          console.error("Error en la recarga", err);
+          this.isProcessingPayment = false;
+          alert("Hubo un error procesando tu pago con el banco.");
+        }
+      });
+    }, 2000);
   }
 }

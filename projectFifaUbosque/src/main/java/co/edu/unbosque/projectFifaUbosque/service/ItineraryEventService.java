@@ -15,12 +15,10 @@ public class ItineraryEventService {
 	@Autowired
 	private ItineraryEventRepository repository;
 
-	// Obtener todos los eventos de un usuario
 	public List<ItineraryEventDTO> getUserItinerary(String userEmail) {
 		return repository.findByUserEmail(userEmail).stream().map(this::convertToDTO).collect(Collectors.toList());
 	}
 
-	// Guardar una lista de eventos (Ideal para cuando se compra un "Paquete")
 	public List<ItineraryEventDTO> saveEvents(List<ItineraryEventDTO> dtos) {
 		List<ItineraryEvent> events = dtos.stream().map(this::convertToEntity).collect(Collectors.toList());
 
@@ -29,12 +27,10 @@ public class ItineraryEventService {
 		return savedEvents.stream().map(this::convertToDTO).collect(Collectors.toList());
 	}
 
-	// Eliminar un evento individual
 	public void deleteEvent(Long id) {
 		repository.deleteById(id);
 	}
 
-	// --- Métodos utilitarios de conversión ---
 	private ItineraryEventDTO convertToDTO(ItineraryEvent entity) {
 		ItineraryEventDTO dto = new ItineraryEventDTO();
 		dto.setId(entity.getId());

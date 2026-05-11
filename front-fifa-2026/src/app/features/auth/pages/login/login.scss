@@ -1,9 +1,9 @@
 @use "sass:color";
 
-$c-bg: #0b0f19; 
-$c-primary: #ec4899; 
-$c-secondary: #06b6d4; 
-$c-tertiary: #8b5cf6; 
+$c-bg: #0b0f19;
+$c-primary: #ec4899;
+$c-secondary: #06b6d4;
+$c-tertiary: #8b5cf6;
 $white: #ffffff;
 $glass-bg: rgba(255, 255, 255, 0.05);
 $glass-border: rgba(255, 255, 255, 0.15);
@@ -65,10 +65,21 @@ $glass-border: rgba(255, 255, 255, 0.15);
 }
 
 @keyframes float {
-  0% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(50px, -50px) scale(1.1); }
-  66% { transform: translate(-30px, 40px) scale(0.9); }
-  100% { transform: translate(0, 0) scale(1); }
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(50px, -50px) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-30px, 40px) scale(0.9);
+  }
+
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
 }
 
 // TARJETA DE CRISTAL
@@ -88,8 +99,15 @@ $glass-border: rgba(255, 255, 255, 0.15);
 }
 
 @keyframes popIn {
-  from { opacity: 0; transform: scale(0.9) translateY(20px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .card-header {
@@ -98,17 +116,20 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
   .logo-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    margin-bottom: 10px;
+    gap: 10px;
 
-    .icon-pulse {
-      font-size: 2.5rem;
-      animation: heartbeat 2s infinite;
+    .logo-image {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 15px rgba($c-secondary, 0.4));
     }
 
     h1 {
+      margin: 0;
       font-size: 2.5rem;
       font-weight: 900;
       color: $white;
@@ -130,9 +151,20 @@ $glass-border: rgba(255, 255, 255, 0.15);
 }
 
 @keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  10%, 30% { transform: scale(1.15); }
-  20% { transform: scale(1.05); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  10%,
+  30% {
+    transform: scale(1.15);
+  }
+
+  20% {
+    transform: scale(1.05);
+  }
 }
 
 .login-form {
@@ -140,11 +172,11 @@ $glass-border: rgba(255, 255, 255, 0.15);
   flex-direction: column;
   gap: 20px;
 
-  // ¡NUEVO!: Estilos para el enlace de recuperar contraseña
+  
   .forgot-password-container {
     text-align: right;
-    margin-top: -10px; // Lo acerca al campo de contraseña
-    
+    margin-top: -10px; 
+
     .forgot-password-link {
       color: rgba($white, 0.6);
       font-size: 0.85rem;
@@ -153,7 +185,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
       transition: color 0.3s ease;
 
       &:hover {
-        color: $c-secondary; // Brilla en cian al pasar el mouse
+        color: $c-secondary; 
         text-decoration: underline;
       }
     }
@@ -174,12 +206,13 @@ $glass-border: rgba(255, 255, 255, 0.15);
     background: rgba(0, 0, 0, 0.4);
     box-shadow: 0 0 20px rgba($c-secondary, 0.2);
     transform: translateY(-2px);
-  }
 
-  .input-icon {
-    padding-left: 18px;
-    font-size: 1.3rem;
-    opacity: 0.8;
+    .input-icon {
+      background: $c-secondary;
+      color: #000; 
+      text-shadow: none;
+      box-shadow: 0 0 15px rgba($c-secondary, 0.6);
+    }
   }
 
   input {
@@ -187,6 +220,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
     background: transparent;
     border: none;
     padding: 18px 15px;
+    padding-right: 80px;
     color: $white;
     font-size: 1.05rem;
     outline: none;
@@ -199,31 +233,38 @@ $glass-border: rgba(255, 255, 255, 0.15);
     &:-webkit-autofill:hover,
     &:-webkit-autofill:focus,
     &:-webkit-autofill:active {
-      -webkit-text-fill-color: $white !important; 
-      transition: background-color 5000s ease-in-out 0s; 
-      box-shadow: inset 0 0 20px 20px transparent; 
+      -webkit-text-fill-color: $white !important;
+      transition: background-color 5000s ease-in-out 0s;
+      box-shadow: inset 0 0 20px 20px transparent;
     }
   }
 
   .btn-eye {
     position: absolute;
-    right: 15px;
-    background: none;
+    right: 8px;
+    background: rgba(255, 255, 255, 0.1);
     border: none;
+    color: rgba($white, 0.8);
     cursor: pointer;
-    font-size: 1.3rem;
-    transition: 0.2s;
-    opacity: 0.5;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: 0.3s;
 
     &:hover {
-      opacity: 1;
-      transform: scale(1.2);
+      background: rgba(255, 255, 255, 0.2);
+      color: $white;
     }
   }
 }
 
 .alert-box {
-  display: flex; align-items: center; gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   background: rgba(#ef4444, 0.15);
   border: 1px solid rgba(#ef4444, 0.4);
   padding: 12px 15px;
@@ -231,14 +272,31 @@ $glass-border: rgba(255, 255, 255, 0.15);
   color: #fca5a5;
   animation: shake 0.5s ease-in-out;
 
-  p { margin: 0; font-size: 0.9rem; font-weight: 500; }
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-8px); }
-  50% { transform: translateX(8px); }
-  75% { transform: translateX(-8px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-8px);
+  }
+
+  50% {
+    transform: translateX(8px);
+  }
+
+  75% {
+    transform: translateX(-8px);
+  }
 }
 
 .btn-play {
@@ -273,13 +331,19 @@ $glass-border: rgba(255, 255, 255, 0.15);
 }
 
 .spinner {
-  width: 22px; height: 22px;
+  width: 22px;
+  height: 22px;
   border: 3px solid rgba($white, 0.3);
   border-top-color: $white;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 .card-footer {
   margin-top: 30px;
@@ -300,6 +364,100 @@ $glass-border: rgba(255, 255, 255, 0.15);
         color: color.adjust($c-secondary, $lightness: 15%);
         text-shadow: 0 0 10px rgba($c-secondary, 0.5);
       }
+    }
+  }
+}
+
+// ==========================================
+// 🔒 SECCIÓN DE VERIFICACIÓN (DISEÑO LIMPIO)
+// ==========================================
+.verification-step {
+  
+  .step-header {
+    text-align: center;
+    margin-bottom: 30px;
+
+    .pin-icon {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+      font-weight: 900;
+      letter-spacing: 4px;
+      color: $c-secondary;
+      text-shadow: 0 0 15px rgba($c-secondary, 0.4);
+    }
+
+    h2 {
+      margin: 0;
+      color: $white;
+      font-size: 1.6rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+      color: rgba($white, 0.5);
+      margin-top: 8px;
+    }
+  }
+
+  .pin-group {
+    margin-bottom: 25px;
+
+    .pin-input {
+      width: 100%;
+      text-align: center;
+      letter-spacing: 15px; // Separa los números para que parezcan cajas
+      font-weight: 800;
+      font-size: 2.2rem;
+      padding: 15px;
+      border: 1px solid rgba($white, 0.1);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.4);
+      color: $white;
+      transition: all 0.3s ease;
+
+      &::placeholder {
+        color: rgba($white, 0.1);
+        font-weight: 400;
+      }
+
+      &:focus {
+        border-color: $c-secondary;
+        box-shadow: 0 0 20px rgba($c-secondary, 0.3);
+        background: rgba($c-secondary, 0.05);
+        outline: none;
+      }
+    }
+  }
+
+  // Botón Verde de Éxito
+  .btn-verify {
+    background: linear-gradient(135deg, #10b981, #059669);
+    box-shadow: 0 10px 25px rgba(#10b981, 0.3);
+
+    &:hover:not(:disabled) {
+      box-shadow: 0 15px 35px rgba(#10b981, 0.4);
+      transform: translateY(-3px);
+      background: linear-gradient(135deg, #34d399, #059669);
+    }
+  }
+
+  // Botón Cancelar (Sobrio)
+  .btn-cancel {
+    margin-top: 15px;
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    background: transparent;
+    border: 1px solid rgba($white, 0.15);
+    color: rgba($white, 0.8);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba($white, 0.05);
+      border-color: rgba($white, 0.3);
+      color: $white;
     }
   }
 }

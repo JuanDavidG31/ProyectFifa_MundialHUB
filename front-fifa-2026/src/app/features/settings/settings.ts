@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient} from '@angular/common/http';
 import { AuthService } from '../../core/services/auth.service';
-
+import { UserService } from '../../core/services/user.service';
 @Component({
   selector: 'app-settings',
   standalone: true,
@@ -52,6 +52,7 @@ export class Settings implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private userService: UserService,
     private http: HttpClient,
     private router: Router
   ) { }
@@ -100,7 +101,7 @@ export class Settings implements OnInit {
   loadUserData(): void {
     const currentUsername = localStorage.getItem('username');
     if (currentUsername) {
-      this.authService.getUserByUsername(currentUsername).subscribe({
+      this.userService.getUserByUsername(currentUsername).subscribe({
         next: (me) => {
           if (me) {
             this.userId = me.id;
@@ -127,7 +128,7 @@ export class Settings implements OnInit {
     if (!this.selectedImage || !this.userId) return;
 
     this.isUploading = true;
-    this.authService.actualizarFotoDePerfil(this.userId, this.selectedImage).subscribe({
+    this.userService.actualizarFotoDePerfil(this.userId, this.selectedImage).subscribe({
       next: (res) => {
         this.isUploading = false;
         if (res.avatar) {
@@ -193,7 +194,7 @@ export class Settings implements OnInit {
       password: this.formData.password || undefined
     };
 
-    this.authService.updateProfile(this.userId, payload).subscribe({
+    this.userService.updateProfile(this.userId, payload).subscribe({
       next: () => {
         this.isLoading = false;
         const userCambiado = this.formData.user !== localStorage.getItem('username');
@@ -221,7 +222,7 @@ export class Settings implements OnInit {
     if (confirmar) {
       this.isDeleting = true;
 
-      this.authService.deleteAccount(this.userId).subscribe({
+      this.userService.deleteAccount(this.userId).subscribe({
         next: () => {
           this.isDeleting = false;
           alert('Tu cuenta ha sido eliminada. Lamentamos verte partir.');

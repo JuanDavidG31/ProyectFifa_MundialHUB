@@ -4,6 +4,7 @@ import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BettingService, BetMessageDTO } from '../../core/services/betting.service';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service';
 
 export interface MatchPrediction {
   id: number;
@@ -16,7 +17,7 @@ export interface MatchPrediction {
   homeScorePred: number | null;
   awayScorePred: number | null;
   isSaved: boolean;
-  status: 'PENDING' | 'LOCKED' | 'FINISHED'; // PENDING: Se puede apostar, LOCKED: Partido en juego, FINISHED: Terminado
+  status: 'PENDING' | 'LOCKED' | 'FINISHED';
 }
 
 @Component({
@@ -30,7 +31,6 @@ export class ApuestasComponent implements OnInit {
 
   activeTab: 'proximos' | 'historial' | 'salas' = 'proximos'; // <-- Añadido 'salas'
 
-  // Variables de Salas
   availableRooms: any[] = [];
   currentRoom: any = null;
   joinRequests: BetMessageDTO[] = []; // Solicitudes pendientes
@@ -38,12 +38,10 @@ export class ApuestasComponent implements OnInit {
 
   isCreateRoomModalOpen = false;
   newRoomName = '';
-  // 🌟 DASHBOARD DEL USUARIO
   userPoints = 1250;
   userRank = 34;
   accuracy = 68;
 
-  // 🌟 MOCK DATA: Partidos disponibles para apostar
   upcomingMatches: MatchPrediction[] = [
     {
       id: 1, homeTeam: 'Argentina', homeFlag: 'https://crests.football-data.org/762.png',
@@ -61,24 +59,24 @@ export class ApuestasComponent implements OnInit {
       id: 3, homeTeam: 'Brasil', homeFlag: 'https://crests.football-data.org/764.svg',
       awayTeam: 'Portugal', awayFlag: 'https://crests.football-data.org/765.svg',
       date: 'Hoy, 21:00', group: 'Cuartos de Final',
-      homeScorePred: 2, awayScorePred: 1, isSaved: true, status: 'LOCKED' // Ya empezó, no se puede cambiar
+      homeScorePred: 2, awayScorePred: 1, isSaved: true, status: 'LOCKED'
     }
   ];
   private subs: Subscription = new Subscription();
   constructor(
     private bettingService: BettingService,
-    private router: Router // 🌟 Inyectamos el servicio de rutas
+    private authService: AuthService,
+    private router: Router
   ) { }
   ngOnInit(): void {
-    alert("⚠️ El apartado de Pronósticos se encuentra actualmente en mantenimiento para mejorar tu experiencia. Serás redirigido al inicio.");
-    this.router.navigate(['/home']);
+    // this.router.navigate(['/home']);
 
     window.scrollTo(0, 0);
     this.bettingService.connect();
 
     this.bettingService.recoverRoom(this.myUsername).subscribe(room => {
       if (room && room.id) {
-        this.bettingService.currentRoom$.next(room); // Restauramos la sala
+        this.bettingService.currentRoom$.next(room);
       }
     });
 
@@ -86,7 +84,6 @@ export class ApuestasComponent implements OnInit {
       this.bettingService.currentRoom$.subscribe(room => {
         this.currentRoom = room;
 
-        // 🌟 NUEVO: Si la sala desaparece y estoy en la pestaña 'salas', recargo el lobby
         if (!room && this.activeTab === 'salas') {
           this.loadRooms();
         }
@@ -106,9 +103,12 @@ export class ApuestasComponent implements OnInit {
     );
   }
 
+  cerrarSesion() {
+    this.authService.logout();
+  }
+
   ngOnDestroy(): void {
-    // 🌟 CLAVE: Cancelamos la escucha visual para no tener fugas de memoria,
-    // pero NO llamamos a this.bettingService.disconnect(), así la sala sigue viva en el fondo.
+
     this.subs.unsubscribe();
   }
 
@@ -130,7 +130,7 @@ export class ApuestasComponent implements OnInit {
           alert('¡Sala creada! Eres el administrador.');
         },
         error: (err) => {
-          // Si el backend lanza la alerta de nombre repetido, la mostramos aquí
+
           alert(err.error?.error || 'Error al crear la sala. Verifica el nombre.');
         }
       });
@@ -145,7 +145,6 @@ export class ApuestasComponent implements OnInit {
     }
   }
 
-  // --- LÓGICA DE SALAS ---
   loadRooms() {
     this.bettingService.getAvailableRooms().subscribe(rooms => {
       this.availableRooms = rooms;
@@ -171,7 +170,6 @@ export class ApuestasComponent implements OnInit {
     this.bettingService.respondToRequest(req.roomId!, this.myUsername, req.sender!, accept);
   }
 
-  // Método modificado para compartir predicción
   savePrediction(match: MatchPrediction) {
     if (match.homeScorePred === null || match.awayScorePred === null) {
       alert("Por favor ingresa ambos resultados antes de guardar.");
@@ -179,13 +177,11 @@ export class ApuestasComponent implements OnInit {
     }
     match.isSaved = true;
 
-    // Si estamos en una sala, compartimos automáticamente el pronóstico
     if (this.currentRoom) {
       this.bettingService.sharePrediction(this.currentRoom.id, this.myUsername, match);
       alert('¡Pronóstico guardado y compartido en la sala!');
     }
 
-    // Efecto visual...
     const btn = document.getElementById('btn-save-' + match.id);
     if (btn) { /* ... tu lógica anterior de UI ... */ }
   }

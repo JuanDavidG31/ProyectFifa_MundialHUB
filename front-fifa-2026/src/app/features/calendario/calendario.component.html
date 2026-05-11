@@ -2,11 +2,22 @@
     <div class="bg-shape shape-1"></div>
     <div class="bg-shape shape-2"></div>
 
-    <nav class="top-nav">
-        <button class="back-nav" routerLink="/home">
-            <span class="icon">‹</span> Volver al Hub
-        </button>
-    </nav>
+    <header class="top-nav fade-in-up">
+        <div class="logo-container" routerLink="/home" title="Ir al Inicio" style="cursor: pointer;">
+            <img src="assets/mundial.png" alt="Logo MundialHub" class="logo-image">
+            <h1 class="logo-text">Mundial<span class="gradient-text">Hub</span></h1>
+        </div>
+
+        <div class="nav-actions">
+            <button class="back-nav" routerLink="/home" title="Volver al panel principal">
+                <span class="icon">‹</span> Volver
+            </button>
+
+            <button class="btn-logout-nav" (click)="cerrarSesion()">
+                Cerrar Sesión
+            </button>
+        </div>
+    </header>
 
     <header class="header centered fade-in-up">
         <h1>Planificador de <span class="gradient-text">Viaje</span></h1>
@@ -17,76 +28,143 @@
         <div class="tabs-wrapper fade-in-up">
             <div class="tabs-container">
                 <button class="tab-btn" [class.active]="activeTab === 'itinerario'" (click)="setTab('itinerario')">
-                    🗺️ Mi Itinerario
+                    MI ITINERARIO
                 </button>
                 <button class="tab-btn" [class.active]="activeTab === 'paquetes'" (click)="setTab('paquetes')">
-                    🎒 Paquetes Predefinidos
+                    PAQUETES
+                </button>
+                <button class="tab-btn" [class.active]="activeTab === 'reportes'" (click)="setTab('reportes')">
+                    MIS REPORTES
                 </button>
             </div>
         </div>
 
         <div class="itinerary-view fade-in" *ngIf="activeTab === 'itinerario'">
 
-            <div class="form-card glass-card fade-in" *ngIf="showAddEventForm">
-                <h3>Añadir Nuevo Evento</h3>
-                <div class="form-row">
-                    <select [(ngModel)]="newEvent.type">
-                        <option value="FLIGHT">✈️ Vuelo</option>
-                        <option value="HOTEL">🏨 Hotel</option>
-                        <option value="MATCH">⚽ Partido / Evento</option>
-                    </select>
-                    <input type="date" [(ngModel)]="newEvent.date">
-                </div>
-                <input type="text" placeholder="Título (Ej: Vuelo Bogotá - Miami)" [(ngModel)]="newEvent.title">
-                <input type="text" placeholder="Ubicación / Aeropuerto / Estadio" [(ngModel)]="newEvent.location">
+            <div class="planner-dashboard">
 
-                <div class="form-actions">
-                    <button class="btn-outline" (click)="showAddEventForm = false">Cancelar</button>
-                    <button class="btn-neon" (click)="addEvent()">Guardar</button>
-                </div>
-            </div>
+                <div class="planner-sidebar">
 
-            <div class="calendar-grid-wrapper glass-card fade-in-up">
+                    <div class="form-card glass-card fade-in smart-builder-vip">
+                        <div class="builder-header">
+                            <div class="header-text">
+                                <h3>Constructor de Pack</h3>
+                                <p>Selecciona uno o varios partidos para armar tu viaje</p>
+                            </div>
+                        </div>
 
-                <div class="month-header">
-                    <button class="btn-nav-month" (click)="prevMonth()">❮</button>
-                    <h2>{{ currentDate | date:'MMMM yyyy' | uppercase }}</h2>
-                    <button class="btn-nav-month" (click)="nextMonth()">❯</button>
-                </div>
-
-                <div class="weekdays-row">
-                    <div class="weekday" *ngFor="let day of weekDays">{{ day }}</div>
-                </div>
-
-                <div class="days-grid">
-                    <div class="day-cell" *ngFor="let day of calendarDays" [ngClass]="{'empty-cell': !day.dayNum}">
-
-                        <ng-container *ngIf="day.dayNum">
-                            <span class="day-number">{{ day.dayNum }}</span>
-
-                            <div class="day-events-list">
-                                <div class="event-pill fade-in" *ngFor="let ev of day.events" [ngClass]="ev.type"
-                                    title="{{ev.title}} en {{ev.location}}" (click)="openEventModal(ev)"
-                                    style="cursor: pointer;">
-                                    <span class="evt-icon">
-                                        {{ ev.type === 'FLIGHT' ? '✈️' : ev.type === 'HOTEL' ? '🏨' : '⚽' }}
-                                    </span>
-                                    <span class="evt-text">{{ ev.title }}</span>
-                                    <button class="btn-delete-evt"
-                                        (click)="deleteEvent(ev.id); $event.stopPropagation()">✖</button>
+                        <div class="multi-select-container">
+                            <label class="label-small">Partidos Disponibles (Selecciona los que quieras)</label>
+                            <div class="match-selection-list">
+                                <div class="match-item-check" *ngFor="let m of allMatches"
+                                    (click)="toggleMatchSelection(m.id)"
+                                    [class.selected]="selectedMatchIds.includes(m.id)">
+                                    <div class="check-box">
+                                        <span *ngIf="selectedMatchIds.includes(m.id)">✓</span>
+                                    </div>
+                                    <div class="match-info-mini">
+                                        <strong>{{ m.local }} vs {{ m.visitante }}</strong>
+                                        <small>{{ m.fecha }} • {{ m.estadio }}</small>
+                                    </div>
                                 </div>
                             </div>
-                        </ng-container>
+                        </div>
+
+                        <button class="btn-neon full-width generate-btn"
+                            [disabled]="selectedMatchIds.length === 0 || isGeneratingPack"
+                            (click)="createCustomPackage()">
+                            <span *ngIf="!isGeneratingPack">Generar Plan ({{ selectedMatchIds.length }} Partidos)</span>
+                            <ng-container *ngIf="isGeneratingPack">
+                                <span class="spinner-small"></span>
+                                <span style="margin-left: 10px;">Armando itinerario...</span>
+                            </ng-container>
+                        </button>
+                    </div>
+
+                    <button class="add-event-neon-btn" (click)="showAddEventForm = !showAddEventForm"
+                        [class.form-open]="showAddEventForm">
+                        <span>{{ showAddEventForm ? 'Cerrar Formulario' : 'Añadir Evento Manual' }}</span>
+                    </button>
+
+                    <div class="form-card glass-card fade-in manual-form-card" *ngIf="showAddEventForm">
+                        <h3>Nuevo Evento</h3>
+                        <p>Completa los detalles para agendarlo en tu itinerario.</p>
+
+                        <div class="input-row-double">
+                            <div class="input-group">
+                                <label>Título del Evento</label>
+                                <input type="text" [(ngModel)]="newEventTitle" placeholder="Ej: Vuelo Copa o Hotel...">
+                            </div>
+                            <div class="input-group">
+                                <label>Categoría</label>
+                                <select [(ngModel)]="newEventType" class="custom-select">
+                                    <option value="MATCH">Partido / Evento</option>
+                                    <option value="FLIGHT">Vuelo</option>
+                                    <option value="OTHER">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="input-row-double">
+                            <div class="input-group">
+                                <label>Fecha</label>
+                                <input type="date" [(ngModel)]="newEventDate">
+                            </div>
+                            <div class="input-group">
+                                <label>Ubicación</label>
+                                <input type="text" [(ngModel)]="newEventLocation"
+                                    placeholder="Ej: Estadio, Aeropuerto o Ciudad">
+                            </div>
+                        </div>
+
+                        <button class="btn-neon save-btn" (click)="saveManualEvent()">
+                            Añadir al Calendario
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="planner-main">
+                    <div class="calendar-grid-wrapper glass-card fade-in-up">
+
+                        <div class="month-header">
+                            <button class="btn-nav-month" (click)="prevMonth()">❮</button>
+                            <h2>{{ currentDate | date:'MMMM yyyy' | uppercase }}</h2>
+                            <button class="btn-nav-month" (click)="nextMonth()">❯</button>
+                        </div>
+
+                        <div class="weekdays-row">
+                            <div class="weekday" *ngFor="let day of weekDays">{{ day }}</div>
+                        </div>
+
+                        <div class="days-grid">
+                            <div class="day-cell" *ngFor="let day of calendarDays"
+                                [ngClass]="{'empty-cell': !day.dayNum}">
+                                <ng-container *ngIf="day.dayNum">
+                                    <span class="day-number">{{ day.dayNum }}</span>
+
+                                    <div class="day-events-list">
+                                        <div class="event-pill fade-in" *ngFor="let ev of day.events"
+                                            [ngClass]="ev.type" (click)="openEventModal(ev)" style="cursor: pointer;">
+                                            <span class="evt-text">{{ ev.title }}</span>
+                                            <button class="btn-delete-evt"
+                                                (click)="deleteEvent(ev.id); $event.stopPropagation()">✕</button>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
+
             </div>
         </div>
 
         <div class="packages-view fade-in" *ngIf="activeTab === 'paquetes'">
             <div class="search-container fade-in-up">
                 <div class="search-box">
-                    <span class="search-icon">🔍</span>
+                    <span class="search-icon">⌕</span>
                     <input type="text" placeholder="Buscar paquetes (ej: Argentina, Grupo A...)"
                         [(ngModel)]="searchTerm" (input)="filterPackages()">
                 </div>
@@ -97,8 +175,7 @@
                     <div class="pkg-header">
                         <span class="pkg-icon">{{ pkg.imageIcon }}</span>
                         <div>
-                            <small
-                                style="color: #ec4899; font-weight: bold; text-transform: uppercase; display: block; font-size: 0.7rem; letter-spacing: 1px; margin-bottom: 2px;">
+                            <small class="category-text">
                                 {{ pkg.category }}
                             </small>
                             <h3 style="margin: 0;">{{ pkg.name }}</h3>
@@ -111,17 +188,62 @@
                         </div>
 
                         <button class="btn-buy" (click)="openPackageDetails(pkg)">
-                            Ver Plan 📋
+                            Ver Plan
                         </button>
                     </div>
                 </div>
 
             </div>
         </div>
+        <div class="itinerary-view fade-in" *ngIf="activeTab === 'reportes'">
+            <div class="form-card glass-card fade-in">
 
+                <div class="builder-header">
+                    <div class="header-text">
+                        <h2>Historial de Adquisiciones</h2>
+                        <p>Registro completo de todos tus paquetes, itinerarios generados y eventos manuales.</p>
+                    </div>
+                    <button class="btn-outline" (click)="loadReports()">Actualizar Registro</button>
+                </div>
+
+                <div class="reports-container">
+                    <div *ngIf="isLoadingReports" class="loading-state text-center" style="padding: 20px;">
+                        <span class="spinner-text">Cargando tu historial...</span>
+                    </div>
+
+                    <div *ngIf="!isLoadingReports && userReports.length === 0" class="empty-state">
+                        <p>No tienes reportes de compras o itinerarios registrados aún.</p>
+                    </div>
+
+                    <div class="report-list" *ngIf="!isLoadingReports && userReports.length > 0">
+                        <div class="report-card fade-in-up" *ngFor="let rep of userReports">
+
+                            <div class="report-icon"
+                                [ngClass]="{'gen': rep.packageType==='GENERADO', 'man': rep.packageType==='MANUAL', 'pre': rep.packageType==='PREDEFINIDO'}">
+                                {{ rep.packageType === 'GENERADO' ? 'IA' : rep.packageType === 'MANUAL' ? 'MN' : 'PQ' }}
+                            </div>
+
+                            <div class="report-details">
+                                <h3>{{ rep.packageName }}</h3>
+                                <div class="badges">
+                                    <span class="type-badge" [ngClass]="rep.packageType.toLowerCase()">{{
+                                        rep.packageType }}</span>
+                                    <span class="date-badge">{{ rep.purchaseDate | date:'medium' }}</span>
+                                </div>
+                            </div>
+
+                            <div class="report-status">
+                                <span class="status-ok">✔ Procesado</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </main>
 </div>
-
 
 
 <div class="modal-overlay fade-in" *ngIf="isDetailsModalOpen && selectedPackage" (click)="closePackageDetails()">
@@ -139,16 +261,16 @@
         <div class="modal-body">
             <p class="description">{{ selectedPackage.description }}</p>
 
-            <h3>📋 ¿Qué incluye este plan?</h3>
+            <h3>¿Qué incluye este plan?</h3>
             <div class="match-list-scroll">
                 <div class="match-detail-item" *ngFor="let m of selectedPackage.matchesRawData">
                     <div class="match-info">
                         <strong>{{ m.local }} vs {{ m.visitante }}</strong>
-                        <span>📅 {{ m.fecha }}</span>
-                        <span>📍 {{ m.estadio }}</span>
+                        <span class="detail-line"><span class="detail-label">FECHA:</span> {{ m.fecha }}</span>
+                        <span class="detail-line"><span class="detail-label">LUGAR:</span> {{ m.estadio }}</span>
                     </div>
                     <div class="extra-info">
-                        <span class="flight-badge">✈️ Vuelo incluido ({{
+                        <span class="flight-badge">Vuelo incluido ({{
                             generarFechaVuelo(formatearFechaParaCalendario(m.fecha)) | date:'mediumDate' }})</span>
                     </div>
                 </div>
@@ -168,33 +290,34 @@
         </div>
     </div>
 </div>
+
 <div class="modal-overlay fade-in" *ngIf="isEventModalOpen && selectedEvent" (click)="closeEventModal()">
     <div class="modal-details-card glass-card fade-in-up event-modal-card" (click)="$event.stopPropagation()">
         <button class="close-btn" (click)="closeEventModal()">✕</button>
 
         <div class="modal-header event-modal-header">
-            <span class="pkg-icon-large" [ngClass]="selectedEvent.type">
-                {{ selectedEvent.type === 'FLIGHT' ? '✈️' : selectedEvent.type === 'HOTEL' ? '🏨' : '⚽' }}
+            <span class="pkg-icon-large type-badge" [ngClass]="selectedEvent.type">
+                {{ selectedEvent.type === 'FLIGHT' ? 'VUELO' : selectedEvent.type === 'HOTEL' ? 'HOTEL' : 'PARTIDO' }}
             </span>
             <h2 class="event-title">{{ selectedEvent.title }}</h2>
-            <small class="category-label">{{ selectedEvent.type === 'MATCH' ? 'Partido / Evento' : selectedEvent.type
-                === 'FLIGHT' ? 'Vuelo' : 'Alojamiento' }}</small>
         </div>
 
         <div class="modal-body">
-            <div class="event-info-box">
-                <div class="info-row">
-                    <span class="icon-big">📅</span>
-                    <div class="info-text">
-                        <small>Fecha Programada</small>
-                        <strong>{{ selectedEvent.date | date:'fullDate' }}</strong>
+            <div class="modal-body">
+                <div class="event-info-box">
+                    <div class="info-row">
+                        <div class="badge-icon">FECHA</div>
+                        <div class="info-text">
+                            <strong>{{ selectedEvent.date | date:'fullDate' }}</strong>
+                        </div>
                     </div>
-                </div>
-                <div class="info-row">
-                    <span class="icon-big">📍</span>
-                    <div class="info-text">
-                        <small>Ubicación</small>
-                        <strong>{{ selectedEvent.location || 'Ubicación no especificada' }}</strong>
+                    <div class="info-row">
+                        <div class="badge-icon">
+                            {{ selectedEvent.type === 'FLIGHT' ? 'COSTO' : 'LUGAR' }}
+                        </div>
+                        <div class="info-text">
+                            <strong>{{ selectedEvent.location || 'No especificada' }}</strong>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -202,7 +325,7 @@
 
         <div class="modal-footer" style="justify-content: center; border-top: none;">
             <button class="btn-outline delete-action" (click)="deleteEvent(selectedEvent.id); closeEventModal()">
-                Eliminar de mi Itinerario ✖
+                Eliminar de mi Itinerario
             </button>
         </div>
     </div>

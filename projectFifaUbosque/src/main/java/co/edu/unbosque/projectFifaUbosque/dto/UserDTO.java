@@ -19,6 +19,7 @@ public class UserDTO {
 	private boolean isVerified = false;
 	private int verificationCode;
 	private boolean tutorialView;
+	private int coins;
 	private boolean countActive;
 
 	public UserDTO() {
@@ -43,6 +44,14 @@ public class UserDTO {
 
 	public Long getId() {
 		return id;
+	}
+
+	public int getCoins() {
+		return coins;
+	}
+
+	public void setCoins(int coins) {
+		this.coins = coins;
 	}
 
 	public void setId(Long id) {

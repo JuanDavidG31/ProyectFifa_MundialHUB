@@ -1,11 +1,13 @@
 package co.edu.unbosque.projectFifaUbosque.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import co.edu.unbosque.projectFifaUbosque.dto.StickerResponseDTO;
@@ -25,22 +27,19 @@ public class AlbumService {
 	@Autowired
 	private TransactionRepository transactionRepo;
 	@Autowired
-	private org.springframework.messaging.simp.SimpMessagingTemplate messagingTemplate;
+	private SimpMessagingTemplate messagingTemplate;
 	private static final int PACK_COST_IN_COINS = 10;
 	@Autowired
 	private EmailService emailService;
 
-	private Map<String, String> activeExchangeCodes = new java.util.concurrent.ConcurrentHashMap<>();
+	private Map<String, String> activeExchangeCodes = new ConcurrentHashMap<>();
 
-	// ==========================================
-	// NUEVO SISTEMA P2P EN TIEMPO REAL
-	// ==========================================
-	@lombok.Data // ¡CLAVE! Esto genera los getters y setters automáticamente para que viaje como
-					// JSON
+	
+	@lombok.Data 
 	public static class ExchangeRoom {
 		public String requester;
 		public String target;
-		public String status; // PENDING, ACCEPTED, EXECUTED
+		public String status;
 		public Long requesterStickerId;
 		public Long targetStickerId;
 		public boolean requesterReady;
@@ -49,7 +48,7 @@ public class AlbumService {
 		public List<Map<String, Object>> targetInventory;
 	}
 
-	private Map<String, ExchangeRoom> activeRooms = new java.util.concurrent.ConcurrentHashMap<>();
+	private Map<String, ExchangeRoom> activeRooms = new ConcurrentHashMap<>();
 
 	public ExchangeRoom pollRoom(String username) {
 		return activeRooms.values().stream().filter(r -> r.requester.equals(username) || r.target.equals(username))
@@ -59,13 +58,10 @@ public class AlbumService {
 	private void broadcastRoomUpdate(ExchangeRoom room) {
 		if (room != null) {
 			try {
-				// YA NO encriptamos aquí. Enviamos a los nombres limpios directamente.
-				System.out.println("🟢 [WEBSOCKET] Enviando sala a: " + room.requester + " y " + room.target);
 				
 				messagingTemplate.convertAndSendToUser(room.requester, "/queue/exchange", room);
 				messagingTemplate.convertAndSendToUser(room.target, "/queue/exchange", room);
 			} catch (Exception e) {
-				System.err.println("🔴 [WEBSOCKET ERROR] " + e.getMessage());
 			}
 		}
 	}
@@ -78,7 +74,6 @@ public class AlbumService {
 		}
 
 		String reqName = AESUtil.decrypt(requester.getUsername());
-		// Limpiar si ya estaba en una sala
 		activeRooms.values().removeIf(r -> r.requester.equals(reqName) || r.target.equals(reqName));
 
 		ExchangeRoom room = new ExchangeRoom();
@@ -123,8 +118,7 @@ public class AlbumService {
 			else
 				room.targetReady = true;
 
-			// ¡MAGIA! Si ambos dieron "Listo", se hace el trueque en la Base de Datos
-			// automáticamente
+			
 			if (room.requesterReady && room.targetReady) {
 				executeSwapInternal(room);
 				room.status = "EXECUTED";
@@ -227,7 +221,7 @@ public class AlbumService {
 	@Transactional
 	public Map<String, String> executeP2PExchange(User requester, String targetUsername, Long myStickerId,
 			Long theirStickerId) {
-		User target = userRepo.findByUser(co.edu.unbosque.projectFifaUbosque.util.AESUtil.encrypt(targetUsername))
+		User target = userRepo.findByUser(AESUtil.encrypt(targetUsername))
 				.orElseThrow(() -> new IllegalStateException("El usuario destino no existe."));
 
 		UserSticker myUs = userStickerRepo.findByUser(requester).stream()
@@ -257,8 +251,8 @@ public class AlbumService {
 
 		userStickerRepo.saveAll(List.of(myUs, theirUs, myNewUs, theirNewUs));
 
-		String requesterName = co.edu.unbosque.projectFifaUbosque.util.AESUtil.decrypt(requester.getName());
-		String targetName = co.edu.unbosque.projectFifaUbosque.util.AESUtil.decrypt(target.getName());
+		String requesterName = AESUtil.decrypt(requester.getName());
+		String targetName = AESUtil.decrypt(target.getName());
 
 		transactionRepo.save(new Transaction(requester, "P2P_EXCHANGE", 0,
 
@@ -283,7 +277,6 @@ public class AlbumService {
 			boolean isOwned = owned != null;
 			int duplicates = isOwned ? Math.max(0, owned.getQuantity() - 1) : 0;
 
-			// ENVIAMOS LA RAREZA AL FRONTEND
 			return new StickerResponseDTO(sticker.getCode(), sticker.getTitle(), sticker.getSectionId(),
 					sticker.getPageTitle(), sticker.getImageUrl(), isOwned, duplicates, sticker.getRarity());
 		}).collect(Collectors.toList());

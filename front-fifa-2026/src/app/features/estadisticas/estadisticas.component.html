@@ -2,11 +2,22 @@
     <div class="bg-shape shape-1"></div>
     <div class="bg-shape shape-2"></div>
 
-    <nav class="top-nav">
-        <button class="back-nav" routerLink="/home">
-            <span class="icon">‹</span> Volver al Hub
-        </button>
-    </nav>
+    <header class="top-nav fade-in-up">
+        <div class="logo-container" routerLink="/home" title="Ir al Inicio" style="cursor: pointer;">
+            <img src="assets/mundial.png" alt="Logo MundialHub" class="logo-image">
+            <h1 class="logo-text">Mundial<span class="gradient-text">Hub</span></h1>
+        </div>
+
+        <div class="nav-actions">
+            <button class="back-nav" routerLink="/home" title="Volver al panel principal">
+                <span class="icon">‹</span> Volver
+            </button>
+            
+            <button class="btn-logout-nav" (click)="cerrarSesion()">
+                Cerrar Sesión
+            </button>
+        </div>
+    </header>
 
     <header class="header centered fade-in-up">
         <h1>Líderes del <span class="gradient-text">Torneo</span></h1>
@@ -21,10 +32,10 @@
                     <span class="pulse-dot"></span> En Vivo
                 </button>
                 <button class="tab-btn" [class.active]="activeTab === 'goles'" (click)="setTab('goles')">
-                    ⚽ Goleadores
+                    Goleadores
                 </button>
                 <button class="tab-btn" [class.active]="activeTab === 'asistencias'" (click)="setTab('asistencias')">
-                    👟 Asistencias
+                    Asistencias
                 </button>
             </div>
         </div>
@@ -37,8 +48,10 @@
 
             <div class="matches-grid fade-in" *ngIf="activeTab === 'envivo'">
 
-                <div class="match-card" *ngFor="let match of liveMatchesList; trackBy: trackByMatchId"
-                    [ngClass]="match.status.toLowerCase()">
+                <div class="match-card glass-card fade-in-up" *ngFor="let match of liveMatchesList" [ngClass]="{
+                        'is-live': match.status === 'IN_PLAY' || match.status === 'PAUSED',
+                        'is-scheduled': match.status === 'SCHEDULED' || match.status === 'TIMED'
+                    }" (click)="openMatchDetails(match)">
                     <div class="match-header">
                         <span class="status-badge">
                             <span *ngIf="match.status === 'IN_PLAY' || match.status === 'PAUSED'"
@@ -132,11 +145,71 @@
                 </div>
 
                 <div class="no-data" *ngIf="currentList.length === 0">
-                    <span class="icon-huge">📊</span>
+                    <span class="icon-huge">❔</span>
                     <p>Aún no hay estadísticas disponibles para esta categoría.</p>
                 </div>
 
             </div>
         </div>
     </main>
+    <div class="modal-overlay fade-in" *ngIf="selectedMatch" (click)="closeMatchDetails()">
+        <div class="modal-details-card glass-card-massive fade-in-up" (click)="$event.stopPropagation()">
+
+            <button class="close-btn" (click)="closeMatchDetails()">✕</button>
+
+            <div class="modal-match-header">
+                <span class="match-status-badge" [ngClass]="selectedMatch.status">
+                    {{ translateStatus(selectedMatch.status) }}
+                </span>
+                <span class="match-stage">{{ selectedMatch.stage | titlecase }}</span>
+                <span class="match-date">{{ selectedMatch.utcDate | date:'fullDate' }}</span>
+            </div>
+
+            <div class="modal-match-scoreboard">
+                <div class="team-side">
+                    <img [src]="selectedMatch.homeCrest" [alt]="selectedMatch.homeTeam" class="big-crest">
+                    <h3>{{ selectedMatch.homeTeam }}</h3>
+                </div>
+
+                <div class="score-center">
+                    <div class="main-score">
+                        {{ selectedMatch.score.fullTime.home !== null ? selectedMatch.score.fullTime.home : '-' }}
+                        <span class="vs">VS</span>
+                        {{ selectedMatch.score.fullTime.away !== null ? selectedMatch.score.fullTime.away : '-' }}
+                    </div>
+                    
+                </div>
+
+                <div class="team-side">
+                    <img [src]="selectedMatch.awayCrest" [alt]="selectedMatch.awayTeam" class="big-crest">
+                    <h3>{{ selectedMatch.awayTeam }}</h3>
+                </div>
+            </div>
+
+            <div class="modal-match-details"
+                *ngIf="selectedMatch.status !== 'SCHEDULED' && selectedMatch.status !== 'TIMED'">
+                <h4>Desglose del Marcador</h4>
+
+                <div class="detail-row">
+                    <span>Primer Tiempo</span>
+                    <strong>
+                        {{ selectedMatch.score.halfTime.home !== null ? selectedMatch.score.halfTime.home : 0 }} -
+                        {{ selectedMatch.score.halfTime.away !== null ? selectedMatch.score.halfTime.away : 0 }}
+                    </strong>
+                </div>
+
+                <div class="detail-row" *ngIf="selectedMatch.score.extraTime?.home !== null">
+                    <span>Tiempo Extra</span>
+                    <strong>{{ selectedMatch.score.extraTime.home }} - {{ selectedMatch.score.extraTime.away }}</strong>
+                </div>
+
+                <div class="detail-row penalties" *ngIf="selectedMatch.score.penalties?.home !== null">
+                    <span>Tanda de Penales</span>
+                    <strong>({{ selectedMatch.score.penalties.home }}) - ({{ selectedMatch.score.penalties.away
+                        }})</strong>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>

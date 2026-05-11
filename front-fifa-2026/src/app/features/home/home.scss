@@ -1,12 +1,12 @@
 @use "sass:color";
 
-// --- PALETA VIBRANTE Y GAMER ---
-$c-bg: #0b0f19; // Azul ultra oscuro
-$c-primary: #ec4899; // Magenta brillante
-$c-secondary: #06b6d4; // Cian eléctrico
-$c-tertiary: #8b5cf6; // Morado neón
-$c-error: #ef4444; // Rojo Alerta
+$c-bg: #0b0f19;
+$c-primary: #ec4899;
+$c-secondary: #06b6d4;
+$c-tertiary: #8b5cf6;
+$c-error: #ef4444;
 $c-warning: #f59e0b;
+$c-gold: #fbbf24;
 $white: #ffffff;
 $c-white: #ffffff;
 $glass-bg: rgba(255, 255, 255, 0.05);
@@ -19,14 +19,13 @@ $glass-border: rgba(255, 255, 255, 0.15);
   background-color: $c-bg;
   font-family: 'Poppins', 'Inter', sans-serif;
   overflow-x: hidden;
-  height: 100%; // Mantiene la pantalla fija a su tamaño real
+  height: 100%;
 }
 
 ::ng-deep * {
   box-sizing: border-box;
 }
 
-// NUEVO: Le damos forma al contenedor padre de Angular
 :host {
   display: flex;
   flex-direction: column;
@@ -36,7 +35,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
 .home-wrapper {
   position: relative;
-  flex: 1; // Ocupa el espacio del host
+  flex: 1;
   width: 100%;
   color: $white;
   overflow-x: hidden;
@@ -44,9 +43,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
   flex-direction: column;
 }
 
-// ==========================================
-// FONDOS ANIMADOS (Fijos para el scroll)
-// ==========================================
+// FONDOS ANIMADOS 
 .bg-shape {
   position: fixed;
   border-radius: 50%;
@@ -54,7 +51,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
   z-index: 0;
   opacity: 0.4;
   animation: float 15s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
-  pointer-events: none; // Para no estorbar clics
+  pointer-events: none;
 }
 
 .shape-1 {
@@ -103,9 +100,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ==========================================
-// BARRA DE NAVEGACIÓN DE CRISTAL
-// ==========================================
+// BARRA DE NAVEGACIÓN 
 .top-nav {
   position: sticky;
   top: 0;
@@ -114,7 +109,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
   justify-content: space-between;
   align-items: center;
   padding: 15px 5%;
-  background: rgba(11, 15, 25, 0.6); // Semitransparente oscuro
+  background: rgba(11, 15, 25, 0.6);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -125,13 +120,12 @@ $glass-border: rgba(255, 255, 255, 0.15);
     gap: 10px;
 
     .icon-pulse {
-      animation: heartbeat 2s infinite; // Mantenemos la animación
+      animation: heartbeat 2s infinite;
     }
 
-    // NUEVO: Definimos el tamaño de tu imagen
     .logo-image {
-      width: 40px; // Puedes aumentar o disminuir este valor según prefieras
-      height: auto; // Mantiene la proporción original de la imagen
+      width: 40px;
+      height: auto;
       object-fit: contain;
     }
 
@@ -185,7 +179,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
           width: 45px;
           height: 45px;
           border-radius: 50%;
-          border: 2px solid $c-secondary; // Borde vibrante
+          border: 2px solid $c-secondary;
           overflow: hidden;
           background: rgba($white, 0.1);
           box-shadow: 0 0 10px rgba($c-secondary, 0.3);
@@ -278,9 +272,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ==========================================
-// CONTENIDO PRINCIPAL: ESTILO APP NATIVA
-// ==========================================
+// CONTENIDO PRINCIPAL
 .main-content {
   position: relative;
   z-index: 10;
@@ -294,24 +286,24 @@ $glass-border: rgba(255, 255, 255, 0.15);
   gap: 30px;
 }
 
-// 1. PERFIL DE USUARIO
+// PERFIL DE USUARIO
 .user-profile-section {
   display: flex;
   align-items: center;
-  justify-content: center; // Centramos el contenido
+  justify-content: center;
   padding: 10px 0 20px 0;
 
   .user-details {
-    text-align: center; // Centramos el texto
+    text-align: center;
 
     .favorite-team {
       margin: 0;
-      font-size: 3rem; // Letra más grande para destacar
+      font-size: 3rem;
       font-weight: 800;
       color: $c-secondary;
       letter-spacing: -1px;
       text-transform: uppercase;
-      text-shadow: 0 0 20px rgba($c-secondary, 0.4); // Brillo de neón sutil
+      text-shadow: 0 0 20px rgba($c-secondary, 0.4);
     }
 
     .subtitle {
@@ -324,7 +316,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// 2. DIVISOR ELEGANTE (AHORA DESLIZABLE)
 .fancy-divider-container {
   width: 100%;
   margin: 10px 0 20px 0;
@@ -340,7 +331,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     border-radius: 2px;
     cursor: pointer;
 
-    // Disfrazamos el "agarrador" para que parezca tu botón de 3 puntos
     &::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
@@ -351,7 +341,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
       border-radius: 20px;
       cursor: grab;
 
-      // Dibujamos los "•••" usando SVG directamente en CSS para que quede perfecto
       background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='24' viewBox='0 0 50 24'%3E%3Ccircle cx='17' cy='12' r='2' fill='white'/%3E%3Ccircle cx='25' cy='12' r='2' fill='white'/%3E%3Ccircle cx='33' cy='12' r='2' fill='white'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: center;
@@ -359,7 +348,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
       &:active {
         cursor: grabbing;
-        transform: scale(1.1); // Efecto al hacer clic y arrastrar
+        transform: scale(1.1);
       }
     }
 
@@ -382,7 +371,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// 3. CARRUSEL DE TARJETAS
+// CARRUSEL DE TARJETAS
 .cards-carousel {
   display: flex;
   gap: 20px;
@@ -396,44 +385,39 @@ $glass-border: rgba(255, 255, 255, 0.15);
   -ms-overflow-style: none;
   scrollbar-width: none;
 
-  // SOLUCIÓN PARA PC: Cambiamos a 6 Columnas exactas
   @media (min-width: 1200px) {
     display: grid;
-    grid-template-columns: repeat(6, 1fr); // <-- AHORA SON 6 COLUMNAS
+    grid-template-columns: repeat(6, 1fr);
     overflow-x: visible;
-    gap: 15px; // Reducimos un poquito el espacio entre ellas para que no queden apretadas
+    gap: 15px;
 
     .app-card {
       min-width: 0;
-      padding: 15px; // Reducimos el relleno interno
+      padding: 15px;
 
       .card-title {
-        font-size: 1.05rem; // Ajustamos levemente el tamaño de la letra
+        font-size: 1.05rem;
       }
 
       .card-image-box {
-        height: 110px; // Ligeramente más bajo para compensar el nuevo ancho
+        height: 110px;
       }
     }
   }
 }
 
-// NUEVO: CONTENEDOR PARA PANELES DE ADMIN/SOPORTE
 .admin-cards-container {
   display: grid;
   gap: 20px;
-  // Si hay 1 tarjeta, ocupa todo el ancho. Si hay 2, se parten a la mitad (50% cada una).
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   margin-bottom: 10px;
 
   .app-card {
 
-    // Le damos un poco más de altura a la imagen para que se sienta realmente "Más grande"
     .card-image-box {
       height: 150px;
     }
 
-    // Títulos ligeramente más grandes para denotar jerarquía
     .card-title {
       font-size: 1.3rem;
     }
@@ -443,11 +427,11 @@ $glass-border: rgba(255, 255, 255, 0.15);
 .app-card {
   min-width: 220px;
   flex: 1;
-  background: rgba(255, 255, 255, 0.03); // Efecto cristal más sutil
+  background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-radius: 20px; // Bordes un poco más redondeados y modernos
-  padding: 20px; // Un poco más de espacio interno para que respiren
+  border-radius: 20px;
+  padding: 20px;
   text-decoration: none;
   color: $white;
   display: flex;
@@ -455,13 +439,12 @@ $glass-border: rgba(255, 255, 255, 0.15);
   align-items: center;
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.05); // Borde base casi invisible
+  border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); // Animación elástica y fluida
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-  // Efecto hover premium
   &:hover {
-    transform: translateY(-8px); // Se eleva en lugar de solo crecer
+    transform: translateY(-8px);
     background: rgba(255, 255, 255, 0.06);
 
     .card-image-box {
@@ -469,7 +452,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
   }
 
-  // Toques de luz en el borde superior en lugar de rodear toda la tarjeta
   &.border-cyan {
     border-top: 1px solid rgba($c-secondary, 0.6);
 
@@ -516,7 +498,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
   .card-image-box {
     width: 100%;
-    height: 130px; // Ligeramente más alto
+    height: 130px;
     border-radius: 14px;
     margin-bottom: 18px;
     display: flex;
@@ -527,9 +509,8 @@ $glass-border: rgba(255, 255, 255, 0.15);
     position: relative;
     overflow: hidden;
     transition: transform 0.4s ease;
-    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5); // Sombra interna para dar profundidad
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
 
-    // Mejoramos los textos y emojis para que destaquen más
     h2 {
       font-size: 3.2rem;
       font-weight: 900;
@@ -540,10 +521,9 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
     .icon-big {
       font-size: 3.5rem;
-      filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.4)); // Sombra al emoji
+      filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.4));
     }
 
-    // Mejoramos los textos y emojis para que destaquen más
     h2 {
       font-size: 3.2rem;
       font-weight: 900;
@@ -554,18 +534,16 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
     .icon-big {
       font-size: 3.5rem;
-      filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.4)); // Sombra al emoji
+      filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.4));
     }
 
-    // 👇 NUEVO: Estilos para la imagen dentro de las tarjetas 👇
     img.logo-image {
       width: 100%;
       height: 100%;
-      object-fit: cover; // Hace que llene la caja (si quieres que no se recorte absolutamente nada, cámbialo a 'contain')
-      border-radius: 14px; // Mantiene las esquinas redondeadas de la caja
+      object-fit: cover;
+      border-radius: 14px;
     }
 
-    // Suavizamos los gradientes de fondo
     &.bg-album {
       background: linear-gradient(135deg, #1a1a2e, #16213e);
     }
@@ -609,42 +587,101 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// 4. SECCIÓN NOTICIAS
+// SECCIÓN NOTICIAS
 .news-section {
   display: flex;
   flex-direction: column;
   gap: 15px;
 
+  // 🌟 CABECERA DE LA SECCIÓN (DISEÑO PREMIUM)
   .news-header {
+    text-align: center;
+    margin-bottom: 50px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
 
-    h3 {
-      margin: 0;
-      font-size: 1.5rem;
-      font-weight: 700;
+    .header-content {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 15px;
+      padding: 10px 30px;
+      background: rgba(255, 255, 255, 0.03); // Fondo sutil tipo "pastilla"
+      backdrop-filter: blur(10px);
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: translateY(-3px);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .hub-tag {
+        background: linear-gradient(135deg, #ef4444, #b91c1c); // Rojo vibrante
+        color: #ffffff;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 900;
+        font-size: 0.85rem;
+        letter-spacing: 2px;
+        box-shadow: 0 0 15px rgba(#ef4444, 0.5);
+        animation: pulseRed 2s infinite; // El palpitar que querías
+      }
+
+      h2 {
+        font-size: 2.2rem;
+        margin: 0;
+        font-weight: 900;
+        letter-spacing: -1px;
+        color: #ffffff;
+        text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+
+        .gradient-text {
+          background: linear-gradient(135deg, #06b6d4, #ec4899); // Cian a Magenta
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5)); // Hace que el gradiente resalte
+        }
+      }
+
+      // Adaptación para móviles
+      @media (max-width: 768px) {
+        flex-direction: column;
+        border-radius: 20px;
+        padding: 15px;
+        gap: 10px;
+
+        h2 {
+          font-size: 1.8rem;
+        }
+      }
     }
 
-    .arrow-icon {
-      color: $c-tertiary; // Flecha morada como en tu diseño
-      font-size: 1.5rem;
-      font-weight: bold;
-      text-shadow: 0 0 10px $c-tertiary;
+    .header-desc {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+      font-weight: 500;
     }
   }
 
   .news-box {
     width: 100%;
     min-height: 180px;
-    background: rgba(45, 15, 65, 0.4); // Fondo morado oscuro sutil
+    background: rgba(45, 15, 65, 0.4);
     border-radius: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
 
     &.dashed {
-      border: 2px dashed $white; // Borde discontinuo blanco
+      border: 2px dashed $white;
     }
 
     p {
@@ -793,16 +830,16 @@ $glass-border: rgba(255, 255, 255, 0.15);
   .btn-skip {
     background: transparent;
     border: none;
-    color: rgba($white, 0.4); // Un gris sutil para que no resalte demasiado
+    color: rgba($white, 0.4);
     margin-top: 20px;
     font-size: 0.9rem;
     cursor: pointer;
-    text-decoration: underline; // Subrayado clásico de "enlace"
+    text-decoration: underline;
     transition: all 0.3s ease;
     display: inline-block;
 
     &:hover {
-      color: $white; // Se ilumina al pasar el mouse
+      color: $white;
       transform: translateY(-2px);
     }
   }
@@ -819,14 +856,22 @@ $glass-border: rgba(255, 255, 255, 0.15);
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: $c-secondary;
-    border: none;
-    font-size: 1.8rem;
+    background: linear-gradient(135deg, $c-secondary, #0284c7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: $white;
+    font-size: 2.2rem;
+    font-weight: 800;
     cursor: pointer;
-    box-shadow: 0 10px 20px rgba($c-secondary, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 25px rgba($c-secondary, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
     &:hover {
-      transform: scale(1.1);
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 15px 35px rgba($c-secondary, 0.7), inset 0 0 15px rgba(255, 255, 255, 0.5);
     }
   }
 
@@ -970,24 +1015,22 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ==========================================
 // MODAL DE ZOOM PARA EL AVATAR
-// ==========================================
 .avatar-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.85); // Fondo muy oscuro para resaltar la foto
-  backdrop-filter: blur(10px); // Efecto de cristal esmerilado
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  z-index: 2000; // Por encima de todo, incluso del chat
+  z-index: 2000;
   display: flex;
   align-items: center;
   justify-content: center;
   animation: fadeIn 0.3s ease-out;
-  cursor: zoom-out; // Indica que al hacer clic fuera se cierra
+  cursor: zoom-out;
 }
 
 .avatar-modal-content {
@@ -1004,7 +1047,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
     height: auto;
     max-width: 100%;
     max-height: 80vh;
-    border-radius: 20px; // Bordes redondeados elegantes
+    border-radius: 20px;
     border: 3px solid rgba($white, 0.2);
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
     object-fit: contain;
@@ -1024,6 +1067,635 @@ $glass-border: rgba(255, 255, 255, 0.15);
     &:hover {
       transform: scale(1.2) rotate(90deg);
       color: $c-primary;
+    }
+  }
+}
+
+// BOTÓN DE BILLETERA 
+.coin-wallet-btn {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba($c-gold, 0.5);
+  padding: 6px 16px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  margin-right: 15px;
+  box-shadow: inset 0 0 10px rgba($c-gold, 0.1), 0 4px 10px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    background: rgba($c-gold, 0.15);
+    border-color: $c-gold;
+    box-shadow: inset 0 0 15px rgba($c-gold, 0.3), 0 6px 15px rgba($c-gold, 0.2);
+    transform: translateY(-2px) scale(1.02);
+
+    .plus-badge {
+      transform: rotate(90deg);
+    }
+  }
+
+  .coin-icon {
+    font-size: 1rem;
+    font-weight: 700;
+    color: $c-gold;
+    text-shadow: 0 0 8px rgba($c-gold, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .coin-amount {
+    color: $white;
+    font-weight: 900;
+    font-size: 1.15rem;
+    letter-spacing: 0.5px;
+  }
+
+  .plus-badge {
+    background: linear-gradient(135deg, $c-primary, $c-tertiary);
+    color: $white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-left: 5px;
+    box-shadow: 0 0 10px rgba($c-primary, 0.6);
+    transition: transform 0.3s ease;
+  }
+}
+
+// MODAL DE PASARELA DE PAGO
+.recharge-modal-card {
+  width: 90%;
+  max-width: 400px;
+  background: rgba($c-bg, 0.95);
+  border: 1px solid rgba($white, 0.1);
+  border-radius: 24px;
+  padding: 30px;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+
+  .close-modal-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: rgba($white, 0.5);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+      color: $c-error;
+      transform: rotate(90deg);
+    }
+  }
+
+  .payment-header {
+    text-align: center;
+    margin-bottom: 25px;
+
+    .icon-pulse {
+      font-size: 3.5rem;
+      margin-bottom: 10px;
+      color: $c-gold;
+      text-shadow: 0 0 15px rgba($c-gold, 0.4);
+      display: inline-block;
+    }
+
+    h2 {
+      color: $white;
+      margin: 0 0 5px 0;
+      font-size: 1.5rem;
+    }
+
+    p {
+      color: $c-secondary;
+      margin: 0;
+      font-weight: bold;
+    }
+  }
+
+  .payment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      label {
+        font-size: 0.85rem;
+        color: rgba($white, 0.8);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .amount-wrapper {
+        position: relative;
+
+        .coin-symbol {
+          position: absolute;
+          left: 15px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 1.2rem;
+          color: $c-gold;
+          font-weight: bold;
+        }
+
+        input {
+          width: 100%;
+          padding: 15px 15px 15px 55px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba($c-gold, 0.5);
+          border-radius: 12px;
+          color: $white;
+          font-size: 1.2rem;
+          font-weight: bold;
+          outline: none;
+          transition: all 0.3s ease;
+
+          &::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+          }
+
+          &:focus {
+            border-color: $c-gold;
+            box-shadow: 0 0 15px rgba($c-gold, 0.4);
+            background: rgba(255, 255, 255, 0.1);
+          }
+        }
+      }
+    }
+
+    .dummy-credit-card {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid rgba($white, 0.05);
+      position: relative;
+      overflow: hidden;
+
+      .card-chip {
+        width: 40px;
+        height: 30px;
+        background: rgba(255, 215, 0, 0.6);
+        border-radius: 6px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      }
+
+      .dummy-input {
+        margin-bottom: 10px;
+
+        input {
+          background: transparent;
+          border: none;
+          color: $white;
+          font-family: monospace;
+          font-size: 1.1rem;
+          padding: 0;
+
+          &::placeholder {
+            color: rgba($white, 0.3);
+          }
+        }
+      }
+
+      .card-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+      }
+    }
+
+    .btn-pay {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: $white;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(#10b981, 0.4);
+      }
+
+      &:disabled {
+        background: #475569;
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+    }
+  }
+}
+
+.spinner-small {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba($white, 0.3);
+  border-top-color: $white;
+  border-radius: 50%;
+  animation: spin 1s infinite linear;
+}
+
+.news-section {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 30px;
+
+    h2 {
+      font-size: 2.2rem;
+      margin-bottom: 5px;
+    }
+
+    p {
+      color: rgba($white, 0.5);
+    }
+  }
+
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+  }
+
+  .news-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0;
+    border-radius: 20px; 
+    border: 1px solid rgba(255, 255, 255, 0.08); 
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: linear-gradient(180deg, rgba(30, 40, 55, 0.6) 0%, rgba(15, 20, 30, 0.8) 100%);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 15px 35px rgba($c-secondary, 0.2);
+      border-color: rgba($c-secondary, 0.5);
+
+      .news-image img {
+        transform: scale(1.08);
+      }
+
+      .news-content h3 {
+        color: $c-secondary;
+      }
+
+      .btn-read-more span {
+        transform: translateX(6px);
+      }
+    }
+
+    .news-image {
+      position: relative;
+      height: 200px;
+      width: 100%;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+      }
+
+      .news-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: linear-gradient(135deg, $c-primary, $c-secondary);
+        color: white;
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    .news-content {
+      padding: 30px 25px; 
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+
+      .content-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+
+        .news-date {
+          color: rgba($c-secondary, 0.8);
+          font-size: 0.85rem;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+        }
+
+        .share-icon {
+          width: 8px;
+          height: 8px;
+          background: rgba($white, 0.3);
+          border-radius: 50%;
+        }
+      }
+
+      h3 {
+        margin: 0 0 12px 0;
+        font-size: 1.4rem;
+        color: $white;
+        font-weight: 800;
+        line-height: 1.3;
+        transition: color 0.3s ease;
+      }
+
+      .news-excerpt {
+        color: rgba($white, 0.65);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 0 0 25px 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .btn-read-more {
+        background: transparent;
+        border: none;
+        color: $c-secondary;
+        padding: 0;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        text-align: left;
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        span {
+          transition: transform 0.3s ease;
+          font-size: 1.2rem;
+          line-height: 1;
+        }
+      }
+    }
+  }
+}
+
+.empty-news-state {
+  text-align: center;
+  padding: 60px 20px;
+  margin: 0 auto;
+  max-width: 600px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(#06b6d4, 0.3); 
+    transform: translateY(-3px);
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.8;
+    animation: float 4s ease-in-out infinite; 
+  }
+
+  h3 {
+    font-size: 1.6rem;
+    color: #ffffff;
+    margin: 0 0 10px 0;
+    font-weight: 800;
+  }
+
+  p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+// ESTILOS PARA LA SECCIÓN DE NOTICIAS
+.news-section {
+  padding: 60px 20px;
+  max-width: 1300px;
+  margin: 0 auto;
+
+  .news-header {
+    text-align: center;
+    margin-bottom: 45px;
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 10px;
+
+      .hub-tag {
+        background: rgba($c-error, 0.1);
+        color: lighten($c-error, 15%);
+        border: 1px solid rgba($c-error, 0.3);
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-weight: 800;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+      }
+
+      h2 {
+        font-size: 2.5rem;
+        margin: 0;
+        letter-spacing: -1px;
+      }
+    }
+
+    .header-desc {
+      color: rgba($white, 0.6);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+  }
+
+  .news-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0; 
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: rgba(20, 25, 35, 0.6);
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-12px) scale(1.01);
+      box-shadow: 0 20px 40px rgba($c-secondary, 0.25);
+      border-color: rgba($c-secondary, 0.6);
+
+      .news-image img {
+        transform: scale(1.1);
+      }
+
+      .news-content h3 {
+        color: $c-secondary;
+      }
+
+      .btn-read-more span {
+        transform: translateX(5px);
+      }
+    }
+
+    .news-image {
+      position: relative;
+      height: 210px; 
+      width: 100%;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.4); 
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; 
+        transition: transform 0.5s ease;
+      }
+
+      .news-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: linear-gradient(135deg, $c-primary, $c-secondary);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .news-content {
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+
+      .content-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+
+        .news-date {
+          color: rgba($white, 0.5);
+          font-size: 0.85rem;
+          font-weight: 600;
+        }
+
+        .share-icon {
+          width: 15px;
+          height: 15px;
+          background: rgba($white, 0.2);
+          border-radius: 50%; 
+        }
+      }
+
+      h3 {
+        margin: 0 0 15px 0;
+        font-size: 1.5rem;
+        color: $white;
+        font-weight: 800;
+        line-height: 1.2;
+        transition: color 0.3s ease;
+      }
+
+      .news-excerpt {
+        color: rgba($white, 0.75);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 0 0 20px 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .btn-read-more {
+        background: transparent;
+        border: none;
+        color: $c-secondary;
+        padding: 0;
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+        text-align: left;
+        margin-top: auto; 
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        span {
+          transition: transform 0.3s ease;
+        }
+      }
     }
   }
 }

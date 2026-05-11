@@ -12,7 +12,6 @@ public class ItineraryEventDTO {
 	public ItineraryEventDTO() {
 	}
 
-	// Getters y Setters
 	public Long getId() {
 		return id;
 	}

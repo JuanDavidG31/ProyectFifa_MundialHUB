@@ -10,7 +10,6 @@ import java.util.List;
 @Repository
 public interface ItineraryEventRepository extends JpaRepository<ItineraryEvent, Long> {
 
-	// Método mágico de Spring Data JPA para traer el itinerario de un usuario
 	List<ItineraryEvent> findByUserEmail(String userEmail);
 	
 	@Transactional

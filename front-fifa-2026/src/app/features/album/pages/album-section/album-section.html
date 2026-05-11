@@ -12,10 +12,10 @@
       <h1 class="title">{{ sectionTitle }}</h1>
       <div class="subtitle">
         <span class="stat-pill">
-          <span class="icon">🔖</span> {{ collected }} de {{ total }} Obtenidas
+          <span class="icon"></span> {{ collected }} de {{ total }} Obtenidas
         </span>
         <span class="stat-pill cyan">
-          <span class="icon">✨</span> {{ percent }}% Completado
+          <span class="icon"></span> {{ percent }}% Completado
         </span>
       </div>
     </div>
@@ -75,7 +75,7 @@
 
     <div class="detail-header">
       <span class="code">{{ selectedSticker.code }}</span>
-      <span class="rarity">{{ selectedSticker.type === 'LEGEND' ? '⭐ Leyenda' : 'Jugador' }}</span>
+      <span class="rarity">{{ selectedSticker.type === 'LEGEND' ? 'Leyenda' : 'Jugador' }}</span>
     </div>
 
     <div class="detail-img">
@@ -90,7 +90,7 @@
       <div class="stats" *ngIf="selectedSticker.owned">
         <span class="badge" *ngIf="selectedSticker.duplicates > 0">+{{ selectedSticker.duplicates }} Repetidas</span>
         <span class="value" *ngIf="selectedSticker.duplicates > 0">
-          Valor de cambio: <strong>{{ selectedSticker.exchangeValue || 10 }} 🪙 c/u</strong>
+          Valor de cambio: <strong>{{ selectedSticker.exchangeValue || 10 }} $ c/u</strong>
         </span>
       </div>
     </div>

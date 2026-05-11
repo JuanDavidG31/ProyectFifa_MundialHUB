@@ -2,11 +2,22 @@
     <div class="bg-shape shape-1"></div>
     <div class="bg-shape shape-2"></div>
 
-    <nav class="top-nav">
-        <button class="back-nav" routerLink="/home">
-            <span class="icon">‹</span> Volver al Hub
-        </button>
-    </nav>
+    <header class="top-nav fade-in-up">
+        <div class="logo-container" routerLink="/home" title="Ir al Inicio" style="cursor: pointer;">
+            <img src="assets/mundial.png" alt="Logo MundialHub" class="logo-image">
+            <h1 class="logo-text">Mundial<span class="gradient-text">Hub</span></h1>
+        </div>
+
+        <div class="nav-actions">
+            <button class="back-nav" routerLink="/home" title="Volver al panel principal">
+                <span class="icon">‹</span> Volver
+            </button>
+            
+            <button class="btn-logout-nav" (click)="cerrarSesion()">
+                Cerrar Sesión
+            </button>
+        </div>
+    </header>
 
     <header class="header centered fade-in-up">
         <h1>Mis <span class="gradient-text">Pronósticos</span></h1>

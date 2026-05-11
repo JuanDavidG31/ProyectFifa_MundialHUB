@@ -10,6 +10,11 @@
     </div>
 
     <div class="user-actions">
+      <button class="coin-wallet-btn" (click)="openRechargeModal()" title="Recargar Monedas">
+        <span class="coin-icon">$</span>
+        <span class="coin-amount">{{ userCoins }}</span>
+        <span class="plus-badge">+</span>
+      </button>
       <div class="user-info">
         <p class="greeting">¡Hola, <strong class="gradient-text">{{ userName }}</strong>!</p>
 
@@ -17,11 +22,11 @@
           <div class="avatar-container">
             <img *ngIf="userAvatar" [src]="userAvatar" alt="Avatar" class="avatar-img" (click)="toggleAvatarModal()"
               style="cursor: pointer;">
-            <div *ngIf="!userAvatar" class="avatar-placeholder">👤</div>
+            <div *ngIf="!userAvatar" class="avatar-placeholder">U</div>
           </div>
 
           <button class="settings-btn" routerLink="/settings" title="Configuración de Perfil">
-            <span class="settings-icon">⚙️</span>
+            <span class="settings-icon">&#9881;</span>
           </button>
         </div>
       </div>
@@ -103,7 +108,7 @@
       <a *ngIf="isAdmin" routerLink="/admin" class="app-card border-error">
         <h4 class="card-title">Admin</h4>
         <div class="card-image-box bg-admin">
-          <span class="icon-big">⚙️</span>
+          <span class="icon-big">Admin</span>
         </div>
         <p class="card-desc">Panel de control del sistema</p>
       </a>
@@ -111,21 +116,52 @@
       <a *ngIf="isSupport" routerLink="/support" class="app-card border-warning" (click)="updateStatusConnect()">
         <h4 class="card-title">Soporte</h4>
         <div class="card-image-box bg-support">
-          <span class="icon-big">🎧</span>
+          <span class="icon-big">Ayuda</span>
         </div>
         <p class="card-desc">Atención de casos y auditoría</p>
       </a>
 
     </section>
 
-    <section class="news-section">
+    <section class="news-section fade-in">
       <div class="news-header">
-        <h3>Noticias</h3>
-        <div class="arrow-icon">➔</div>
+        <div class="header-content">
+          <span class="hub-tag icon-pulseRed">HUB</span>
+          <h2>Últimas <span class="gradient-text">Novedades</span></h2>
+        </div>
+        <p class="header-desc">Mantente al día con las actualizaciones del Hub, partidos en vivo y eventos del álbum.
+        </p>
       </div>
-      <div class="news-box dashed">
-        <p>No hay noticias por el momento...</p>
+
+      <div class="news-grid" *ngIf="noticias.length > 0">
+        <div class="news-card glass-card fade-in-up" *ngFor="let noticia of noticias; let i = index"
+          [style.animation-delay]="i * 100 + 'ms'">
+
+          <div class="news-image" *ngIf="noticia.imageUrl">
+            <img [src]="noticia.imageUrl" alt="Novedad">
+            <div class="news-badge">OFICIAL</div>
+          </div>
+
+          <div class="news-content">
+            <div class="content-header">
+              <span class="news-date">{{ noticia.createdAt | date:'dd MMM, yyyy' }}</span>
+              <div class="share-icon" *ngIf="noticia.imageUrl"></div>
+            </div>
+
+            <h3>{{ noticia.title }}</h3>
+            <p class="news-excerpt">{{ noticia.content }}</p>
+
+            <button class="btn-read-more">Leer actualización <span>→</span></button>
+          </div>
+        </div>
       </div>
+
+      <div class="empty-news-state glass-card fade-in-up" *ngIf="noticias.length === 0">
+        <div class="empty-icon">📭</div>
+        <h3>Sin novedades por ahora</h3>
+        <p>Aún no hay anuncios oficiales. ¡Revisa más tarde para enterarte de nuevos eventos, sobres y partidos!</p>
+      </div>
+
     </section>
 
   </main>
@@ -134,38 +170,38 @@
     <div class="tutorial-modal fade-in-up">
 
       <div *ngIf="currentTutorialStep === 0">
-        <span class="tutorial-icon">🌍</span>
+        <span class="tutorial-icon">1</span>
         <h2>¡Bienvenido a MundialHub!</h2>
         <p>Tu plataforma definitiva para vivir la Copa del Mundo. Te daremos un recorrido rápido por todo lo que puedes
           hacer.</p>
       </div>
 
       <div *ngIf="currentTutorialStep === 1">
-        <span class="tutorial-icon">📖</span>
+        <span class="tutorial-icon">2</span>
         <h2>Álbum Virtual</h2>
         <p>Abre sobres diariamente, colecciona a tus jugadores favoritos y completa tu álbum antes que nadie.</p>
       </div>
 
       <div *ngIf="currentTutorialStep === 2">
-        <span class="tutorial-icon">⚽</span>
+        <span class="tutorial-icon">3</span>
         <h2>Pronósticos y Apuestas</h2>
         <p>Adivina los resultados de los partidos, acumula puntos y compite en salas privadas con tus amigos.</p>
       </div>
 
       <div *ngIf="currentTutorialStep === 3">
-        <span class="tutorial-icon">📊</span>
+        <span class="tutorial-icon">4</span>
         <h2>Estadísticas en Vivo</h2>
         <p>Consulta la tabla de Goleadores y Asistencias actualizada al instante durante todo el torneo.</p>
       </div>
 
       <div *ngIf="currentTutorialStep === 4">
-        <span class="tutorial-icon">🎫</span>
+        <span class="tutorial-icon">5</span>
         <h2>Compra de Entradas</h2>
         <p>Consigue tus tickets para los partidos. Recibirás un código QR en tu correo listo para entrar al estadio.</p>
       </div>
 
       <div *ngIf="currentTutorialStep === 5">
-        <span class="tutorial-icon">✈️</span>
+        <span class="tutorial-icon">6</span>
         <h2>Planificador de Viaje</h2>
         <p>Arma tu itinerario ideal o compra paquetes completos. ¡Tus boletos comprados se agendarán aquí
           automáticamente!</p>
@@ -193,7 +229,7 @@
     </div>
   </div>
   <div class="chat-widget" *ngIf="!isSupport && !isAdmin">
-    <button class="chat-fab icon-pulse" (click)="toggleChat()">💬</button>
+    <button class="chat-fab icon-pulse" (click)="toggleChat()">?</button>
 
     <div class="chat-window" *ngIf="isChatOpen">
       <div class="chat-header">
@@ -234,5 +270,51 @@
       <button class="close-modal" (click)="toggleAvatarModal()">✕</button>
       <img [src]="userAvatar" alt="Avatar Ampliado" class="expanded-avatar">
     </div>
+  </div>
+</div>
+<div class="avatar-modal-overlay" *ngIf="isRechargeModalOpen" (click)="closeRechargeModal()">
+  <div class="recharge-modal-card glass-card fade-in-up" (click)="$event.stopPropagation()">
+
+    <button class="close-modal-btn" (click)="closeRechargeModal()">✕</button>
+
+    <div class="payment-header">
+      <div class="icon-pulse">$</div>
+      <h2>Recargar Billetera</h2>
+      <p>1 USD = 100 $</p>
+    </div>
+
+    <div class="payment-form">
+      <div class="input-group">
+        <label>Cantidad de Puntos a comprar</label>
+        <div class="amount-wrapper">
+          <span class="coin-symbol">$</span>
+          <input type="number" [(ngModel)]="rechargeAmount" placeholder="Ej: 500" min="1">
+        </div>
+      </div>
+
+      <div class="dummy-credit-card">
+        <div class="card-chip"></div>
+        <div class="input-group dummy-input">
+          <label>Número de Tarjeta</label>
+          <input type="text" placeholder="**** **** **** ****" value="4532 1234 5678 9010" disabled>
+        </div>
+        <div class="card-row">
+          <div class="input-group dummy-input">
+            <label>Vencimiento</label>
+            <input type="text" placeholder="MM/YY" value="12/28" disabled>
+          </div>
+          <div class="input-group dummy-input">
+            <label>CVC</label>
+            <input type="password" placeholder="***" value="123" disabled>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-pay" [disabled]="isProcessingPayment || !rechargeAmount" (click)="processPayment()">
+        <span *ngIf="!isProcessingPayment">Pagar Ahora</span>
+        <span *ngIf="isProcessingPayment" class="spinner-small"></span>
+      </button>
+    </div>
+
   </div>
 </div>

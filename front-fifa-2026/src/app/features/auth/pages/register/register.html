@@ -7,7 +7,7 @@
 
     <div class="card-header">
       <div class="logo-container">
-        <div class="icon-pulse">⚽</div>
+        <img src="assets/mundial.png" alt="Logo MundialHub" class="icon-pulse logo-image">
         <h1>Mundial<span class="gradient-text">Hub</span></h1>
       </div>
       <p class="subtitle">¡Crea tu cuenta y empieza tu colección!</p>
@@ -45,11 +45,11 @@
 
         <div class="password-container">
           <div class="input-group">
-            <span class="input-icon">🔑</span>
+
             <input name="password" [(ngModel)]="registerData.password" (input)="onPasswordChange()" required
               [type]="showPassword ? 'text' : 'password'" placeholder="Contraseña secreta">
             <button type="button" class="btn-eye" (click)="togglePassword()">
-              {{ showPassword ? '🔓' : '🔒' }}
+              {{ showPassword ? 'ꗃ' : '🔒︎' }}
             </button>
           </div>
 

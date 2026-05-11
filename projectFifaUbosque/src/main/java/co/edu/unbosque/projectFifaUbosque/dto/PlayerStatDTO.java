@@ -13,7 +13,6 @@ public class PlayerStatDTO {
 		this.value = value;
 	}
 
-	// Getters y Setters
 	public String getName() {
 		return name;
 	}

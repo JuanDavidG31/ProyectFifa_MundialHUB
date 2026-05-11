@@ -8,7 +8,6 @@ import { AuthService } from './auth.service';
 export interface BetMessageDTO {
   roomId?: string;
   sender: string;
-  // Añadimos 'ROOM_CLOSED' a la lista 👇
   type: 'JOIN_REQUEST' | 'JOIN_ACCEPT' | 'JOIN_DENY' | 'PREDICTION' | 'ROOM_UPDATE' | 'ROOM_CLOSED';
   content: string;
   targetUser?: string;
@@ -22,10 +21,9 @@ export class BettingService {
   private apiUrl = 'http://localhost:8080/betting-rooms';
   private stompClient: Client | null = null;
 
-  // 🌟 NUEVO: El servicio ahora guarda el ESTADO de tu sala
   public currentRoom$ = new BehaviorSubject<any>(null);
   public joinRequests$ = new BehaviorSubject<BetMessageDTO[]>([]);
-  public notifications$ = new Subject<string>(); // Para enviar alertas al componente
+  public notifications$ = new Subject<string>(); 
 
   constructor(private http: HttpClient, private authService: AuthService) {
   }
@@ -38,7 +36,6 @@ export class BettingService {
     return this.http.get<any>(`${this.apiUrl}/my-room?username=${username}`);
   }
 
-  // 🌟 NUEVO: Fuerza la salida cuando se cierra la sesión global
   forceLeaveRest(username: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/force-leave?username=${username}`);
   }
@@ -49,7 +46,6 @@ export class BettingService {
   }
 
   connect() {
-    // 🌟 EVITAR DOBLE CONEXIÓN: Si ya está conectado, no hacemos nada
     if (this.stompClient && this.stompClient.connected) {
       return;
     }
@@ -61,7 +57,6 @@ export class BettingService {
       webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
       connectHeaders: { Authorization: `Bearer ${token}` },
       onConnect: () => {
-        console.log('🟢 Conectado a Salas de Apuestas');
 
         this.stompClient?.subscribe(`/queue/betting/${username}`, (msg: Message) => {
           const body = JSON.parse(msg.body);
@@ -113,7 +108,6 @@ export class BettingService {
       content: accept ? 'Aceptado' : 'Denegado'
     });
 
-    // Quitamos la solicitud de la lista visual
     const updatedReqs = this.joinRequests$.value.filter(r => r.sender !== targetUser);
     this.joinRequests$.next(updatedReqs);
   }
@@ -128,11 +122,10 @@ export class BettingService {
     });
   }
 
-  // NUEVO: Método para salir de la sala
   leaveRoom(roomId: string, username: string) {
     if (this.stompClient && this.stompClient.connected) {
       this.stompClient.publish({
-        destination: '/app/betting.leave', // <-- ¡CORREGIDO EL DESTINO!
+        destination: '/app/betting.leave', 
         body: JSON.stringify({
           roomId: roomId,
           sender: username,
@@ -142,7 +135,7 @@ export class BettingService {
       });
     }
     this.currentRoom$.next(null);
-    this.joinRequests$.next([]); // <-- Vaciamos la bandeja
+    this.joinRequests$.next([]); 
   }
 
   private sendMessage(message: BetMessageDTO) {

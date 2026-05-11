@@ -16,7 +16,6 @@ public class BetMessageDTO {
 
 	private String targetUser;
 
-	// Y añade sus métodos al final de la clase:
 	public String getTargetUser() {
 		return targetUser;
 	}

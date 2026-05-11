@@ -3,7 +3,11 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
-
+import { TicketsService } from '../../core/services/ticket.service';
+import { MatchesService } from '../../core/services/matches.service';
+import { ItineraryService } from '../../core/services/itinerary.service';
+import { FlightsService } from '../../core/services/flights.service';
+import { ReportsService } from '../../core/services/reports.service';
 interface ItineraryEvent {
   id: number;
   type: 'FLIGHT' | 'HOTEL' | 'MATCH';
@@ -43,25 +47,108 @@ export class CalendarioComponent implements OnInit {
   selectedPackage: any = null;
   isDetailsModalOpen = false;
   allMatches: any[] = [];
-  activeTab: 'itinerario' | 'paquetes' = 'itinerario';
+  activeTab: string = 'itinerario';
   processingId: number | null = null;
   selectedEvent: ItineraryEvent | null = null;
   isEventModalOpen = false;
   myEvents: ItineraryEvent[] = [];
   showAddEventForm = false;
   newEvent: Partial<ItineraryEvent> = { type: 'MATCH', title: '', date: '', location: '' };
-
-  // Inicializamos vacío para llenarlo dinámicamente
+  selectedMatchIds: number[] = [];  // Inicializamos vacío para llenarlo dinámicamente
   packages: any[] = [];
-
+  newEventTitle: string = '';
+  newEventDate: string = '';
+  newEventType: 'FLIGHT' | 'HOTEL' | 'MATCH' | 'OTHER' = 'OTHER';
+  newEventLocation: string = '';
+  isGeneratingPack: boolean = false;
+  isSavingManual: boolean = false;
+  // Esta la usaremos para agrupar los eventos en la lista
+  userEventsGrouped: any[] = [];
   currentDate: Date = new Date();
   weekDays: string[] = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
   calendarDays: CalendarDay[] = [];
-
-  constructor(private authService: AuthService) { }
+  userReports: any[] = [];
+  isLoadingReports: boolean = false;
+  constructor(private authService: AuthService, private ticketsService: TicketsService, private matchesService: MatchesService, private itineraryService: ItineraryService, private flightsService: FlightsService, private reportsService: ReportsService) { }
 
   ngOnInit(): void {
     this.cargarDatosIniciales();
+  }
+
+  toggleMatchSelection(matchId: number) {
+    const index = this.selectedMatchIds.indexOf(matchId);
+    if (index > -1) {
+      this.selectedMatchIds.splice(index, 1); // Quitar si ya estaba
+    } else {
+      this.selectedMatchIds.push(matchId); // Añadir si no estaba
+    }
+  }
+
+
+  // 🌟 CONSTRUCTOR DE PLANES PERSONALIZADOS (CONECTADO A LA API REAL)
+  // 🌟 CONSTRUCTOR DE PLANES PERSONALIZADOS (MODO DEBUG)
+  createCustomPackage() {
+    if (this.selectedMatchIds.length === 0) return;
+    this.isGeneratingPack = true;
+    const currentUser = localStorage.getItem('username') || '';
+
+    // 🌟 1. Extraemos todas las fechas de los partidos seleccionados
+    const fechasTimestamp = this.selectedMatchIds.map(id => {
+      const m = this.allMatches.find(x => x.id == id);
+      return new Date(this.formatearFechaParaCalendario(m.fecha) + 'T00:00:00').getTime();
+    });
+
+    // 🌟 2. Calculamos la fecha más antigua y la más lejana
+    const minDate = new Date(Math.min(...fechasTimestamp));
+    const maxDate = new Date(Math.max(...fechasTimestamp));
+
+    const startDateBackend = minDate.toISOString().split('T')[0];
+    const endDateBackend = maxDate.toISOString().split('T')[0];
+
+    this.flightsService.getFlightPackage(currentUser, startDateBackend, endDateBackend).subscribe({
+      next: (vuelos) => {
+        if (!vuelos || !vuelos.outbound || vuelos.outbound.length === 0) {
+          alert("⚠️ Google Flights no encontró rutas. Intenta con otros partidos.");
+          this.isGeneratingPack = false;
+          return;
+        }
+
+        const outboundFlight = vuelos.outbound[0];
+
+        let inboundFlight = null;
+        if (vuelos.inbound && vuelos.inbound.length > 0) {
+          inboundFlight = vuelos.inbound[0];
+        } else {
+          // Vuelo espejo basado en la fecha FINAL
+          const returnDateObj = new Date(endDateBackend + 'T00:00:00');
+          returnDateObj.setDate(returnDateObj.getDate() + 2);
+          inboundFlight = { airline: outboundFlight.airline, price: outboundFlight.price, departureTime: returnDateObj.toISOString().split('T')[0] + " 10:00" };
+        }
+
+        const eventsToSave: any[] = [];
+        eventsToSave.push({ userEmail: currentUser, eventType: 'FLIGHT', title: `✈︎ Vuelo Ida: ${outboundFlight.airline}`, eventDate: outboundFlight.departureTime.split(' ')[0], location: `Aprox: $${outboundFlight.price} USD` });
+
+        this.selectedMatchIds.forEach(id => {
+          const match = this.allMatches.find(m => m.id == id);
+          eventsToSave.push({ userEmail: currentUser, eventType: 'MATCH', title: `Partido: ${match.local} vs ${match.visitante}`, eventDate: this.formatearFechaParaCalendario(match.fecha), location: match.estadio });
+        });
+
+        eventsToSave.push({ userEmail: currentUser, eventType: 'FLIGHT', title: `✈︎ Vuelo Regreso: ${inboundFlight.airline}`, eventDate: inboundFlight.departureTime.split(' ')[0], location: `Aprox: $${inboundFlight.price} USD` });
+
+        this.itineraryService.saveItineraryEvents(eventsToSave).subscribe({
+          next: () => {
+            const report = { userEmail: currentUser, packageName: `Itinerario Inteligente (${this.selectedMatchIds.length} partidos)`, packageType: 'GENERADO' };
+            this.reportsService.savePackageReport(report).subscribe();
+            this.isGeneratingPack = false;
+            alert("¡Itinerario Épico Generado exitosamente!");
+            this.selectedMatchIds = [];
+            this.cargarDatosIniciales();
+          },
+          error: () => { this.isGeneratingPack = false; alert("Error guardando el itinerario."); }
+        });
+      },
+      error: () => { this.isGeneratingPack = false; alert("No hubo conexión con el backend."); }
+    });
   }
 
   openEventModal(ev: ItineraryEvent) {
@@ -98,7 +185,7 @@ export class CalendarioComponent implements OnInit {
     const currentUser = localStorage.getItem('username') || 'usuario';
 
     // 1. Pedimos el itinerario a la base de datos
-    this.authService.getUserItinerary(currentUser).subscribe({
+    this.itineraryService.getUserItinerary(currentUser).subscribe({
       next: (eventosGuardados) => {
         // Transformamos los DTOs que vienen del back a nuestra interfaz interna
         this.myEvents = eventosGuardados.map(e => ({
@@ -114,7 +201,7 @@ export class CalendarioComponent implements OnInit {
     });
 
     // 2. Traemos los partidos (como ya lo tenías)
-    this.authService.getWcMatches().subscribe({
+    this.matchesService.getWcMatches().subscribe({
       next: (data) => {
         this.allMatches = data;
         this.generarCatalogoDePaquetes();
@@ -122,7 +209,9 @@ export class CalendarioComponent implements OnInit {
       error: (err) => console.error("❌ Error al traer partidos:", err)
     });
   }
-
+  cerrarSesion() {
+    this.authService.logout();
+  }
 
   generarCatalogoDePaquetes() {
     const nuevosPaquetes: TravelPackage[] = [];
@@ -147,7 +236,7 @@ export class CalendarioComponent implements OnInit {
         category: 'Selección',
         description: `Todos los partidos de ${pais} en el torneo.`,
         price: partidosPais.length * 150, // Precio dinámico
-        imageIcon: "⚽",
+        imageIcon: "✉", // <-- Cambiado de emoji a texto
         includedMatches: partidosPais.map(m => `${m.local} vs ${m.visitante}`).join(', '),
         matchesRawData: partidosPais
       });
@@ -168,14 +257,13 @@ export class CalendarioComponent implements OnInit {
         category: 'Fase de Grupos',
         description: `Vive la emoción completa de todos los encuentros del ${grupo}.`,
         price: 800,
-        imageIcon: "🏟️",
+        imageIcon: "✉", // <-- Cambiado de emoji a texto
         includedMatches: `${partidosGrupo.length} partidos de la fase inicial.`,
         matchesRawData: partidosGrupo
       });
     });
 
-    // --- 3. PAQUETE "EL CAMINO A LA GLORIA" (Fase Final) ---
-    // Filtramos partidos que no tengan grupo (suelen ser eliminatorias) o nombres de fase final
+
     const faseFinal = this.allMatches.filter(m => {
       const n = (m.nombre || '').toUpperCase();
       return n.includes('CUARTOS') || n.includes('QUARTER') ||
@@ -189,7 +277,7 @@ export class CalendarioComponent implements OnInit {
         category: 'Fase Final',
         description: "El paquete definitivo: Cuartos, Semifinales y la Gran Final.",
         price: 4500,
-        imageIcon: "🏆",
+        imageIcon: "VIP", // <-- Cambiado de emoji a texto
         includedMatches: "Partidos de eliminación directa y Final.",
         matchesRawData: faseFinal
       });
@@ -210,7 +298,6 @@ export class CalendarioComponent implements OnInit {
       );
     }
   }
-  // 🌟 FUNCIÓN CLAVE: Convierte '11 jun 2026' en '2026-06-11' para que el calendario lo reconozca
   formatearFechaParaCalendario(fechaRaw: string): string {
     if (!fechaRaw) return '';
 
@@ -237,95 +324,114 @@ export class CalendarioComponent implements OnInit {
     this.processingId = pkg.id;
     const currentUser = localStorage.getItem('username') || 'usuario';
 
-    const purchasePayload = {
-      userEmail: currentUser,
-      matchName: `PAQUETE: ${pkg.name}`,
-      stadium: 'Sedes Varias',
-      date: 'Múltiples Fechas'
-    };
+    const purchasePayload = { userEmail: currentUser, matchName: `PAQUETE: ${pkg.name}`, stadium: 'Sedes Varias', date: 'Múltiples Fechas' };
 
-    // 1. Ejecutar la compra (tickets)
-    this.authService.buyTicket(purchasePayload).subscribe({
+    this.ticketsService.buyTicket(purchasePayload).subscribe({
       next: () => {
         if (pkg.matchesRawData && pkg.matchesRawData.length > 0) {
 
-          // Creamos un array temporal para enviar al backend
-          const eventosAGuardar: any[] = [];
+          // 🌟 Calculamos el inicio y fin del paquete
+          const fechasTimestamp = pkg.matchesRawData.map((m: any) =>
+            new Date(this.formatearFechaParaCalendario(m.fecha) + 'T00:00:00').getTime()
+          );
 
-          pkg.matchesRawData.forEach((match: any) => {
-            const fechaPartido = this.formatearFechaParaCalendario(match.fecha);
+          const minDate = new Date(Math.min(...fechasTimestamp));
+          const maxDate = new Date(Math.max(...fechasTimestamp));
 
-            // Evento 1: Partido
-            eventosAGuardar.push({
-              userEmail: currentUser,
-              eventType: 'MATCH',
-              title: `${match.local} vs ${match.visitante}`,
-              eventDate: fechaPartido,
-              location: match.estadio
-            });
+          const startDateBackend = minDate.toISOString().split('T')[0];
+          const endDateBackend = maxDate.toISOString().split('T')[0];
 
-            // Evento 2: Vuelo (7 días antes)
-            const fechaVuelo = this.generarFechaVuelo(fechaPartido);
-            eventosAGuardar.push({
-              userEmail: currentUser,
-              eventType: 'FLIGHT',
-              title: `✈️ Vuelo de ida: Destino ${match.estadio}`,
-              eventDate: fechaVuelo,
-              location: `Aeropuerto Intl. cercano a ${match.estadio}`
-            });
-          });
+          this.flightsService.getFlightPackage(currentUser, startDateBackend, endDateBackend).subscribe({
+            next: (vuelos) => {
+              const eventosAGuardar: any[] = [];
+              let outboundFlight = null;
+              let inboundFlight = null;
 
-          // 2. Guardamos todos los eventos masivamente en la base de datos
-          this.authService.saveItineraryEvents(eventosAGuardar).subscribe({
-            next: (savedEvents) => {
-              // Recargamos el itinerario desde el back para tener los IDs reales de la DB
-              this.cargarDatosIniciales();
+              if (vuelos && vuelos.outbound && vuelos.outbound.length > 0) {
+                outboundFlight = vuelos.outbound[0];
+                inboundFlight = (vuelos.inbound && vuelos.inbound.length > 0) ? vuelos.inbound[0] : outboundFlight;
 
-              this.isDetailsModalOpen = false;
-              this.processingId = null;
-              this.closePackageDetails();
-              alert(`¡Paquete ${pkg.name} adquirido! Todo se ha guardado en tu itinerario oficial.`);
+                eventosAGuardar.push({ userEmail: currentUser, eventType: 'FLIGHT', title: `✈︎ Vuelo Ida: ${outboundFlight.airline}`, eventDate: outboundFlight.departureTime.split(' ')[0], location: `Costo aprox: $${outboundFlight.price} USD` });
+              } else {
+                eventosAGuardar.push({ userEmail: currentUser, eventType: 'FLIGHT', title: `✈︎ Vuelo Ida (Sugerido)`, eventDate: this.generarFechaVuelo(startDateBackend), location: `Hacia Sede del Mundial` });
+              }
+
+              pkg.matchesRawData.forEach((match: any) => {
+                eventosAGuardar.push({ userEmail: currentUser, eventType: 'MATCH', title: `${match.local} vs ${match.visitante}`, eventDate: this.formatearFechaParaCalendario(match.fecha), location: match.estadio });
+              });
+
+              if (inboundFlight && outboundFlight) {
+                // Si usamos el fallback local (espejo) porque Google falló el regreso
+                const returnDate = vuelos.inbound && vuelos.inbound.length > 0 ? inboundFlight.departureTime.split(' ')[0] : (() => {
+                  const d = new Date(endDateBackend + 'T00:00:00');
+                  d.setDate(d.getDate() + 2);
+                  return d.toISOString().split('T')[0];
+                })();
+
+                eventosAGuardar.push({ userEmail: currentUser, eventType: 'FLIGHT', title: `✈︎ Vuelo Regreso: ${inboundFlight.airline}`, eventDate: returnDate, location: `Costo aprox: $${inboundFlight.price} USD` });
+              }
+
+              this.itineraryService.saveItineraryEvents(eventosAGuardar).subscribe({
+                next: () => {
+                  const report = { userEmail: currentUser, packageName: pkg.name, packageType: 'PREDEFINIDO' };
+                  this.reportsService.savePackageReport(report).subscribe();
+                  this.cargarDatosIniciales();
+                  this.isDetailsModalOpen = false;
+                  this.processingId = null;
+                  this.closePackageDetails();
+                  alert(`¡Paquete ${pkg.name} adquirido y organizado correctamente en tu calendario!`);
+                },
+                error: () => { alert("Hubo un error armando el itinerario."); this.processingId = null; }
+              });
             },
-            error: (err) => {
-              console.error("Error guardando itinerario masivo:", err);
-              alert("Se compró el ticket, pero hubo un error armando el itinerario.");
-              this.processingId = null;
-            }
+            error: () => { alert("No pudimos conectar con la aerolínea."); this.processingId = null; }
           });
         }
       },
-      error: () => {
-        this.processingId = null;
-        alert("Error en la compra.");
+      error: () => { this.processingId = null; alert("Error en la compra."); }
+    });
+  }
+  setTab(tab: string) {
+    this.activeTab = tab;
+    // Si entramos a la pestaña de reportes, los cargamos
+    if (tab === 'reportes') {
+      this.loadReports();
+    }
+  }
+  loadReports() {
+    const currentUser = localStorage.getItem('username') || '';
+    if (!currentUser) return;
+
+    this.isLoadingReports = true;
+    this.reportsService.getUserReports(currentUser).subscribe({
+      next: (data) => {
+        this.userReports = data;
+        this.isLoadingReports = false;
+      },
+      error: (err) => {
+        console.error('Error cargando reportes', err);
+        this.isLoadingReports = false;
       }
     });
   }
-  setTab(tab: 'itinerario' | 'paquetes') { this.activeTab = tab; }
 
 
-  // ==========================================
-  // 🌟 LÓGICA DEL CALENDARIO VISUAL
-  // ==========================================
+
   generateCalendar() {
     this.calendarDays = [];
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
 
-    // Primer día del mes y total de días
     const firstDayIndex = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    // Rellenar espacios vacíos antes del primer día (para que encaje en la semana)
     for (let i = 0; i < firstDayIndex; i++) {
       this.calendarDays.push({ dayNum: null, dateStr: null, events: [] });
     }
 
-    // Llenar los días reales del mes
     for (let i = 1; i <= daysInMonth; i++) {
-      // Formato YYYY-MM-DD
       const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
 
-      // Buscar si este día tiene eventos
       const dayEvents = this.myEvents.filter(e => e.date === dateStr);
 
       this.calendarDays.push({ dayNum: i, dateStr: dateStr, events: dayEvents });
@@ -342,37 +448,40 @@ export class CalendarioComponent implements OnInit {
     this.generateCalendar();
   }
 
-  // ==========================================
-  // LÓGICA DE EVENTOS
-  // ==========================================
-  addEvent() {
-    if (!this.newEvent.title || !this.newEvent.date) return;
+
+  saveManualEvent() {
+    if (!this.newEventTitle || !this.newEventDate) {
+      alert("⚠️ Por favor, ingresa al menos el título y la fecha del evento.");
+      return;
+    }
+
+    this.isSavingManual = true; // 🌟 Empieza a cargar
 
     const currentUser = localStorage.getItem('username') || 'usuario';
-
-    // Formateamos como el backend lo espera
     const eventToSave = [{
-      userEmail: currentUser,
-      eventType: this.newEvent.type,
-      title: this.newEvent.title,
-      eventDate: this.newEvent.date,
-      location: this.newEvent.location || ''
+      userEmail: currentUser, eventType: this.newEventType, title: this.newEventTitle, eventDate: this.newEventDate, location: this.newEventLocation || ''
     }];
 
-    // Guardamos en BD y recargamos
-    this.authService.saveItineraryEvents(eventToSave).subscribe({
+    this.itineraryService.saveItineraryEvents(eventToSave).subscribe({
       next: () => {
+        const report = { userEmail: currentUser, packageName: `Evento: ${this.newEventTitle}`, packageType: 'MANUAL' };
+        this.reportsService.savePackageReport(report).subscribe();
+        this.isSavingManual = false;
         this.showAddEventForm = false;
-        this.newEvent = { type: 'MATCH', title: '', date: '', location: '' };
-        this.cargarDatosIniciales(); // Recargamos para obtener el ID generado por la BD
+        this.newEventTitle = ''; this.newEventDate = ''; this.newEventLocation = ''; this.newEventType = 'OTHER';
+        this.cargarDatosIniciales();
       },
-      error: (err) => console.error("Error añadiendo evento individual", err)
+      error: (err) => {
+        this.isSavingManual = false; // 🌟 Termina de cargar
+        console.error("Error añadiendo evento individual", err);
+        alert("Hubo un error al guardar tu evento.");
+      }
     });
   }
 
   deleteEvent(id: number) {
     // Borramos el evento por su ID real en la base de datos
-    this.authService.deleteItineraryEvent(id).subscribe({
+    this.itineraryService.deleteItineraryEvent(id).subscribe({
       next: () => {
         // Lo quitamos visualmente sin tener que recargar todo
         this.myEvents = this.myEvents.filter(e => e.id !== id);
