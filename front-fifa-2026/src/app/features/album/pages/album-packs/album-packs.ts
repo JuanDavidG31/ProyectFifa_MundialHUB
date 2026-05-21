@@ -24,9 +24,9 @@ export class AlbumPacks implements OnInit, OnDestroy {
   openStep: OpenStep = 'IDLE';
   openingPackId: string | null = null;
   lastStickers: any[] = [];
-
+isRipping = false;
+  private shakeMs = 1200;
   isShaking = false;
-  private shakeMs = 450;
   private statusSub!: Subscription;
 
   constructor(private albumService: AlbumService) { }
@@ -86,14 +86,21 @@ export class AlbumPacks implements OnInit, OnDestroy {
 
   async openCurrent() {
     const p = this.current;
-    if (!p || p.status === 'OPENED' || this.isShaking) return;
+    if (!p || p.status === 'OPENED' || this.isShaking || this.isRipping) return;
 
     this.openingPackId = p.id;
-    this.isShaking = true;
+    this.isShaking = true; // Fase 1: Empieza a temblar
 
     try {
       const results = await this.albumService.openPackOnServer();
 
+      // Transición quirúrgica entre temblar y rasgar
+      setTimeout(() => {
+        this.isShaking = false;
+        this.isRipping = true; // Fase 2: Se dispara el rasgado visual
+      }, 700); // Tiembla durante 700ms
+
+      // Al finalizar todo el tiempo (1200ms totales) mostramos las láminas
       setTimeout(() => {
         this.lastStickers = results.map(s => ({
           ...s,
@@ -102,13 +109,16 @@ export class AlbumPacks implements OnInit, OnDestroy {
 
         p.status = 'OPENED';
         this.openStep = 'RESULTS';
-        this.isShaking = false;
+        this.isRipping = false; // Reseteamos la animación
+        this.openingPackId = null;
       }, this.shakeMs);
 
-    } catch (e) {
-      console.error("Error abriendo paquete", e);
+    } catch (e: any) {
+      console.error(e);
+      alert(e.error?.error || "Error al abrir el paquete.");
       this.isShaking = false;
-      alert("Hubo un error o ya no te quedan paquetes disponibles.");
+      this.isRipping = false;
+      this.openingPackId = null;
     }
   }
 

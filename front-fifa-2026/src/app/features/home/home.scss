@@ -593,7 +593,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   flex-direction: column;
   gap: 15px;
 
-  // 🌟 CABECERA DE LA SECCIÓN (DISEÑO PREMIUM)
   .news-header {
     text-align: center;
     margin-bottom: 50px;
@@ -608,7 +607,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
       gap: 15px;
       margin-bottom: 15px;
       padding: 10px 30px;
-      background: rgba(255, 255, 255, 0.03); // Fondo sutil tipo "pastilla"
+      background: rgba(255, 255, 255, 0.03);
       backdrop-filter: blur(10px);
       border-radius: 50px;
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -621,7 +620,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
       }
 
       .hub-tag {
-        background: linear-gradient(135deg, #ef4444, #b91c1c); // Rojo vibrante
+        background: linear-gradient(135deg, #ef4444, #b91c1c);
         color: #ffffff;
         padding: 6px 14px;
         border-radius: 20px;
@@ -629,7 +628,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
         font-size: 0.85rem;
         letter-spacing: 2px;
         box-shadow: 0 0 15px rgba(#ef4444, 0.5);
-        animation: pulseRed 2s infinite; // El palpitar que querías
+        animation: pulseRed 2s infinite;
       }
 
       h2 {
@@ -641,10 +640,10 @@ $glass-border: rgba(255, 255, 255, 0.15);
         text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 
         .gradient-text {
-          background: linear-gradient(135deg, #06b6d4, #ec4899); // Cian a Magenta
+          background: linear-gradient(135deg, #06b6d4, #ec4899);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5)); // Hace que el gradiente resalte
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
         }
       }
 
@@ -1131,178 +1130,381 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// MODAL DE PASARELA DE PAGO
-.recharge-modal-card {
+// MODAL DE PASARELA DE PAGO 
+.payment-modal {
   width: 90%;
-  max-width: 400px;
-  background: rgba($c-bg, 0.95);
-  border: 1px solid rgba($white, 0.1);
+  max-width: 420px;
+  background: linear-gradient(180deg, rgba(15, 20, 30, 0.95) 0%, rgba(10, 15, 20, 0.98) 100%);
+  border-top: 2px solid #10b981;
   border-radius: 24px;
   padding: 30px;
   position: relative;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(16, 185, 129, 0.15);
+  text-align: center;
+  margin: auto;
 
-  .close-modal-btn {
+  .close-modal {
     position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    color: rgba($white, 0.5);
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: $white;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
     font-size: 1.2rem;
     cursor: pointer;
-    transition: 0.2s;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &:hover {
-      color: $c-error;
-      transform: rotate(90deg);
+      background: $c-error;
+      border-color: $c-error;
+      transform: rotate(90deg) scale(1.1);
     }
   }
 
+  // CABECERA DEL MODAL
   .payment-header {
-    text-align: center;
     margin-bottom: 25px;
 
-    .icon-pulse {
-      font-size: 3.5rem;
-      margin-bottom: 10px;
-      color: $c-gold;
-      text-shadow: 0 0 15px rgba($c-gold, 0.4);
+    .secure-badge {
       display: inline-block;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      padding: 6px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
     }
 
     h2 {
       color: $white;
       margin: 0 0 5px 0;
-      font-size: 1.5rem;
+      font-size: 1.6rem;
+      font-weight: 800;
     }
 
     p {
-      color: $c-secondary;
+      color: rgba(255, 255, 255, 0.6);
       margin: 0;
-      font-weight: bold;
+      font-size: 0.95rem;
     }
   }
 
+  // CUERPO DEL FORMULARIO
   .payment-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    text-align: left;
 
     .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      margin-bottom: 18px;
 
       label {
+        display: block;
+        margin-bottom: 8px;
+        color: rgba(255, 255, 255, 0.7);
         font-size: 0.85rem;
-        color: rgba($white, 0.8);
         text-transform: uppercase;
         letter-spacing: 1px;
+        font-weight: 600;
+      }
+    }
+
+    // ENTRADA DEL MONTO GIGANTE
+    .amount-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      .coin-symbol {
+        position: absolute;
+        left: 20px;
+        font-size: 2rem;
+        font-weight: 900;
+        color: #fbbf24;
+        text-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
       }
 
-      .amount-wrapper {
-        position: relative;
+      input {
+        width: 100%;
+        padding: 20px 20px 20px 55px;
+        font-size: 2.2rem;
+        font-weight: 800;
+        background: rgba(0, 0, 0, 0.4);
+        border: 2px solid rgba(251, 191, 36, 0.3);
+        border-radius: 16px;
+        color: $white;
+        transition: all 0.3s ease;
 
-        .coin-symbol {
-          position: absolute;
-          left: 15px;
-          top: 50%;
-          transform: translateY(-50%);
-          font-size: 1.2rem;
-          color: $c-gold;
-          font-weight: bold;
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.15);
+          font-size: 1.5rem;
         }
 
-        input {
-          width: 100%;
-          padding: 15px 15px 15px 55px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba($c-gold, 0.5);
-          border-radius: 12px;
-          color: $white;
-          font-size: 1.2rem;
-          font-weight: bold;
+        &:focus {
           outline: none;
-          transition: all 0.3s ease;
-
-          &::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-          }
-
-          &:focus {
-            border-color: $c-gold;
-            box-shadow: 0 0 15px rgba($c-gold, 0.4);
-            background: rgba(255, 255, 255, 0.1);
-          }
+          border-color: #fbbf24;
+          box-shadow: 0 0 25px rgba(251, 191, 36, 0.25);
+          background: rgba(251, 191, 36, 0.05);
         }
       }
     }
 
+    // LA TARJETA VIRTUAL INTERACTIVA
     .dummy-credit-card {
-      background: linear-gradient(135deg, #1e293b, #0f172a);
-      padding: 20px;
+      background: linear-gradient(135deg, #1e3a8a 0%, #9333ea 50%, #db2777 100%);
       border-radius: 16px;
-      border: 1px solid rgba($white, 0.05);
+      padding: 25px;
+      margin-bottom: 25px;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 
-      .card-chip {
-        width: 40px;
-        height: 30px;
-        background: rgba(255, 215, 0, 0.6);
-        border-radius: 6px;
-        margin-bottom: 15px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-      }
+      .card-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
 
-      .dummy-input {
-        margin-bottom: 10px;
+        .card-chip {
+          width: 45px;
+          height: 35px;
+          background: linear-gradient(135deg, #fbbf24, #d97706);
+          border-radius: 6px;
+          position: relative;
+        }
 
-        input {
-          background: transparent;
-          border: none;
-          color: $white;
-          font-family: monospace;
-          font-size: 1.1rem;
-          padding: 0;
+        .card-logo {
+          display: flex;
+          gap: -10px;
 
-          &::placeholder {
-            color: rgba($white, 0.3);
+          .circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+          }
+
+          .red {
+            background: rgba(239, 68, 68, 0.85);
+            transform: translateX(12px);
+            z-index: 2;
+          }
+
+          .yellow {
+            background: rgba(250, 204, 21, 0.85);
           }
         }
       }
 
-      .card-row {
+      .card-number-display {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 1.6rem;
+        color: #fff;
+        font-weight: 700;
+        letter-spacing: 3px;
+        margin-bottom: 20px;
+        min-height: 30px;
+      }
+
+      .card-footer-display {
         display: flex;
         justify-content: space-between;
-        gap: 15px;
+        color: rgba(255, 255, 255, 0.8);
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: 600;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+
+        .card-name-display {
+          flex: 1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          margin-right: 15px;
+        }
       }
     }
 
+    // CAMPOS DE TEXTO REALES (INPUTS)
+    .real-checkout-inputs {
+      .input-group {
+        margin-bottom: 18px;
+      }
+
+      .gateway-input {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: $white;
+        padding: 14px 18px;
+        border-radius: 10px;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.2);
+        }
+
+        &:focus {
+          border-color: #06b6d4;
+          background: rgba(6, 182, 212, 0.05);
+          box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+          outline: none;
+        }
+
+        &.text-center {
+          text-align: center;
+          letter-spacing: 2px;
+        }
+      }
+    }
+
+    .card-row {
+      display: flex;
+      gap: 15px;
+    }
+
+    // BOTÓN DE PAGAR
     .btn-pay {
+      width: 100%;
       background: linear-gradient(135deg, #10b981, #059669);
       color: $white;
-      padding: 16px;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: bold;
+      padding: 18px;
+      border-radius: 14px;
+      font-size: 1.15rem;
+      font-weight: 800;
       border: none;
       cursor: pointer;
-      transition: 0.3s;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       display: flex;
       justify-content: center;
       align-items: center;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+      margin-top: 20px;
 
       &:hover:not(:disabled) {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(#10b981, 0.4);
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 15px 35px rgba(16, 185, 129, 0.5);
       }
 
       &:disabled {
         background: #475569;
+        box-shadow: none;
         cursor: not-allowed;
         opacity: 0.7;
+        transform: none;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 20px;
+    width: 95%;
+    box-sizing: border-box;
+
+    .close-modal {
+      top: 10px;
+      right: 10px;
+      width: 30px;
+      height: 30px;
+      font-size: 1rem;
+    }
+
+    .payment-header {
+      margin-bottom: 15px;
+
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      .secure-badge {
+        font-size: 0.7rem;
+        padding: 4px 10px;
+        margin-bottom: 10px;
+      }
+    }
+
+    .payment-form {
+      .input-group label {
+        font-size: 0.75rem;
+        margin-bottom: 5px;
+      }
+
+      // Ajuste del Input Gigante
+      .amount-wrapper {
+        .coin-symbol {
+          left: 12px;
+          font-size: 1.4rem;
+        }
+
+        input {
+          font-size: 1.5rem;
+          padding: 15px 15px 15px 35px;
+
+          &::placeholder {
+            font-size: 1.2rem;
+          }
+        }
+      }
+
+      // Ajuste de la Tarjeta para que no se salga de la pantalla
+      .dummy-credit-card {
+        padding: 15px;
+        margin-bottom: 15px;
+
+        .card-header-row {
+          margin-bottom: 15px;
+
+          .card-chip {
+            width: 35px;
+            height: 25px;
+          }
+
+          .card-logo .circle {
+            width: 25px;
+            height: 25px;
+          }
+        }
+
+        .card-number-display {
+          font-size: 1.15rem;
+          letter-spacing: 1px;
+          margin-bottom: 15px;
+        }
+
+        .card-footer-display {
+          font-size: 0.85rem;
+          letter-spacing: 0;
+        }
+      }
+
+      .real-checkout-inputs {
+        .input-group {
+          margin-bottom: 12px;
+        }
+
+        .gateway-input {
+          font-size: 0.9rem;
+          padding: 12px 14px;
+        }
+      }
+
+      .card-row {
+        gap: 10px;
+      }
+
+      .btn-pay {
+        padding: 14px;
+        font-size: 1rem;
+        margin-top: 10px;
       }
     }
   }
@@ -1347,8 +1549,8 @@ $glass-border: rgba(255, 255, 255, 0.15);
     flex-direction: column;
     overflow: hidden;
     padding: 0;
-    border-radius: 20px; 
-    border: 1px solid rgba(255, 255, 255, 0.08); 
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     background: linear-gradient(180deg, rgba(30, 40, 55, 0.6) 0%, rgba(15, 20, 30, 0.8) 100%);
     backdrop-filter: blur(10px);
@@ -1402,7 +1604,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
 
     .news-content {
-      padding: 30px 25px; 
+      padding: 30px 25px;
       display: flex;
       flex-direction: column;
       flex: 1;
@@ -1485,7 +1687,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
   &:hover {
     background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(#06b6d4, 0.3); 
+    border-color: rgba(#06b6d4, 0.3);
     transform: translateY(-3px);
   }
 
@@ -1493,7 +1695,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
     font-size: 4rem;
     margin-bottom: 20px;
     opacity: 0.8;
-    animation: float 4s ease-in-out infinite; 
+    animation: float 4s ease-in-out infinite;
   }
 
   h3 {
@@ -1580,7 +1782,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    padding: 0; 
+    padding: 0;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     background: rgba(20, 25, 35, 0.6);
     cursor: pointer;
@@ -1605,15 +1807,15 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
     .news-image {
       position: relative;
-      height: 210px; 
+      height: 210px;
       width: 100%;
       overflow: hidden;
-      background: rgba(0, 0, 0, 0.4); 
+      background: rgba(0, 0, 0, 0.4);
 
       img {
         width: 100%;
         height: 100%;
-        object-fit: cover; 
+        object-fit: cover;
         transition: transform 0.5s ease;
       }
 
@@ -1654,7 +1856,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
           width: 15px;
           height: 15px;
           background: rgba($white, 0.2);
-          border-radius: 50%; 
+          border-radius: 50%;
         }
       }
 
@@ -1687,7 +1889,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
         font-size: 0.9rem;
         cursor: pointer;
         text-align: left;
-        margin-top: auto; 
+        margin-top: auto;
         display: flex;
         align-items: center;
         gap: 5px;
@@ -1731,5 +1933,84 @@ $glass-border: rgba(255, 255, 255, 0.15);
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 850px) {
+  .top-nav {
+    padding: 12px 15px !important; 
+
+    .logo-container {
+      gap: 8px;
+
+      .logo-image {
+        width: 32px;
+        height: 32px;
+      }
+
+      .logo-text {
+        font-size: 1.3rem;
+      }
+    }
+
+    .user-actions {
+      gap: 10px;
+
+      .user-info .greeting {
+        display: none !important;
+      }
+
+      .coin-wallet-btn {
+        padding: 6px 10px;
+
+        .coin-amount {
+          font-size: 0.95rem;
+        }
+
+        .plus-badge {
+          width: 16px;
+          height: 16px;
+          font-size: 0.7rem;
+        }
+      }
+
+      .avatar-group {
+        gap: 8px;
+
+        .avatar-container {
+          width: 35px;
+          height: 35px;
+
+          .avatar-img,
+          .avatar-placeholder {
+            width: 35px !important;
+            height: 35px !important;
+            line-height: 35px;
+            font-size: 1rem;
+          }
+        }
+
+        .settings-btn {
+          width: 35px;
+          height: 35px;
+          font-size: 1.1rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 420px) {
+  .top-nav {
+    .logo-container .logo-text {
+      display: none !important; 
+    }
+
+    .user-actions .coin-wallet-btn {
+      .coin-icon {
+        display: none;
+      }
+
+    }
   }
 }

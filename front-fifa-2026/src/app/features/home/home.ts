@@ -18,6 +18,10 @@ import { NoticeService } from '../../core/services/notice.service';
   styleUrls: ['./home.scss']
 })
 export class HomeComponent implements OnInit {
+  cardName: string = '';
+  cardNumber: string = '';
+  cardExpiry: string = '';
+  cardCvc: string = '';
   userCoins: number = 0;
   isRechargeModalOpen = false;
   rechargeAmount: number | null = null;
@@ -41,27 +45,27 @@ export class HomeComponent implements OnInit {
   favoriteTeam: string = 'Cargando...';
   tutorialSteps = [
     {
-      icon: '👋',
+      icon: '',
       title: '¡Bienvenido a MundialHub!',
       desc: 'Tu plataforma definitiva para vivir la pasión del fútbol. Te daremos un recorrido rápido por todo lo que puedes hacer.'
     },
     {
-      icon: '🎟️',
+      icon: '',
       title: 'Compra de Tickets',
       desc: 'Encuentra y asegura tus entradas para los mejores partidos con un código QR oficial.'
     },
     {
-      icon: '📒',
+      icon: '',
       title: 'Tu Álbum Virtual',
       desc: 'Colecciona, abre sobres e intercambia cromos con otros usuarios para completar tu equipo ideal.'
     },
     {
-      icon: '🎯',
+      icon: '',
       title: 'Pronósticos y Apuestas',
       desc: 'Demuestra cuánto sabes de fútbol, adivina los resultados y compite en el ranking global.'
     },
     {
-      icon: '🌍',
+      icon: '',
       title: 'Equipos y Estadísticas',
       desc: 'Sigue el rendimiento de tu selección favorita y mantente al día con el torneo.'
     }
@@ -109,7 +113,6 @@ export class HomeComponent implements OnInit {
 
     this.chatService.connect();
 
-    // Escuchar mensajes
     this.chatSubscription = this.chatService.messages$.subscribe(msg => {
       if (!msg) return;
 
@@ -129,6 +132,25 @@ export class HomeComponent implements OnInit {
     this.cargarNoticias();
   }
 
+  formatCardNumber(event: any) {
+    let input = event.target.value.replace(/\D/g, '').substring(0, 16);
+    input = input != '' ? input.match(/.{1,4}/g).join(' ') : '';
+    this.cardNumber = input;
+  }
+
+  formatExpiry(event: any) {
+    let input = event.target.value.replace(/\D/g, '').substring(0, 4);
+    if (input.length > 2) {
+      this.cardExpiry = input.substring(0, 2) + '/' + input.substring(2, 4);
+    } else {
+      this.cardExpiry = input;
+    }
+  }
+
+  formatCvc(event: any) {
+    this.cardCvc = event.target.value.replace(/\D/g, '').substring(0, 3);
+  }
+
   cargarNoticias() {
     this.noticeService.getNotices().subscribe({
       next: (data) => {
@@ -139,12 +161,11 @@ export class HomeComponent implements OnInit {
   }
 
   toggleAvatarModal() {
-    if (this.userAvatar) { // Solo abrimos si realmente hay una imagen
+    if (this.userAvatar) {
       this.isAvatarModalOpen = !this.isAvatarModalOpen;
     }
   }
 
-  // Mueve el carrusel cuando el usuario arrastra la barra superior
   onScrollRangeChange(event: any) {
     const scrollVal = event.target.value;
     const el = this.carousel.nativeElement;
@@ -152,7 +173,6 @@ export class HomeComponent implements OnInit {
     el.scrollLeft = (scrollVal / 100) * maxScroll;
   }
 
-  // Actualiza la barra superior si el usuario desliza con el dedo (táctil)
   onCarouselScroll(event: any) {
     const el = event.target;
     const maxScroll = el.scrollWidth - el.clientWidth;
@@ -190,19 +210,15 @@ export class HomeComponent implements OnInit {
   }
 
   requestAgent() {
-    // 1. Ponemos un estado de espera mientras le preguntamos al backend
     this.chatStatus = 'Verificando disponibilidad de agentes...';
 
-    // 2. Llamamos a nuestro nuevo endpoint
     this.userService.checkActiveSupport().subscribe({
       next: (hasSupport: boolean) => {
         if (hasSupport) {
-          // ✅ SÍ HAY SOPORTE: Procedemos a conectarnos al WebSocket
           this.chatMessages = [];
           this.chatStatus = 'Buscando agente...';
           this.chatService.requestSupport(this.userName);
         } else {
-          // ❌ NO HAY SOPORTE: Bloqueamos y avisamos al usuario
           this.chatStatus = 'No hay agentes de soporte conectados en este momento.';
           this.chatMessages = [];
         }
@@ -217,9 +233,7 @@ export class HomeComponent implements OnInit {
   sendChatMessage() {
     if (this.newMessage.trim() === '') return;
 
-    // Lo mostramos localmente
     this.chatMessages.push({ sender: this.userName, text: this.newMessage, isMe: true });
-    // Lo enviamos por WS
     this.chatService.sendMessage(this.userName, this.newMessage);
     this.newMessage = '';
   }
@@ -231,15 +245,12 @@ export class HomeComponent implements OnInit {
   }
 
   cerrarSesion(): void {
-    // 1. Disparamos la orden al servidor UNA SOLA VEZ
     this.updateStatusConnectFalse();
 
-    // 2. Iniciamos el ciclo de verificación
     this.verificarCierreSeguro();
   }
 
   verificarCierreSeguro(): void {
-    // Revisamos si el servidor ya respondió y la variable cambió
     if (localStorage.getItem('countActive') === 'false') {
 
       // ¡Éxito! Limpiamos todo y cerramos sesión
@@ -248,7 +259,6 @@ export class HomeComponent implements OnInit {
       this.authService.logout();
 
     } else {
-      // Si todavía no ha cambiado, esperamos 200 milisegundos y nos volvemos a llamar a nosotros mismos
       setTimeout(() => {
         this.verificarCierreSeguro();
       }, 200);
@@ -336,7 +346,7 @@ export class HomeComponent implements OnInit {
 
   openRechargeModal() {
     this.isRechargeModalOpen = true;
-    this.rechargeAmount = null; // Limpiamos el input
+    this.rechargeAmount = null;
   }
 
   closeRechargeModal() {
@@ -352,14 +362,13 @@ export class HomeComponent implements OnInit {
     this.isProcessingPayment = true;
     const currentUsername = localStorage.getItem('username') || '';
 
-    // Simulamos un retraso de 2 segundos para que parezca que el banco está procesando
     setTimeout(() => {
       this.userService.rechargeUserCoins(currentUsername, this.rechargeAmount!).subscribe({
         next: (newBalance) => {
-          this.userCoins = newBalance; // Actualizamos la UI al instante
+          this.userCoins = newBalance;
           this.isProcessingPayment = false;
           this.closeRechargeModal();
-          alert(`¡Pago Exitoso! Has recargado ${this.rechargeAmount} 🪙 a tu cuenta.`);
+          alert(`¡Pago Exitoso! Has recargado ${this.rechargeAmount} $ a tu cuenta.`);
         },
         error: (err) => {
           console.error("Error en la recarga", err);

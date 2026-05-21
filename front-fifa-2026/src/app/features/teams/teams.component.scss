@@ -184,11 +184,20 @@ $glass-border: rgba(255, 255, 255, 0.1);
         }
       }
     }
+
+    @media (max-width: 600px) {
+      padding: 15px;
+      flex-direction: column;
+      gap: 15px;
+
+      .nav-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
   }
 
-  // ==========================================
   // CABECERA
-  // ==========================================
   .header.centered {
     position: relative;
     z-index: 10;
@@ -302,9 +311,12 @@ $glass-border: rgba(255, 255, 255, 0.1);
 
     .fixtures-grid {
       display: grid;
-      // 🌟 MEJORA RESPONSIVE: Usa min(100%, 260px) para evitar overflow en celulares pequeños
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
 
       .match-card {
         background: rgba(0, 0, 0, 0.3);
@@ -494,12 +506,12 @@ $glass-border: rgba(255, 255, 255, 0.1);
 
       .search-box {
         position: relative;
+        width: 100%;
 
         @media (max-width: 768px) {
           width: 100%;
         }
 
-        // Ancho 100% en móvil
 
         input {
           background: rgba(0, 0, 0, 0.4);
@@ -510,6 +522,8 @@ $glass-border: rgba(255, 255, 255, 0.1);
           width: 250px;
           font-family: 'Poppins', sans-serif;
           transition: border-color 0.3s;
+
+          box-sizing: border-box;
 
           @media (max-width: 768px) {
             width: 100%;
@@ -552,7 +566,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
           width: 100%;
         }
 
-        // Ancho 100% en móvil
 
         &:hover {
           border-color: rgba(255, 255, 255, 0.3);
@@ -561,19 +574,25 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // ==========================================
   // GRID ESTILO "TRADING CARDS"
-  // ==========================================
   .teams-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 25px;
     margin-top: 20px;
 
-    // 🌟 ARREGLO MÓVIL: Forzamos EXACTAMENTE 2 columnas para que no se desborde
     @media (max-width: 768px) {
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
+    }
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+      gap: 15px;
+
+      .trading-card {
+        height: 220px;
+      }
     }
 
     .trading-card {

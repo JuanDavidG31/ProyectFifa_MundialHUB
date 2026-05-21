@@ -10,7 +10,7 @@
 
     <div class="store-pill glass-card">
       <div class="balance">
-        <span class="stat-icon" style="margin-left: 10px;">📦</span>
+        <span class="stat-icon" style="margin-left: 10px;">✉️</span>
         <span>Tienes <strong>{{ availablePacks }}</strong> Paquetes</span>
 
         <span class="stat-icon" style="margin-left: 10px;">$</span>
@@ -36,16 +36,16 @@
 
       <div class="carousel-viewport">
         <div class="pack-track" [style.transform]="'translateX(-' + (index * 100) + '%)'">
-          
+
           <div class="pack-container" *ngFor="let p of packs; let i = index" [class.active]="i === index">
-            <div class="pack-art" [class.opened]="p.status === 'OPENED'" [class.shake]="isShaking && openingPackId === p.id">
+            <div class="pack-art" [class.opened]="p.status === 'OPENED'"
+              [class.shake]="isShaking && openingPackId === p.id" [class.ripping]="isRipping && openingPackId === p.id">
+
               <div class="pack-design" *ngIf="p.status === 'UNOPENED'">
-                <span class="pack-logo">⚽</span>
-                <span class="pack-text">FIFA 2026</span>
-                <span class="pack-type">EDICIÓN OFICIAL</span>
+                <img src="assets/sobresalbum.png" alt="Sobre Panini 2026" class="pack-image">
               </div>
               <div class="pack-opened-content" *ngIf="p.status === 'OPENED'">
-                <span class="icon">📦</span>
+                <span class="icon">✉️</span>
                 <span>Vacío</span>
               </div>
             </div>
@@ -63,22 +63,24 @@
     </section>
 
     <div class="empty-state glass-card" *ngIf="packs.length === 0">
-      <span class="empty-icon">📦</span>
+      <span class="empty-icon">✉️</span>
       <h2>¡Tu inventario está vacío!</h2>
-      <p>Ve a la tienda en la parte superior para adquirir más paquetes usando tus FIFA Coins y sigue expandiendo tu colección.</p>
+      <p>Ve a la tienda en la parte superior para adquirir más paquetes usando tus FIFA Coins y sigue expandiendo tu
+        colección.</p>
     </div>
   </main>
 
   <div class="overlay" *ngIf="openStep === 'RESULTS'">
     <div class="sheet glass-card-massive">
       <button class="close-btn" (click)="closeOverlay()">✕</button>
-      
+
       <div class="results">
         <h2 class="results-title">¡Nuevas <span class="gradient-text">Láminas!</span></h2>
-        
+
         <div class="grid">
-          <div class="sticker-card foil-effect" *ngFor="let s of lastStickers" [ngClass]="(s.rarity || 'Común') | lowercase">
-            
+          <div class="sticker-card foil-effect" *ngFor="let s of lastStickers"
+            [ngClass]="(s.rarity || 'Común') | lowercase">
+
             <div class="rarity-badge" [ngClass]="(s.rarity || 'Común') | lowercase">
               {{ s.rarity || 'Común' }}
             </div>
@@ -86,7 +88,6 @@
             <div class="dup-badge" *ngIf="s.duplicates > 0">Repetida</div>
 
             <div class="img-placeholder" *ngIf="!s.imageUrl">
-              <span class="emoji">👤</span>
             </div>
             <img *ngIf="s.imageUrl" class="img" [src]="s.imageUrl" alt="{{s.title}}">
 

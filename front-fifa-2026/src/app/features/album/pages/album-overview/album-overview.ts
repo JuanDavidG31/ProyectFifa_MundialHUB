@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { AlbumStatus } from '../../models/album.models';
 
 interface AlbumSection {
-  id: string; name: string; total: number; collected: number; icon: string;
+  id: string; name: string; total: number; collected: number; shortName: string;
 }
 
 @Component({
@@ -42,7 +42,7 @@ export class AlbumOverview implements OnInit, OnDestroy {
 
     this.subs.add(this.albumService.status$.subscribe(st => this.status = st));
   }
-  
+
 
   ngOnDestroy() {
     this.subs.unsubscribe();
@@ -53,15 +53,11 @@ export class AlbumOverview implements OnInit, OnDestroy {
     const estadiosData = this.albumService.getSectionProgress('estadios');
     const categoriasData = this.albumService.getSectionProgress('categorias');
 
+    // 🌟 Sin emojis y arreglando la duplicación que tenías
     this.sections = [
-      { id: 'selecciones', name: 'Equipos 2026', total: seleccionesData.total, collected: seleccionesData.collected, icon: '🌎' },
-      { id: 'estadios', name: 'Estadios Oficiales', total: estadiosData.total, collected: estadiosData.collected, icon: '🏟️' },
-      { id: 'categorias', name: 'Ediciones Especiales', total: categoriasData.total, collected: categoriasData.collected, icon: '⭐' },
-    ];
-    this.sections = [
-      { id: 'selecciones', name: 'Equipos 2026', total: seleccionesData.total, collected: seleccionesData.collected, icon: '🌎' },
-      { id: 'estadios', name: 'Estadios Oficiales', total: estadiosData.total, collected: estadiosData.collected, icon: '🏟️' },
-      { id: 'categorias', name: 'Ediciones Especiales', total: categoriasData.total, collected: categoriasData.collected, icon: '⭐' },
+      { id: 'selecciones', name: 'Equipos 2026', total: seleccionesData.total, collected: seleccionesData.collected, shortName: 'EQ' },
+      { id: 'estadios', name: 'Estadios Oficiales', total: estadiosData.total, collected: estadiosData.collected, shortName: 'ST' },
+      { id: 'categorias', name: 'Ediciones Especiales', total: categoriasData.total, collected: categoriasData.collected, shortName: 'SP' },
     ];
 
     const totalCollected = seleccionesData.collected + estadiosData.collected + categoriasData.collected;
@@ -85,7 +81,7 @@ export class AlbumOverview implements OnInit, OnDestroy {
 
   claimReward() {
     this.albumService.win1000();
-    
+
     this.status.coins += 1000;
     this.rewardClaimed = true;
     localStorage.setItem('albumCompleteReward', 'true');

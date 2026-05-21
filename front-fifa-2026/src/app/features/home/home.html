@@ -273,19 +273,19 @@
   </div>
 </div>
 <div class="avatar-modal-overlay" *ngIf="isRechargeModalOpen" (click)="closeRechargeModal()">
-  <div class="recharge-modal-card glass-card fade-in-up" (click)="$event.stopPropagation()">
+  <div class="payment-modal fade-in-up" (click)="$event.stopPropagation()">
 
-    <button class="close-modal-btn" (click)="closeRechargeModal()">✕</button>
+    <button class="close-modal" (click)="closeRechargeModal()">✕</button>
 
     <div class="payment-header">
-      <div class="icon-pulse">$</div>
-      <h2>Recargar Billetera</h2>
-      <p>1 USD = 100 $</p>
+      <div class="secure-badge">Pago 100% Seguro</div>
+      <h2>Completar Pago</h2>
+      <p>1 USD = 100 <span style="color: #fbbf24; font-weight: bold;">$</span></p>
     </div>
 
     <div class="payment-form">
       <div class="input-group">
-        <label>Cantidad de Puntos a comprar</label>
+        <label>Monto de Monedas a Comprar</label>
         <div class="amount-wrapper">
           <span class="coin-symbol">$</span>
           <input type="number" [(ngModel)]="rechargeAmount" placeholder="Ej: 500" min="1">
@@ -293,28 +293,53 @@
       </div>
 
       <div class="dummy-credit-card">
-        <div class="card-chip"></div>
-        <div class="input-group dummy-input">
-          <label>Número de Tarjeta</label>
-          <input type="text" placeholder="**** **** **** ****" value="4532 1234 5678 9010" disabled>
-        </div>
-        <div class="card-row">
-          <div class="input-group dummy-input">
-            <label>Vencimiento</label>
-            <input type="text" placeholder="MM/YY" value="12/28" disabled>
+        <div class="card-header-row">
+          <div class="card-chip"></div>
+          <div class="card-logo">
+            <div class="circle red"></div>
+            <div class="circle yellow"></div>
           </div>
-          <div class="input-group dummy-input">
-            <label>CVC</label>
-            <input type="password" placeholder="***" value="123" disabled>
+        </div>
+        <div class="card-number-display">{{ cardNumber || '#### #### #### ####' }}</div>
+        <div class="card-footer-display">
+          <div class="card-name-display">{{ cardName || 'NOMBRE DEL TITULAR' | uppercase }}</div>
+          <div class="card-expiry-display">{{ cardExpiry || 'MM/YY' }}</div>
+        </div>
+      </div>
+
+      <div class="real-checkout-inputs">
+        <div class="input-group">
+          <label>Titular de la Tarjeta</label>
+          <input type="text" [(ngModel)]="cardName" placeholder="EJ: JUAN PEREZ" maxlength="30" class="gateway-input">
+        </div>
+
+        <div class="input-group">
+          <label>Número de Tarjeta</label>
+          <input type="text" [ngModel]="cardNumber" (ngModelChange)="cardNumber=$event"
+            (input)="formatCardNumber($event)" placeholder="0000 0000 0000 0000" class="gateway-input">
+        </div>
+
+        <div class="card-row">
+          <div class="input-group">
+            <label>Vencimiento</label>
+            <input type="text" [ngModel]="cardExpiry" (ngModelChange)="cardExpiry=$event" (input)="formatExpiry($event)"
+              placeholder="MM/YY" class="gateway-input text-center">
+          </div>
+          <div class="input-group">
+            <label>Cód. Seguridad</label>
+            <input type="password" [ngModel]="cardCvc" (ngModelChange)="cardCvc=$event" (input)="formatCvc($event)"
+              placeholder="CVC" class="gateway-input text-center">
           </div>
         </div>
       </div>
 
-      <button class="btn-pay" [disabled]="isProcessingPayment || !rechargeAmount" (click)="processPayment()">
-        <span *ngIf="!isProcessingPayment">Pagar Ahora</span>
+      <button class="btn-pay"
+        [disabled]="isProcessingPayment || !rechargeAmount || cardNumber.length < 19 || cardExpiry.length < 5 || cardCvc.length < 3 || !cardName"
+        (click)="processPayment()">
+        <span *ngIf="!isProcessingPayment">Pagar {{ rechargeAmount ? (rechargeAmount / 100 | currency:'USD') : '$0.00'
+          }}</span>
         <span *ngIf="isProcessingPayment" class="spinner-small"></span>
       </button>
     </div>
-
   </div>
 </div>

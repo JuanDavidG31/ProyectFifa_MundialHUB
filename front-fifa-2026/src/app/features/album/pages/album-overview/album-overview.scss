@@ -1,6 +1,5 @@
 @use "sass:color";
 
-// --- PALETA VIBRANTE Y GAMER ---
 $c-bg: #0b0f19;
 $c-primary: #ec4899;
 $c-secondary: #06b6d4;
@@ -27,9 +26,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
   overflow-x: hidden;
   padding-bottom: 60px;
 
-  // ==========================================
   // FONDOS ANIMADOS
-  // ==========================================
   .bg-shape {
     position: fixed;
     border-radius: 50%;
@@ -91,9 +88,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     animation: fadeIn 0.5s ease-out forwards;
   }
 
-  // ==========================================
   // BARRA SUPERIOR
-  // ==========================================
   .top-nav {
     position: sticky;
     top: 0;
@@ -185,12 +180,192 @@ $glass-border: rgba(255, 255, 255, 0.1);
           background: rgba(255, 255, 255, 0.08);
         }
       }
+
+      .stat-label {
+        font-size: 0.75rem;
+        opacity: 0.7;
+        letter-spacing: 1px;
+      }
+
+      .stat-value {
+        margin-left: 5px;
+      }
     }
   }
 
-  // ==========================================
+  .quick-actions-grid {
+    display: flex;
+    gap: 15px;
+    margin-top: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    .action-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: $white;
+      padding: 16px 30px;
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(10px);
+
+      .card-line {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 0;
+        transition: width 0.4s ease;
+
+        &.cyan-line {
+          background: $c-secondary;
+        }
+
+        &.white-line {
+          background: $white;
+        }
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.08);
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+
+        .card-line {
+          width: 100%;
+        }
+      }
+
+      &.primary {
+        background: linear-gradient(135deg, $c-primary, #f43f5e);
+        border: none;
+        box-shadow: 0 10px 25px rgba($c-primary, 0.3);
+
+        &:hover {
+          box-shadow: 0 15px 35px rgba($c-primary, 0.5);
+          transform: translateY(-4px) scale(1.02);
+        }
+      }
+    }
+  }
+
+  // GRID DE COLECCIÓN Y ICONOS TIPOGRÁFICOS
+  .section-header {
+    margin-bottom: 30px;
+    text-align: left;
+
+    .section-title {
+      font-size: 1.8rem;
+      color: $white;
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .header-line {
+      width: 60px;
+      height: 4px;
+      background: $c-secondary;
+      border-radius: 2px;
+      margin-top: 10px;
+    }
+  }
+
+  .card-icon-box {
+    width: 65px;
+    height: 65px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: $white;
+    letter-spacing: 1px;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+    transition: all 0.4s ease;
+
+    &.selecciones {
+      background: linear-gradient(135deg, #021B79, #0575E6);
+    }
+
+    &.estadios {
+      background: linear-gradient(135deg, #f12711, #f5af19);
+    }
+
+    &.categorias {
+      background: linear-gradient(135deg, #4b134f, #c94b4b);
+    }
+
+    .section-image {
+      width: 100%;  
+      height: 100%; 
+      object-fit: contain; // Asegura que no se deforme
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+      transition: transform 0.3s ease;
+    }
+  }
+
+  .section-card:hover .card-icon-box {
+    transform: scale(1.08) rotate(5deg);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+
+    .section-image {
+      transform: scale(1.15);
+    }
+  }
+
+  // MODAL DE RECOMPENSA
+  .success-modal {
+    .premium-badge {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, $c-gold, #f39c12);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: $c-bg;
+      box-shadow: 0 0 30px rgba($c-gold, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.5);
+      animation: bounceIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .coin-reward {
+      display: flex;
+      flex-direction: column;
+      background: rgba($c-gold, 0.1);
+      border: 1px solid rgba($c-gold, 0.3);
+      padding: 20px;
+      border-radius: 16px;
+      margin: 25px 0;
+
+      .reward-value {
+        font-size: 3rem;
+        font-weight: 900;
+        color: $c-gold;
+        line-height: 1;
+        text-shadow: 0 0 20px rgba($c-gold, 0.3);
+      }
+
+      .reward-label {
+        font-size: 0.9rem;
+        color: rgba($c-gold, 0.8);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-top: 5px;
+      }
+    }
+  }
+
   // CABECERA SIMÉTRICA (CENTRAL)
-  // ==========================================
   .album-hero.centered {
     position: relative;
     z-index: 10;
@@ -286,9 +461,8 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // ==========================================
   // GRID DE COLECCIÓN
-  // ==========================================
+  
   .album-content {
     position: relative;
     z-index: 10;
@@ -406,9 +580,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // ==========================================
   // PANTALLA DE CARGA (LOADER)
-  // ==========================================
   .loading-screen {
     position: absolute;
     top: 0;
@@ -442,9 +614,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // ==========================================
-  // MODAL DE RECOMPENSA 100% (OVERLAY)
-  // ==========================================
+  // MODAL DE RECOMPENSA 
   .overlay {
     position: fixed;
     inset: 0;

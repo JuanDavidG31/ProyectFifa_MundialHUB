@@ -17,12 +17,12 @@
 
       <div class="wallet-container">
         <div class="stat-box gold">
-          <span class="stat-icon">$</span>
-          <span class="stat-value">{{ status.coins }} FIFA Coins</span>
+          <span class="stat-label">$</span>
+          <span class="stat-value">{{ status.coins }} Coins</span>
         </div>
         <div class="stat-box cyan">
-          <span class="stat-icon">📦</span>
-          <span class="stat-value">{{ status.availablePacks }} Paquetes</span>
+          <span class="stat-label">Sobres</span>
+          <span class="stat-value">{{ status.availablePacks }} Packs</span>
         </div>
       </div>
     </nav>
@@ -30,41 +30,48 @@
     <header class="album-hero centered">
       <div class="hero-text">
         <h1>Álbum Oficial <span class="gradient-text">2026</span></h1>
-        <p class="subtitle">Colecciona a las estrellas, completa los equipos e intercambia tus repetidas.</p>
+        <p class="subtitle">Colecciona a las estrellas, completa los equipos y domina el mercado.</p>
       </div>
 
-      <div class="action-buttons-centered">
-        <button class="btn-glass" routerLink="/album/history">
-          <span class="icon">📜</span> Historial
+      <div class="quick-actions-grid">
+        <button class="action-card outline" routerLink="/album/history">
+          <div class="card-line cyan-line"></div>
+          <span>Ver Historial</span>
         </button>
 
-        <button class="btn-play primary" (click)="goToPacks()">
-          <span class="pack-icon">📦</span> Abrir Paquetes
+        <button class="action-card primary" (click)="goToPacks()">
+          <div class="card-line white-line"></div>
+          <span>Abrir Paquetes</span>
         </button>
 
-        <button class="btn-glass" routerLink="/album/exchange">
-          <span class="icon">🔄</span> Mercado
+        <button class="action-card outline" routerLink="/album/exchange">
+          <div class="card-line cyan-line"></div>
+          <span>Mercado Global</span>
         </button>
       </div>
     </header>
 
     <main class="album-content">
-      <div class="section-header centered-header">
-        <h2 class="section-title">
-          <span class="title-icon"></span> TU ALBUM!
-        </h2>
+      <div class="section-header">
+        <h2 class="section-title">Progreso de Colección</h2>
+        <div class="header-line"></div>
       </div>
 
       <div class="sections-grid">
         <div class="section-card glass-card" *ngFor="let section of sections" (click)="goToSection(section.id)">
-          <div class="card-icon">{{ section.icon }}</div>
+
+          <div class="card-icon-box" [ngClass]="section.id">
+            <img *ngIf="section.id === 'selecciones'" src="assets/equiposalbum.png" alt="Equipos" class="section-image">
+            <img *ngIf="section.id === 'estadios'" src="assets/estadiosalbum.png" alt="Estadios" class="section-image">
+            <img *ngIf="section.id === 'categorias'" src="assets/leyendasalbum.png" alt="Especiales" class="section-image">
+          </div>
 
           <div class="card-info">
             <h3>{{ section.name }}</h3>
 
             <div class="progress-container">
               <div class="progress-stats">
-                <span class="stickers-count">{{ section.collected }} de {{ section.total }}</span>
+                <span class="stickers-count">{{ section.collected }} de {{ section.total }} láminas</span>
                 <span class="percent">{{ getProgress(section) }}%</span>
               </div>
 
@@ -78,6 +85,21 @@
     </main>
 
   </div>
+
+  <div class="overlay" *ngIf="showRewardModal">
+    <div class="success-modal glass-card">
+      <div class="premium-badge">100%</div>
+      <h2>¡Álbum Completado!</h2>
+      <p>Has logrado lo imposible: completar toda la colección mundial. Esta es tu recompensa por tu dedicación:</p>
+
+      <div class="coin-reward">
+        <span class="reward-value">1,000</span>
+        <span class="reward-label">FIFA Coins</span>
+      </div>
+
+      <button class="btn-success" (click)="claimReward()">Reclamar Recompensa</button>
+    </div>
+  </div>
   <div class="overlay" *ngIf="showRewardModal">
     <div class="success-modal glass-card">
       <div class="modal-icon">🏆</div>
@@ -85,12 +107,12 @@
       <p>Has logrado lo imposible: 100% de la colección. Aquí tienes tu recompensa:</p>
 
       <div class="coin-reward">
-        <span class="coin-icon">🪙</span>
+        <span class="coin-icon">$</span>
         <span class="coin-amount">+1000</span>
       </div>
       <p class="sub-text">FIFA Coins</p>
 
-      <button class="btn-success" (click)="claimReward()">¡Reclamar Premio! ✨</button>
+      <button class="btn-success" (click)="claimReward()">¡Reclamar Premio!</button>
     </div>
   </div>
 </div>
