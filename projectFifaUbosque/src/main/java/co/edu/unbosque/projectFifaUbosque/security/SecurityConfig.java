@@ -1,8 +1,8 @@
 package co.edu.unbosque.projectFifaUbosque.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsPasswordService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +29,9 @@ public class SecurityConfig {
 	private final JwtAuthenticationFilter jwtAuthFilter;
 	private final UserDetailsService userDetailsService;
 
+	@Value("${cors.allowed-origins:http://localhost:4200,http://localhost:8080}")
+	private String allowedOriginsRaw;
+
 	public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, UserDetailsService userDetailsService) {
 		this.jwtAuthFilter = jwtAuthFilter;
 		this.userDetailsService = userDetailsService;
@@ -39,14 +41,17 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.cors(cors -> cors.configurationSource(corsConfigurationSource())).csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/api/email/send", "/ws/**", "/error").permitAll()
-
-						.requestMatchers("/user/showAll", "/user/deletebyuser").hasRole("ADMIN")
-						.requestMatchers("/user/showAll", "/user/deletebyuser").hasRole("SUPPORT")
-						.requestMatchers("/user/getbyuser/**", "/user/updatejson", "/user/eliminarId/**", "/album/**", "/api/stickers", "/api/tickets", "/api/flights", "/api/notices", "/api/reports")
-						.hasAnyRole("USER", "ADMIN", "SUPPORT")
-
-						.anyRequest().authenticated())
+						// Swagger
+						.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**",
+								"/webjars/**")
+						.permitAll()
+						// Endpoints públicos
+						.requestMatchers("/auth/**", "/api/email/send", "/ws/**", "/error").permitAll()
+						// Roles
+						.requestMatchers("/user/showAll", "/user/deletebyuser").hasAnyRole("ADMIN", "SUPPORT")
+						.requestMatchers("/user/getbyuser/**", "/user/updatejson", "/user/eliminarId/**", "/album/**",
+								"/api/stickers", "/api/tickets", "/api/flights", "/api/notices", "/api/reports")
+						.hasAnyRole("USER", "ADMIN", "SUPPORT").anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider())
 				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -57,11 +62,14 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:8081",
-				"http://localhost:8082", "http://localhost:4200"));
+
+		// Divide la variable de entorno por comas para soportar múltiples orígenes
+		List<String> origins = Arrays.asList(allowedOriginsRaw.split(","));
+		configuration.setAllowedOrigins(origins);
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		configuration.setAllowedHeaders(List.of("*"));
 		configuration.setAllowCredentials(true);
+
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;

@@ -19,7 +19,7 @@ public class JwtUtil {
 
 	private static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60 * 1000;
 
-	@Value("${jwt.secret:defaultSecretKeyWhichShouldBeAtLeast32CharactersLong}")
+	@Value("${project.jwt.secret}")
 	private String secret;
 
 	private Key getSigningKey() {
@@ -52,7 +52,6 @@ public class JwtUtil {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("authorities", userDetails.getAuthorities());
 		claims.put("user", usernameDesencriptado);
-
 		return createToken(claims, userDetails.getUsername());
 	}
 
