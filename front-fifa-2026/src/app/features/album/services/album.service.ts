@@ -6,7 +6,7 @@ import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 @Injectable({ providedIn: 'root' })
 export class AlbumService {
-    private apiUrl = 'http://localhost:8080/album';
+    private apiUrl = 'https://proyectfifa-mundialhub.onrender.com/album';
 
     private pagesSubject = new BehaviorSubject<AlbumPage[]>([]);
     public pages$ = this.pagesSubject.asObservable();
@@ -21,7 +21,7 @@ export class AlbumService {
         const token = localStorage.getItem('authToken'); // O usa tu AuthService para obtener el token
 
         // 1. Creamos el socket apuntando a la ruta de Spring Boot
-        const socket = new SockJS('http://localhost:8080/ws');
+        const socket = new SockJS('https://proyectfifa-mundialhub.onrender.com/ws');
 
         // 2. Configuramos el cliente STOMP
         this.stompClient = new Client({

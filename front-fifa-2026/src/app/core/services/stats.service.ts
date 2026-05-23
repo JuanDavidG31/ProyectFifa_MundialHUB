@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
 })
 
 export class StatsService {
-    private apiStatsUrl = 'http://localhost:8080/api/stats';
+    private apiStatsUrl = 'https://proyectfifa-mundialhub.onrender.com/api/stats';
     constructor(private http: HttpClient,
         private router: Router,
         private authService: AuthService) { }

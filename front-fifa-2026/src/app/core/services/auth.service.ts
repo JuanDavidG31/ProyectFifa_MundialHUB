@@ -11,7 +11,7 @@ import { AlbumService } from '../../features/album/services/album.service';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/auth';
+  private apiUrl = 'https://proyectfifa-mundialhub.onrender.com/auth';
   private tokenKey = 'authToken';
   private roleKey = 'role';
   private timeoutHandler: any;

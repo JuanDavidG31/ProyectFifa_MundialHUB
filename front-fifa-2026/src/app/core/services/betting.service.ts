@@ -18,7 +18,7 @@ export interface BetMessageDTO {
   providedIn: 'root'
 })
 export class BettingService {
-  private apiUrl = 'http://localhost:8080/betting-rooms';
+  private apiUrl = 'https://proyectfifa-mundialhub.onrender.com/betting-rooms';
   private stompClient: Client | null = null;
 
   public currentRoom$ = new BehaviorSubject<any>(null);

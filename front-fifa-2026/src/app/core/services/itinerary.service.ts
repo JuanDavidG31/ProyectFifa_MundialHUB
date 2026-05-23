@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
 })
 
 export class ItineraryService {
-    private apiItineraryUrl = 'http://localhost:8080/api/itinerary';
+    private apiItineraryUrl = 'https://proyectfifa-mundialhub.onrender.com/api/itinerary';
 
     constructor(private http: HttpClient, private authService: AuthService, private router: Router) { }
 

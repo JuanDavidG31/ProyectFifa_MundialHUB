@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
     providedIn: 'root'
 })
 export class UserService {
-    private apiUrlUser = 'http://localhost:8080/user';
+    private apiUrlUser = 'https://proyectfifa-mundialhub.onrender.com/user';
 
     constructor(
         private http: HttpClient,

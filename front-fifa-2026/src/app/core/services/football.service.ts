@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
 })
 
 export class FootballService {
-    private apiFootballUrl = 'http://localhost:8080/api/football';
+    private apiFootballUrl = 'https://proyectfifa-mundialhub.onrender.com/api/football';
     constructor(private http: HttpClient,
         private router: Router,
         private authService: AuthService) { }

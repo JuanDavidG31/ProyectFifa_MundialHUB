@@ -5,7 +5,7 @@ import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class NoticeService {
-    private apiUrl = 'http://localhost:8080/api/notices';
+    private apiUrl = 'https://proyectfifa-mundialhub.onrender.com/api/notices';
 
     constructor(private http: HttpClient, private authService: AuthService) { }
 

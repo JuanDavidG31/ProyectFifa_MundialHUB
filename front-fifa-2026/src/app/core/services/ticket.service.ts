@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';
 })
 
 export class TicketsService {
-    private apiTicketsUrl = 'http://localhost:8080/api/tickets';
+    private apiTicketsUrl = 'https://proyectfifa-mundialhub.onrender.com/api/tickets';
     constructor(private http: HttpClient,
         private router: Router,
         private authService: AuthService) { }

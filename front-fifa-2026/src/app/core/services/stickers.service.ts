@@ -9,7 +9,7 @@ import {AuthService} from './auth.service';
 })
 
 export class StickersService {
-    private apiStickersUrl = 'http://localhost:8080/api/stickers';
+    private apiStickersUrl = 'https://proyectfifa-mundialhub.onrender.com/api/stickers';
     constructor(private http: HttpClient,
         private router: Router,
         private authService: AuthService) {

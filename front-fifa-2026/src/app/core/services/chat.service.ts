@@ -28,7 +28,7 @@ export class ChatService {
     if (!token) return;
 
     this.stompClient = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+      webSocketFactory: () => new SockJS('https://proyectfifa-mundialhub.onrender.com/ws'),
       connectHeaders: {
         Authorization: `Bearer ${token}` 
       },
