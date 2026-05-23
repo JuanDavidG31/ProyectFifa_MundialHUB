@@ -702,3 +702,482 @@ $glass-border: rgba(255, 255, 255, 0.08);
         box-shadow: 0 0 15px rgba($c-warning, 0.6);
     }
 }
+
+// =============================================================
+// RESPONSIVE COMPLETO — TICKETS
+// Breakpoints: 1024px | 768px | 600px | 480px | 375px
+// =============================================================
+
+// ─── Reset anti-overflow ────────────────────────────────────
+::ng-deep html,
+::ng-deep body,
+::ng-deep app-root {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+.tickets-wrapper,
+.tickets-wrapper * {
+    box-sizing: border-box;
+}
+
+// ─── TABLET LANDSCAPE (≤ 1024px) ────────────────────────────
+@media (max-width: 1024px) {
+    .top-nav {
+        padding: 14px 24px;
+    }
+
+    .main-content {
+        padding: 30px 4%;
+    }
+
+    .main-content .hero-section {
+        margin-bottom: 40px;
+
+        .hero-title {
+            font-size: 3rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.05rem;
+        }
+    }
+
+    .tickets-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
+    }
+
+    .filters-toolbar {
+        .search-box {
+            min-width: 200px;
+        }
+
+        .sort-box {
+            min-width: 180px;
+        }
+    }
+}
+
+// ─── TABLET PORTRAIT (≤ 768px) ──────────────────────────────
+@media (max-width: 768px) {
+
+    // Navbar: 2 filas
+    .top-nav {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 10px;
+
+        .logo-container .logo-text {
+            font-size: 1.2rem;
+        }
+
+        .nav-actions {
+            width: 100%;
+            justify-content: space-between;
+            gap: 8px;
+
+            .back-nav,
+            .btn-logout-nav {
+                flex: 1;
+                justify-content: center;
+                text-align: center;
+                padding: 8px 12px;
+                font-size: 0.82rem;
+            }
+        }
+    }
+
+    // Hero
+    .main-content {
+        padding: 24px 4% 40px;
+
+        .hero-section {
+            margin-bottom: 30px;
+
+            .hero-title {
+                font-size: 2.4rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.95rem;
+            }
+        }
+    }
+
+    // Filtros: apilados verticalmente
+    .filters-toolbar {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+
+        .search-box {
+            min-width: 0;
+            width: 100%;
+        }
+
+        .sort-box {
+            min-width: 0;
+            width: 100%;
+            flex: 1;
+
+            select {
+                width: 100%;
+            }
+        }
+    }
+
+    // Grid: 1 columna
+    .tickets-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    // Ticket card
+    .tickets-grid .ticket-card {
+        .card-content {
+            padding: 20px 20px 16px;
+        }
+
+        .ticket-header {
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+        }
+
+        .teams-container {
+            padding: 16px 12px;
+            min-height: 100px;
+
+            .team-flag {
+                width: 56px;
+                height: 38px;
+            }
+
+            .team-name {
+                font-size: 0.9rem;
+            }
+        }
+
+        .ticket-footer {
+            padding: 16px 20px 20px;
+
+            .price-box .price-value {
+                font-size: 1.4rem;
+            }
+
+            .btn-buy {
+                padding: 11px 20px;
+                font-size: 0.88rem;
+                min-width: 130px;
+            }
+        }
+    }
+
+    // Grupo
+    .group-section {
+        margin-bottom: 40px;
+
+        .group-title {
+            font-size: 1.3rem;
+        }
+    }
+}
+
+// ─── MOBILE GRANDE (≤ 600px) ────────────────────────────────
+@media (max-width: 600px) {
+    .top-nav {
+        padding: 10px 14px;
+
+        .logo-container {
+            .logo-image {
+                width: 30px;
+                height: 30px;
+            }
+
+            .logo-text {
+                font-size: 1.15rem;
+            }
+        }
+
+        .nav-actions {
+
+            .back-nav,
+            .btn-logout-nav {
+                font-size: 0.78rem;
+                padding: 7px 10px;
+            }
+        }
+    }
+
+    .main-content {
+        padding: 18px 14px 30px;
+
+        .hero-section {
+            margin-bottom: 24px;
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.88rem;
+            }
+        }
+    }
+
+    .filters-toolbar {
+        padding: 14px;
+        gap: 10px;
+        border-radius: 12px;
+
+        .search-box input {
+            font-size: 0.9rem;
+            padding: 12px 0;
+        }
+
+        .sort-box select {
+            padding: 12px 40px 12px 12px;
+            font-size: 0.9rem;
+        }
+    }
+
+    .tickets-grid {
+        gap: 16px;
+
+        .ticket-card {
+            border-radius: 18px;
+
+            .card-content {
+                padding: 18px 16px 14px;
+            }
+
+            .ticket-header {
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-bottom: 14px;
+                padding-bottom: 12px;
+
+                .date {
+                    font-size: 0.82rem;
+                }
+
+                .badge {
+                    font-size: 0.7rem;
+                    padding: 4px 10px;
+                }
+            }
+
+            .teams-container {
+                padding: 14px 10px;
+                border-radius: 12px;
+
+                .team {
+                    gap: 8px;
+                }
+
+                .team-flag {
+                    width: 50px;
+                    height: 34px;
+                }
+
+                .team-name {
+                    font-size: 0.82rem;
+                }
+
+                .vs-wrapper .vs-badge {
+                    font-size: 0.65rem;
+                    padding: 7px;
+                }
+            }
+
+            .stadium-info {
+                font-size: 0.78rem;
+            }
+
+            // Divisor decorativo: ajuste de los notches al reducir border-radius
+            .ticket-divider .line {
+                margin: 0 20px;
+            }
+
+            .ticket-footer {
+                padding: 14px 16px 18px;
+                border-radius: 0 0 18px 18px;
+
+                .price-box {
+                    .label {
+                        font-size: 0.68rem;
+                    }
+
+                    .price-value {
+                        font-size: 1.3rem;
+                    }
+                }
+
+                // Footer: precio arriba, botón abajo en pantallas muy estrechas
+                flex-wrap: wrap;
+                gap: 12px;
+
+                .btn-buy {
+                    flex: 1;
+                    min-width: 0;
+                    padding: 11px 16px;
+                    font-size: 0.85rem;
+                }
+            }
+        }
+    }
+
+    .group-section .group-title {
+        font-size: 1.15rem;
+        padding: 10px 18px;
+        letter-spacing: 1px;
+    }
+}
+
+// ─── MOBILE ESTÁNDAR (≤ 480px) ──────────────────────────────
+@media (max-width: 480px) {
+    .main-content .hero-section {
+        .hero-title {
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-subtitle {
+            font-size: 0.85rem;
+        }
+    }
+
+    .tickets-grid .ticket-card {
+        .teams-container {
+
+            // En pantallas muy pequeñas apilamos el partido:
+            // Local | VS | Visitante se comprimen pero se mantienen en fila
+            .team-flag {
+                width: 44px;
+                height: 30px;
+            }
+
+            .team-name {
+                font-size: 0.75rem;
+            }
+        }
+
+        .ticket-footer {
+            // Precio + botón en columna para no aplastarse
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+
+            .price-box {
+                text-align: center;
+
+                .price-value {
+                    font-size: 1.5rem;
+                }
+            }
+
+            .btn-buy {
+                width: 100%;
+                padding: 13px;
+                font-size: 0.92rem;
+                min-width: 0;
+            }
+        }
+    }
+
+    .filters-toolbar {
+        padding: 12px;
+
+        .search-box {
+            padding: 0 12px;
+        }
+    }
+}
+
+// ─── MOBILE PEQUEÑO (≤ 375px) ───────────────────────────────
+@media (max-width: 375px) {
+
+    // Logo solo icono
+    .top-nav .logo-container .logo-text {
+        display: none;
+    }
+
+    .main-content {
+        padding: 14px 12px 24px;
+
+        .hero-section .hero-title {
+            font-size: 1.6rem;
+        }
+    }
+
+    // Bg shapes más pequeños para no saturar GPU
+    .shape-1 {
+        width: 260px;
+        height: 260px;
+    }
+
+    .shape-2 {
+        width: 300px;
+        height: 300px;
+    }
+
+    .shape-3 {
+        width: 200px;
+        height: 200px;
+    }
+
+    .tickets-grid {
+        gap: 12px;
+
+        .ticket-card {
+            .teams-container {
+                padding: 12px 8px;
+
+                .team-flag {
+                    width: 40px;
+                    height: 28px;
+                }
+
+                .team-name {
+                    font-size: 0.7rem;
+                }
+
+                .vs-wrapper .vs-badge {
+                    padding: 6px;
+                    font-size: 0.6rem;
+                }
+            }
+
+            .ticket-footer {
+                padding: 12px 14px 16px;
+
+                .price-box .price-value {
+                    font-size: 1.4rem;
+                }
+            }
+        }
+    }
+}
+
+// ─── REDUCCIÓN DE MOVIMIENTO (accesibilidad) ─────────────────
+@media (prefers-reduced-motion: reduce) {
+
+    .bg-shape,
+    .fade-in-up,
+    .spinner,
+    .spinner-small,
+    .badge.few-left {
+        animation: none !important;
+    }
+
+    .ticket-card:hover {
+        transform: none !important;
+    }
+
+    .btn-buy:hover {
+        transform: none !important;
+    }
+}
