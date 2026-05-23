@@ -1732,26 +1732,37 @@ $white: #ffffff;
 
     .calendar-grid-wrapper {
         padding: 10px;
-        
+
         .month-header {
             margin-bottom: 15px;
-            h2 { font-size: 1.2rem; letter-spacing: 1px; }
-            .btn-nav-month { width: 35px; height: 35px; font-size: 1rem; }
+
+            h2 {
+                font-size: 1.2rem;
+                letter-spacing: 1px;
+            }
+
+            .btn-nav-month {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
         }
 
         .weekdays-row {
             gap: 3px;
-            .weekday { 
-                font-size: 0.7rem; 
-                padding: 5px 0; 
+
+            .weekday {
+                font-size: 0.7rem;
+                padding: 5px 0;
                 border-radius: 4px;
             }
         }
 
         .days-grid {
-            gap: 3px; 
+            gap: 3px;
+
             .day-cell {
-                height: 80px; 
+                height: 80px;
                 padding: 4px;
                 border-radius: 6px;
 
@@ -1762,12 +1773,14 @@ $white: #ffffff;
 
                 .day-events-list {
                     gap: 2px;
-                    
-                    &::-webkit-scrollbar { width: 2px; }
+
+                    &::-webkit-scrollbar {
+                        width: 2px;
+                    }
 
                     .event-pill {
                         padding: 3px 4px;
-                        font-size: 0.55rem; 
+                        font-size: 0.55rem;
                         border-radius: 4px;
                         border-left-width: 2px;
                         gap: 3px;
@@ -1786,21 +1799,28 @@ $white: #ffffff;
             }
         }
     }
-    
-    .smart-builder-vip, .manual-form-card {
+
+    .smart-builder-vip,
+    .manual-form-card {
         padding: 15px;
-        
+
         .builder-header {
             flex-direction: column;
             text-align: center;
             gap: 10px;
-            
-            .pulse-icon { font-size: 2rem; }
-            .header-text h3 { font-size: 1.3rem; }
+
+            .pulse-icon {
+                font-size: 2rem;
+            }
+
+            .header-text h3 {
+                font-size: 1.3rem;
+            }
         }
-        
-        .input-row, .input-row-double {
-            flex-direction: column; 
+
+        .input-row,
+        .input-row-double {
+            flex-direction: column;
             gap: 10px;
             margin-bottom: 10px;
         }
@@ -1809,12 +1829,492 @@ $white: #ffffff;
     .tabs-container {
         display: flex;
         width: 100%;
-        
+
         .tab-btn {
             flex: 1;
             padding: 10px 5px;
             font-size: 0.75rem;
             text-align: center;
         }
+    }
+}
+
+// =============================================================
+// RESPONSIVE COMPLETO
+// Breakpoints: 1100px | 768px | 600px | 480px | 375px
+// =============================================================
+
+// ─── Reset global anti-overflow ─────────────────────────────
+::ng-deep html,
+::ng-deep body,
+::ng-deep app-root {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+.calendar-wrapper,
+.calendar-wrapper * {
+    box-sizing: border-box;
+}
+
+// ─── TABLET LANDSCAPE (≤ 1100px) ────────────────────────────
+@media (max-width: 1100px) {
+    .content {
+        padding: 0 4%;
+    }
+
+    // El dashboard ya colapsa a 1 columna en este punto (ya definido)
+    // Solo ajustamos el sidebar para que no quede pegajoso en tablet
+    .planner-sidebar {
+        position: static !important;
+        top: unset;
+    }
+
+    .packages-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .itinerary-view {
+        padding: 0;
+    }
+}
+
+// ─── TABLET PORTRAIT (≤ 768px) ──────────────────────────────
+@media (max-width: 768px) {
+
+    // Navbar
+    .top-nav {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 10px;
+
+        .logo-container .logo-text {
+            font-size: 1.2rem;
+        }
+
+        .nav-actions {
+            width: 100%;
+            justify-content: space-between;
+
+            .back-nav,
+            .btn-logout-nav {
+                flex: 1;
+                justify-content: center;
+                text-align: center;
+                padding: 8px 12px;
+                font-size: 0.82rem;
+            }
+        }
+    }
+
+    // Cabecera
+    .header.centered {
+        padding: 16px 5% 14px;
+
+        h1 {
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            font-size: 0.92rem;
+        }
+    }
+
+    // Tabs: ya manejado abajo en el bloque existente, reforzamos
+    .tabs-wrapper {
+        padding: 0 4%;
+    }
+
+    .tabs-container {
+        width: 100%;
+        border-radius: 14px;
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 6px;
+            font-size: 0.72rem;
+            letter-spacing: 0.5px;
+            border-radius: 10px;
+            white-space: nowrap;
+        }
+    }
+
+    // Contenido principal
+    .content {
+        padding: 0 4% 30px;
+    }
+
+    // Vista de paquetes
+    .packages-view {
+        padding: 0;
+    }
+
+    .packages-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    // Package cards: footer precio + botón en columna si hay poco espacio
+    .package-card .pkg-footer {
+        flex-wrap: wrap;
+        gap: 12px;
+
+        .btn-buy {
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+    // Reportes
+    .report-card {
+        flex-wrap: wrap;
+        gap: 12px;
+
+        .report-status {
+            width: 100%;
+        }
+
+        .report-details .badges {
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+    }
+
+    // Modal de detalles
+    .modal-details-card {
+        width: 96%;
+        padding: 28px 20px;
+        max-height: 90vh;
+
+        .modal-header {
+            gap: 14px;
+            padding-right: 36px;
+
+            .pkg-icon-large {
+                font-size: 2.5rem;
+                padding: 12px;
+            }
+
+            h2 {
+                font-size: 1.7rem;
+            }
+        }
+
+        .match-detail-item {
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+
+            .flight-badge {
+                white-space: normal;
+            }
+        }
+
+        .modal-footer {
+            flex-direction: column;
+            gap: 14px;
+            align-items: stretch;
+            text-align: center;
+
+            .btn-neon,
+            .btn-outline {
+                width: 100%;
+            }
+        }
+    }
+}
+
+// ─── MOBILE GRANDE (≤ 600px) ────────────────────────────────
+@media (max-width: 600px) {
+    .top-nav {
+        padding: 10px 14px;
+
+        .logo-container {
+            .logo-image {
+                width: 30px;
+                height: 30px;
+            }
+
+            .logo-text {
+                font-size: 1.15rem;
+            }
+        }
+
+        .nav-actions {
+            gap: 8px;
+
+            .back-nav,
+            .btn-logout-nav {
+                font-size: 0.78rem;
+                padding: 7px 10px;
+            }
+        }
+    }
+
+    .header.centered {
+        padding: 14px 4% 12px;
+
+        h1 {
+            font-size: 1.7rem;
+        }
+    }
+
+    .content {
+        padding: 0 14px 24px;
+    }
+
+    // Calendario: celdas más compactas
+    .calendar-grid-wrapper {
+        padding: 12px 8px;
+
+        .month-header h2 {
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .days-grid .day-cell {
+            height: 70px;
+            padding: 3px;
+
+            .day-number {
+                font-size: 0.72rem;
+                margin-bottom: 2px;
+            }
+        }
+    }
+
+    // Formulario manual: filas en columna
+    .manual-form-card {
+
+        .input-row-double,
+        .input-row {
+            flex-direction: column !important;
+            gap: 12px !important;
+        }
+    }
+
+    // Smart builder
+    .smart-builder-vip {
+        padding: 16px !important;
+
+        .builder-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 10px;
+
+            .header-text h3 {
+                font-size: 1.2rem;
+            }
+        }
+    }
+
+    // Modal de eventos
+    .event-modal-card {
+        width: 96%;
+        padding: 22px 16px;
+
+        .event-modal-header .event-title {
+            font-size: 1.5rem !important;
+        }
+    }
+
+    // Reportes: icono más pequeño
+    .report-card {
+        padding: 12px 14px;
+        gap: 10px;
+
+        .report-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+        }
+
+        .report-details h3 {
+            font-size: 0.95rem;
+        }
+    }
+
+    // Paquetes
+    .packages-view {
+        padding: 0;
+    }
+
+    .packages-grid {
+        gap: 12px;
+    }
+
+    .package-card {
+        .pkg-header .pkg-icon {
+            font-size: 1rem;
+            padding: 10px;
+            min-width: 48px;
+        }
+
+        .pkg-header h3 {
+            font-size: 1.15rem;
+        }
+
+        .pkg-footer .pkg-price {
+            font-size: 1.3rem;
+        }
+    }
+}
+
+// ─── MOBILE ESTÁNDAR (≤ 480px) ──────────────────────────────
+@media (max-width: 480px) {
+    .header.centered h1 {
+        font-size: 1.5rem;
+    }
+
+    // Tabs: texto aún más pequeño
+    .tabs-container .tab-btn {
+        font-size: 0.65rem;
+        padding: 9px 4px;
+        letter-spacing: 0;
+    }
+
+    // Calendario: altura mínima pero funcional
+    .calendar-grid-wrapper {
+        padding: 10px 6px;
+
+        .month-header {
+            h2 {
+                font-size: 1rem;
+            }
+
+            .btn-nav-month {
+                width: 30px;
+                height: 30px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .weekdays-row {
+            gap: 2px;
+
+            .weekday {
+                font-size: 0.6rem;
+                padding: 4px 0;
+            }
+        }
+
+        .days-grid {
+            gap: 2px;
+
+            .day-cell {
+                height: 62px;
+                padding: 3px 2px;
+
+                .day-number {
+                    font-size: 0.65rem;
+                }
+
+                .event-pill {
+                    padding: 2px 3px;
+                    font-size: 0.5rem;
+                    border-radius: 3px;
+                    gap: 2px;
+
+                    .btn-delete-evt {
+                        width: 10px;
+                        height: 10px;
+                        font-size: 0.4rem;
+                    }
+                }
+            }
+        }
+    }
+
+    // Builder: botón generador ocupa todo el ancho
+    .generate-btn {
+        padding: 13px !important;
+        font-size: 0.95rem !important;
+    }
+
+    // Modal de paquete: encabezado apilado
+    .modal-details-card {
+        width: 98%;
+        padding: 22px 14px;
+
+        .modal-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 10px;
+            padding-right: 0;
+
+            .pkg-icon-large {
+                align-self: center;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .modal-body .description {
+            font-size: 0.92rem;
+        }
+    }
+}
+
+// ─── MOBILE PEQUEÑO (≤ 375px) ───────────────────────────────
+@media (max-width: 375px) {
+    .top-nav .logo-container .logo-text {
+        display: none;
+    }
+
+    .header.centered {
+        padding: 10px 4% 10px;
+
+        h1 {
+            font-size: 1.3rem;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+        }
+    }
+
+    .tabs-container .tab-btn {
+        font-size: 0.6rem;
+        padding: 8px 3px;
+    }
+
+    .calendar-grid-wrapper .days-grid .day-cell {
+        height: 55px;
+    }
+
+    // Añadir evento: texto más corto
+    .add-event-neon-btn {
+        font-size: 0.9rem;
+        padding: 13px;
+    }
+
+    // Reportes
+    .report-card .report-details .badges {
+        flex-direction: column;
+        gap: 4px;
+    }
+}
+
+// ─── REDUCCIÓN DE MOVIMIENTO (accesibilidad) ─────────────────
+@media (prefers-reduced-motion: reduce) {
+
+    .bg-shape,
+    .fade-in,
+    .fade-in-up,
+    .pulse-icon,
+    .spinner-small {
+        animation: none !important;
+    }
+
+    .package-card:hover,
+    .match-card:hover,
+    .report-card:hover {
+        transform: none !important;
     }
 }

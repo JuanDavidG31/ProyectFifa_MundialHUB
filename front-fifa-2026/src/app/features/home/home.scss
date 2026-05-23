@@ -379,11 +379,11 @@ $glass-border: rgba(255, 255, 255, 0.15);
   padding-bottom: 15px;
 
   // Scroll suave con inercia
-  scroll-behavior: smooth;
+  // scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 
   // Snap: cada tarjeta encaja al detenerse
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: x proximity;
 
   // Ocultar scrollbar en todos los navegadores
   &::-webkit-scrollbar {

@@ -171,6 +171,7 @@ export class HomeComponent implements OnInit {
     const el = this.carousel.nativeElement;
     const maxScroll = el.scrollWidth - el.clientWidth;
     el.scrollLeft = (scrollVal / 100) * maxScroll;
+    this.scrollProgress = scrollVal;
   }
 
   onCarouselScroll(event: any) {
