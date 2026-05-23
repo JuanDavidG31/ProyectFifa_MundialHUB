@@ -4,6 +4,5 @@ target/
 bin/
 .idea/
 node_modules/
-src/main/resources/application.properties
-projectFifaUbosque/src/main/resources/application.properties
+
 front-fifa-2026/angular.json

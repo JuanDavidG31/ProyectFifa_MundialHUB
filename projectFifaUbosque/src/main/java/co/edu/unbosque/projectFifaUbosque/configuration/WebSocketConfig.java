@@ -1,6 +1,7 @@
 package co.edu.unbosque.projectFifaUbosque.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -31,19 +32,20 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
+	// Lee los orígenes permitidos desde application.properties
+	@Value("${websocket.allowed-origins:http://localhost:4200}")
+	private String allowedOrigins;
+
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
-
 		config.enableSimpleBroker("/queue");
-
 		config.setApplicationDestinationPrefixes("/app");
-
 		config.setUserDestinationPrefix("/user");
 	}
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/ws").setAllowedOrigins("http://localhost:4200").withSockJS();
+		registry.addEndpoint("/ws").setAllowedOriginPatterns(allowedOrigins).withSockJS();
 	}
 
 	@Override
@@ -62,12 +64,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 						if (encryptedUsername != null) {
 							UserDetails userDetails = userDetailsService.loadUserByUsername(encryptedUsername);
 							if (jwtUtil.validateToken(token, userDetails)) {
-
 								String cleanUsername = AESUtil.decrypt(encryptedUsername);
-
 								UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
 										cleanUsername, null, userDetails.getAuthorities());
-
 								SecurityContextHolder.getContext().setAuthentication(auth);
 								accessor.setUser(auth);
 							}
