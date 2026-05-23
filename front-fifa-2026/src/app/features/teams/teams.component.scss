@@ -14,19 +14,33 @@ $glass-border: rgba(255, 255, 255, 0.1);
 // ==========================================
 // RESET GLOBAL (ELIMINA BORDES BLANCOS)
 // ==========================================
-::ng-deep body {
+::ng-deep html,
+::ng-deep body,
+::ng-deep app-root {
   margin: 0 !important;
   padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
   background-color: $c-bg !important;
   font-family: 'Poppins', 'Inter', sans-serif;
-  overflow-x: hidden !important;
 }
 
 .teams-wrapper {
   box-sizing: border-box;
+
+  // Todos los hijos respetan box-sizing para evitar desbordamientos
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
   position: relative;
   min-height: 100vh;
-  width: 100vw;
+  // 100vw incluye el scrollbar y causa desbordamiento en móvil
+  width: 100%;
+  max-width: 100%;
   color: $white;
   overflow-x: hidden;
   padding-bottom: 60px;
@@ -519,17 +533,15 @@ $glass-border: rgba(255, 255, 255, 0.1);
           border-radius: 8px;
           padding: 10px 15px 10px 35px;
           color: $white;
-          width: 250px;
+          // Ancho fluido: 250px en desktop, 100% en pantallas pequeñas
+          width: min(250px, 100%);
+          box-sizing: border-box;
           font-family: 'Poppins', sans-serif;
           transition: border-color 0.3s;
-
-          box-sizing: border-box;
 
           @media (max-width: 768px) {
             width: 100%;
           }
-
-          // Ancho 100% en móvil
 
           &::placeholder {
             color: rgba($white, 0.4);
