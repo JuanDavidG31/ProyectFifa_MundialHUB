@@ -378,6 +378,14 @@ $glass-border: rgba(255, 255, 255, 0.15);
   overflow-x: auto;
   padding-bottom: 15px;
 
+  // Scroll suave con inercia
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+
+  // Snap: cada tarjeta encaja al detenerse
+  scroll-snap-type: x mandatory;
+
+  // Ocultar scrollbar en todos los navegadores
   &::-webkit-scrollbar {
     display: none;
   }
@@ -385,14 +393,29 @@ $glass-border: rgba(255, 255, 255, 0.15);
   -ms-overflow-style: none;
   scrollbar-width: none;
 
+  // Cada tarjeta se ancla al scroll
+  .app-card {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+    // Evita que las tarjetas se encojan en el flex
+    flex-shrink: 0;
+    // Transición suave al hacer hover (no se ve cortada mientras scrollea)
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      background 0.35s ease;
+    will-change: transform;
+  }
+
   @media (min-width: 1200px) {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     overflow-x: visible;
     gap: 15px;
+    scroll-snap-type: none;
 
     .app-card {
       min-width: 0;
+      flex-shrink: unset;
       padding: 15px;
 
       .card-title {
@@ -441,7 +464,11 @@ $glass-border: rgba(255, 255, 255, 0.15);
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    background 0.35s ease,
+    border-color 0.35s ease;
+  will-change: transform;
 
   &:hover {
     transform: translateY(-8px);
