@@ -29,7 +29,7 @@ public class SecurityConfig {
 	private final JwtAuthenticationFilter jwtAuthFilter;
 	private final UserDetailsService userDetailsService;
 
-	@Value("${cors.allowed-origins:http://localhost:4200,http://localhost:8080}")
+	@Value("${cors.allowed-origins:http://localhost:4200,http://localhost:8080, https://proyectfifa2026.netlify.app/}")
 	private String allowedOriginsRaw;
 
 	public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, UserDetailsService userDetailsService) {
