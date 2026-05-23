@@ -2027,21 +2027,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     gap: 24px;
   }
 
-  .cards-carousel {
-
-    // En tablet muestra 3 columnas en grid
-    @media (min-width: 769px) {
-      display: grid !important;
-      grid-template-columns: repeat(3, 1fr);
-      overflow-x: visible;
-      gap: 15px;
-
-      .app-card {
-        min-width: 0;
-      }
-    }
-  }
-
   .admin-cards-container {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -2106,16 +2091,21 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
   }
 
-  // Carrusel: 2 columnas en tablet portrait
+  // Carrusel: scroll horizontal con snap en tablet/móvil
   .cards-carousel {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr);
-    overflow-x: visible !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
     gap: 14px;
-    padding-bottom: 0;
+    padding-bottom: 12px;
 
     .app-card {
-      min-width: 0;
+      flex: 0 0 auto;
+      min-width: 180px;
+      width: 180px;
+      scroll-snap-align: start;
       padding: 16px;
 
       .card-title {
@@ -2251,12 +2241,13 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
   }
 
-  // Carrusel: 2 cols compactas
+  // Carrusel: tarjetas más compactas en móvil, sigue siendo scroll horizontal
   .cards-carousel {
-    grid-template-columns: repeat(2, 1fr) !important;
     gap: 12px;
 
     .app-card {
+      min-width: 155px;
+      width: 155px;
       padding: 14px 12px;
       border-radius: 16px;
 
@@ -2265,7 +2256,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
       }
 
       .card-image-box {
-        height: 95px;
+        height: 90px;
         border-radius: 10px;
 
         h2 {
@@ -2474,11 +2465,13 @@ $glass-border: rgba(255, 255, 255, 0.15);
     font-size: 1.5rem;
   }
 
-  // Carrusel: sigue en 2 cols pero más compacto
+  // Carrusel: tarjetas aún más compactas en móvil pequeño
   .cards-carousel {
     gap: 10px;
 
     .app-card {
+      min-width: 140px;
+      width: 140px;
       padding: 12px 10px;
       border-radius: 14px;
 
@@ -2577,12 +2570,15 @@ $glass-border: rgba(255, 255, 255, 0.15);
     font-size: 1.3rem;
   }
 
-  // 1 columna para cartas si la pantalla es muy pequeña
+  // Carrusel: tarjetas mínimas en pantalla muy pequeña, sigue con scroll horizontal
   .cards-carousel {
-    grid-template-columns: 1fr !important;
+    .app-card {
+      min-width: 130px;
+      width: 130px;
 
-    .app-card .card-image-box {
-      height: 100px;
+      .card-image-box {
+        height: 75px;
+      }
     }
   }
 
