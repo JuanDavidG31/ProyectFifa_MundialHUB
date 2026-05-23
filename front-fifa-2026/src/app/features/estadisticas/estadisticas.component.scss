@@ -976,3 +976,581 @@ $white: #ffffff;
         box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
     }
 }
+
+// =============================================================
+// RESPONSIVE COMPLETO — ESTADÍSTICAS
+// Breakpoints: 1024px | 768px | 600px | 480px | 375px
+// =============================================================
+
+// ─── Reset anti-overflow ────────────────────────────────────
+::ng-deep html,
+::ng-deep body,
+::ng-deep app-root {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+.stats-wrapper,
+.stats-wrapper * {
+    box-sizing: border-box;
+}
+
+// ─── TABLET LANDSCAPE (≤ 1024px) ────────────────────────────
+@media (max-width: 1024px) {
+    .top-nav {
+        padding: 14px 24px;
+    }
+
+    .content {
+        padding: 0 4% 40px;
+    }
+
+    .ranking-board {
+        padding: 24px 20px;
+    }
+
+    .matches-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+    }
+}
+
+// ─── TABLET PORTRAIT (≤ 768px) ──────────────────────────────
+@media (max-width: 768px) {
+
+    // Navbar: apilado en 2 filas
+    .top-nav {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 10px;
+
+        .logo-container .logo-text {
+            font-size: 1.2rem;
+        }
+
+        .nav-actions {
+            width: 100%;
+            justify-content: space-between;
+
+            .back-nav,
+            .btn-logout-nav {
+                flex: 1;
+                justify-content: center;
+                text-align: center;
+                padding: 8px 12px;
+                font-size: 0.82rem;
+            }
+        }
+    }
+
+    // Cabecera
+    .header.centered {
+        padding: 16px 5% 20px;
+
+        h1 {
+            font-size: 2.2rem;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+        }
+    }
+
+    // Tabs: ancho completo
+    .tabs-wrapper {
+        padding: 0 4%;
+        margin-bottom: 24px;
+    }
+
+    .tabs-container {
+        width: 100%;
+        border-radius: 14px;
+
+        .tab-btn {
+            flex: 1;
+            justify-content: center;
+            padding: 10px 8px;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            border-radius: 10px;
+        }
+    }
+
+    // Contenido
+    .content {
+        padding: 0 4% 30px;
+    }
+
+    .ranking-board {
+        padding: 20px 14px;
+        border-radius: 18px;
+
+        // Tabla de clasificación: ajustar columnas
+        .ranking-header {
+            padding: 0 10px 12px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        .ranking-item {
+            padding: 12px 10px;
+            gap: 0;
+
+            .col-rank {
+                width: 36px;
+            }
+
+            .col-player {
+                gap: 10px;
+
+                .flag-wrapper {
+                    width: 38px;
+                    height: 26px;
+                }
+
+                .player-details h4 {
+                    font-size: 0.95rem;
+                }
+
+                .player-details .team-name {
+                    font-size: 0.72rem;
+                }
+            }
+
+            .col-stat {
+                width: 70px;
+            }
+
+            .stat-value {
+                font-size: 1.3rem;
+            }
+
+            &:hover {
+                transform: none;
+            }
+
+            // sin hover lateral en móvil
+        }
+    }
+
+    // Grid de partidos
+    .matches-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .match-card {
+        padding: 16px;
+
+        .match-body {
+            .team-block {
+                .shield-container {
+                    width: 52px;
+                    height: 52px;
+                    padding: 6px;
+                }
+
+                .team-name {
+                    font-size: 0.82rem;
+                }
+            }
+
+            .score-block {
+                .score-numbers .score-box {
+                    font-size: 1.8rem;
+                    padding: 6px 12px;
+                }
+
+                .score-divider {
+                    font-size: 1.2rem;
+                }
+
+                .vs-badge {
+                    font-size: 1rem;
+                }
+            }
+        }
+    }
+
+    // Modal del partido
+    .modal-details-card {
+        width: 96%;
+        padding: 28px 18px;
+
+        .modal-match-scoreboard {
+            padding: 20px 12px;
+
+            .team-side {
+                width: 35%;
+
+                .big-crest {
+                    width: 70px;
+                    height: 70px;
+                    margin-bottom: 10px;
+                }
+
+                h3 {
+                    font-size: 0.95rem;
+                }
+            }
+
+            .score-center .main-score {
+                font-size: 3rem;
+                gap: 10px;
+
+                .vs {
+                    font-size: 1.1rem;
+                }
+            }
+        }
+
+        .modal-match-details .detail-row {
+            padding: 10px 14px;
+            font-size: 0.9rem;
+        }
+    }
+}
+
+// ─── MOBILE GRANDE (≤ 600px) ────────────────────────────────
+@media (max-width: 600px) {
+    .top-nav {
+        padding: 10px 14px;
+
+        .logo-container {
+            .logo-image {
+                width: 30px;
+                height: 30px;
+            }
+
+            .logo-text {
+                font-size: 1.15rem;
+            }
+        }
+
+        .nav-actions {
+            gap: 8px;
+
+            .back-nav,
+            .btn-logout-nav {
+                font-size: 0.78rem;
+                padding: 7px 10px;
+            }
+        }
+    }
+
+    .header.centered {
+        padding: 12px 4% 16px;
+
+        h1 {
+            font-size: 1.9rem;
+        }
+    }
+
+    .tabs-container .tab-btn {
+        padding: 9px 6px;
+        font-size: 0.75rem;
+        gap: 5px;
+
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+        }
+    }
+
+    .ranking-board {
+        padding: 16px 10px;
+        border-radius: 14px;
+
+        .ranking-item {
+            padding: 10px 8px;
+            border-radius: 12px;
+
+            .col-rank {
+                width: 30px;
+            }
+
+            .rank-badge {
+                width: 26px;
+                height: 26px;
+                font-size: 0.78rem;
+            }
+
+            .col-player {
+                gap: 8px;
+
+                .flag-wrapper {
+                    width: 32px;
+                    height: 22px;
+                }
+
+                .player-details h4 {
+                    font-size: 0.88rem;
+                }
+            }
+
+            .col-stat {
+                width: 56px;
+            }
+
+            .stat-value {
+                font-size: 1.15rem;
+            }
+        }
+    }
+
+    .match-card {
+        padding: 14px;
+        gap: 12px;
+
+        .match-header {
+            .status-badge {
+                font-size: 0.68rem;
+                padding: 3px 8px;
+            }
+
+            .match-date {
+                font-size: 0.75rem;
+            }
+        }
+
+        .match-body {
+            padding: 6px 0;
+
+            .team-block {
+                .shield-container {
+                    width: 46px;
+                    height: 46px;
+                }
+
+                .team-name {
+                    font-size: 0.75rem;
+                }
+            }
+
+            .score-block {
+                .score-numbers .score-box {
+                    font-size: 1.6rem;
+                    padding: 5px 10px;
+                    border-radius: 10px;
+                }
+
+                .score-divider {
+                    font-size: 1rem;
+                }
+            }
+        }
+    }
+
+    // Modal más compacto
+    .modal-details-card {
+        width: 98%;
+        padding: 22px 14px;
+        border-radius: 18px;
+
+        .modal-match-header {
+            gap: 6px;
+            margin-bottom: 20px;
+
+            .match-stage {
+                font-size: 0.95rem;
+            }
+        }
+
+        .modal-match-scoreboard {
+            padding: 16px 8px;
+            border-radius: 14px;
+
+            .team-side {
+                .big-crest {
+                    width: 56px;
+                    height: 56px;
+                    margin-bottom: 8px;
+                }
+
+                h3 {
+                    font-size: 0.82rem;
+                }
+            }
+
+            .score-center .main-score {
+                font-size: 2.4rem;
+                gap: 8px;
+
+                .vs {
+                    font-size: 1rem;
+                }
+            }
+        }
+    }
+}
+
+// ─── MOBILE ESTÁNDAR (≤ 480px) ──────────────────────────────
+@media (max-width: 480px) {
+    .header.centered h1 {
+        font-size: 1.65rem;
+        letter-spacing: -0.5px;
+    }
+
+    // Tabs: texto ultra-compacto
+    .tabs-container .tab-btn {
+        font-size: 0.68rem;
+        padding: 8px 4px;
+        letter-spacing: 0;
+        gap: 4px;
+    }
+
+    .ranking-board {
+        padding: 12px 8px;
+
+        .ranking-header {
+            padding: 0 6px 10px;
+            font-size: 0.68rem;
+        }
+
+        .ranking-item {
+            padding: 9px 6px;
+
+            .col-player {
+                gap: 6px;
+            }
+
+            .flag-wrapper {
+                width: 28px;
+                height: 20px;
+            }
+
+            .player-details h4 {
+                font-size: 0.82rem;
+            }
+
+            .stat-value {
+                font-size: 1rem;
+            }
+        }
+    }
+
+    .match-card {
+        .match-body .team-block {
+            .shield-container {
+                width: 40px;
+                height: 40px;
+                padding: 4px;
+            }
+
+            .team-name {
+                font-size: 0.7rem;
+            }
+        }
+
+        .match-body .score-block .score-numbers {
+            gap: 6px;
+
+            .score-box {
+                font-size: 1.4rem;
+                padding: 4px 8px;
+                border-radius: 8px;
+            }
+        }
+    }
+
+    .modal-details-card {
+        .modal-match-scoreboard .score-center .main-score {
+            font-size: 2rem;
+            gap: 6px;
+        }
+
+        .modal-match-details .detail-row {
+            padding: 8px 10px;
+            font-size: 0.85rem;
+        }
+    }
+}
+
+// ─── MOBILE PEQUEÑO (≤ 375px) ───────────────────────────────
+@media (max-width: 375px) {
+
+    // Logo solo icono, sin texto
+    .top-nav .logo-container .logo-text {
+        display: none;
+    }
+
+    .header.centered {
+        padding: 10px 4% 12px;
+
+        h1 {
+            font-size: 1.45rem;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+        }
+    }
+
+    .tabs-container .tab-btn {
+        font-size: 0.62rem;
+        padding: 8px 3px;
+    }
+
+    .ranking-item .col-player .player-details h4 {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 140px;
+    }
+
+    // Cards de partido: nombre del equipo truncado
+    .match-card .match-body .team-block .team-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 70px;
+    }
+
+    // Modal del partido: marcador apilado verticalmente
+    .modal-details-card .modal-match-scoreboard {
+        flex-direction: column;
+        gap: 14px;
+        padding: 18px 10px;
+
+        .team-side {
+            width: 100%;
+            flex-direction: row;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .team-side .big-crest {
+            width: 44px;
+            height: 44px;
+            margin-bottom: 0;
+        }
+
+        .team-side h3 {
+            font-size: 0.9rem;
+        }
+
+        .score-center .main-score {
+            font-size: 2.2rem;
+        }
+    }
+}
+
+// ─── REDUCCIÓN DE MOVIMIENTO (accesibilidad) ─────────────────
+@media (prefers-reduced-motion: reduce) {
+
+    .bg-shape,
+    .fade-in,
+    .fade-in-up,
+    .pulse-dot,
+    .neon-spinner {
+        animation: none !important;
+    }
+
+    .match-card:hover,
+    .ranking-item:hover {
+        transform: none !important;
+    }
+}
