@@ -104,7 +104,7 @@ export class AuthService {
 
     const currentUsername = localStorage.getItem('username');
     if (currentUsername) {
-      this.http.delete(`http://proyectfifa-mundialhub.onrender.com/betting-rooms/force-leave?username=${currentUsername}`).subscribe();
+      this.http.delete(`https://proyectfifa-mundialhub.onrender.com/betting-rooms/force-leave?username=${currentUsername}`).subscribe();
     }
 
     localStorage.removeItem(this.tokenKey);
@@ -152,7 +152,7 @@ export class AuthService {
 
   sendVerificationEmail(to: string, subject: string, body: string): Observable<any> {
     const payload = { to, subject, body };
-    return this.http.post('http://proyectfifa-mundialhub.onrender.com/api/email/send', payload, {
+    return this.http.post('https://proyectfifa-mundialhub.onrender.com/api/email/send', payload, {
       headers: this.createAuthHeaders(),
       responseType: 'text' // Spring Boot devuelve un String
     });
