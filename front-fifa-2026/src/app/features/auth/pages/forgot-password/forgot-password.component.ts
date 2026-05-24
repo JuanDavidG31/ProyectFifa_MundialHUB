@@ -87,7 +87,7 @@ export class ForgotPasswordComponent implements OnInit {
       body: emailBody
     };
 
-    this.http.post('http://localhost:8080/api/email/send', payload, { responseType: 'text' }).subscribe({
+    this.http.post('http://proyectfifa-mundialhub.onrender.com/api/email/send', payload, { responseType: 'text' }).subscribe({
       next: () => {
         this.isLoading = false;
         this.step = 2; // Pasamos al siguiente paso
@@ -115,7 +115,7 @@ export class ForgotPasswordComponent implements OnInit {
     this.errorMsg = '';
     this.isLoading = true;
 
-    const url = `http://localhost:8080/auth/reset-password?email=${encodeURIComponent(this.email)}&newPassword=${encodeURIComponent(this.newPassword)}`;
+    const url = `http://proyectfifa-mundialhub.onrender.com/auth/reset-password?email=${encodeURIComponent(this.email)}&newPassword=${encodeURIComponent(this.newPassword)}`;
     
     this.http.put(url, {}, { responseType: 'text' }).subscribe({
       next: () => {

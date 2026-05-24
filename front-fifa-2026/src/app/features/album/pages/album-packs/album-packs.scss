@@ -11,6 +11,16 @@ $white: #ffffff;
 $glass-bg: rgba(255, 255, 255, 0.04);
 $glass-border: rgba(255, 255, 255, 0.1);
 
+// ==========================================
+// BREAKPOINTS CENTRALIZADOS
+// ==========================================
+$bp-xs: 360px; // Teléfonos muy pequeños
+$bp-sm: 480px; // Teléfonos pequeños
+$bp-md: 600px; // Teléfonos grandes / phablets
+$bp-lg: 768px; // Tablets pequeñas
+$bp-xl: 900px; // Tablets medianas
+$bp-2xl: 1200px; // Escritorios
+
 ::ng-deep body {
   margin: 0 !important;
   padding: 0 !important;
@@ -29,7 +39,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
   padding-bottom: 60px;
 
   // ==========================================
-  // FONDOS ANIMADOS
+  // FONDOS ANIMADOS — Escalados con clamp()
   // ==========================================
   .bg-shape {
     position: fixed;
@@ -42,8 +52,8 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 
   .shape-1 {
-    width: 500px;
-    height: 500px;
+    width: clamp(200px, 50vw, 500px);
+    height: clamp(200px, 50vw, 500px);
     background: $c-primary;
     top: -10%;
     left: -10%;
@@ -51,8 +61,8 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 
   .shape-2 {
-    width: 600px;
-    height: 600px;
+    width: clamp(250px, 60vw, 600px);
+    height: clamp(250px, 60vw, 600px);
     background: $c-secondary;
     bottom: -20%;
     right: -10%;
@@ -60,8 +70,8 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 
   .shape-3 {
-    width: 400px;
-    height: 400px;
+    width: clamp(150px, 40vw, 400px);
+    height: clamp(150px, 40vw, 400px);
     background: $c-tertiary;
     top: 40%;
     left: 50%;
@@ -97,17 +107,20 @@ $glass-border: rgba(255, 255, 255, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 5%;
+    padding: 12px 5%;
     background: rgba($c-bg, 0.7);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     animation: fadeInDown 0.6s ease forwards;
+    gap: 12px;
 
-    @media (max-width: 768px) {
+    // Tablets: columna centrada
+    @media (max-width: $bp-lg) {
       flex-direction: column;
-      gap: 15px;
-      padding: 15px;
+      align-items: stretch;
+      padding: 12px 16px;
+      gap: 10px;
     }
 
     .back-nav {
@@ -122,6 +135,9 @@ $glass-border: rgba(255, 255, 255, 0.1);
       font-weight: 600;
       font-size: 0.9rem;
       transition: all 0.3s ease;
+      min-height: 44px; // Área mínima táctil
+      white-space: nowrap;
+      flex-shrink: 0;
 
       .icon {
         margin-right: 8px;
@@ -135,33 +151,73 @@ $glass-border: rgba(255, 255, 255, 0.1);
         color: $c-secondary;
         box-shadow: 0 0 15px rgba($c-secondary, 0.3);
       }
+
+      // En tablet/móvil: ancho completo, centrado
+      @media (max-width: $bp-lg) {
+        width: 100%;
+        justify-content: center;
+
+        &:hover {
+          transform: none; // Evitar desplazamiento en táctil
+        }
+      }
     }
 
+    // ---- PILL DE TIENDA ----
     .store-pill {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 12px;
       padding: 8px 10px 8px 20px;
       border-radius: 50px;
       background: $glass-bg;
       border: 1px solid $glass-border;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      flex-wrap: wrap; // Permite que se ajuste si no cabe
+
+      // En móvil: padding reducido, border-radius adaptado
+      @media (max-width: $bp-lg) {
+        width: 100%;
+        border-radius: 16px;
+        padding: 10px 14px;
+        justify-content: space-between;
+      }
+
+      @media (max-width: $bp-sm) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 12px 14px;
+      }
 
       .balance {
         display: flex;
         align-items: center;
         gap: 8px;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         color: rgba($white, 0.8);
+        flex-wrap: wrap;
 
         strong {
           color: $c-gold;
-          font-size: 1.1rem;
+          font-size: clamp(0.95rem, 3vw, 1.1rem);
           font-weight: 900;
         }
 
         .stat-icon {
-          font-size: 1.2rem;
+          font-size: 1.1rem;
+          // En móvil, quitamos el margin-left inline que viene del HTML
+          margin-left: 0 !important;
+
+          @media (max-width: $bp-sm) {
+            font-size: 1rem;
+          }
+        }
+
+        // En pantallas muy pequeñas: reducir texto
+        @media (max-width: $bp-xs) {
+          font-size: 0.8rem;
+          gap: 5px;
         }
       }
 
@@ -172,11 +228,15 @@ $glass-border: rgba(255, 255, 255, 0.1);
         padding: 8px 18px;
         border-radius: 30px;
         font-weight: 800;
+        font-size: clamp(0.8rem, 2.5vw, 0.95rem);
         cursor: pointer;
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 6px;
         transition: 0.3s ease;
+        min-height: 44px;
+        white-space: nowrap;
 
         &:hover:not(:disabled) {
           background: $c-secondary;
@@ -193,34 +253,43 @@ $glass-border: rgba(255, 255, 255, 0.1);
           background: transparent;
         }
 
+        // En móvil: botón ancho completo
+        @media (max-width: $bp-sm) {
+          width: 100%;
+          padding: 10px 18px;
+        }
+
         .btn-spinner {
           width: 18px;
           height: 18px;
-          border: 2px solid rgba($c-secondary, 0.3); // Fondo transparente
-          border-top-color: $c-secondary; // Color cyan girando
+          border: 2px solid rgba($c-secondary, 0.3);
+          border-top-color: $c-secondary;
           border-radius: 50%;
           animation: spin 0.8s linear infinite;
           display: inline-block;
+          flex-shrink: 0;
         }
       }
     }
   }
 
   // ==========================================
-  // CABECERA
+  // CABECERA / HERO
   // ==========================================
   .packs-hero.centered {
     position: relative;
     z-index: 10;
     text-align: center;
-    padding: 50px 5% 20px;
+    // padding vertical fluido
+    padding: clamp(24px, 6vw, 50px) 5% clamp(12px, 3vw, 20px);
     max-width: 800px;
     margin: 0 auto;
     animation: fadeIn 0.8s ease forwards;
 
     h1 {
       margin: 0 0 10px 0;
-      font-size: 3.5rem;
+      // Tipografía fluida: de 2rem en móvil hasta 3.5rem en escritorio
+      font-size: clamp(2rem, 7vw, 3.5rem);
       font-weight: 900;
       letter-spacing: -1px;
 
@@ -229,17 +298,14 @@ $glass-border: rgba(255, 255, 255, 0.1);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
       }
-
-      @media (max-width: 600px) {
-        font-size: 2.5rem;
-      }
     }
 
     .subtitle {
       color: rgba($white, 0.6);
-      font-size: 1.1rem;
+      font-size: clamp(0.85rem, 2.5vw, 1.1rem);
       font-weight: 500;
       margin: 0;
+      padding: 0 10px;
     }
   }
 
@@ -252,6 +318,10 @@ $glass-border: rgba(255, 255, 255, 0.1);
     max-width: 900px;
     margin: 0 auto;
     padding: 20px 5%;
+
+    @media (max-width: $bp-md) {
+      padding: 15px 4%;
+    }
   }
 
   .carousel {
@@ -261,21 +331,34 @@ $glass-border: rgba(255, 255, 255, 0.1);
     gap: 20px;
     min-height: 50vh;
 
+    // En móvil, reducir el gap lateral (los nav-btn son más pequeños)
+    @media (max-width: $bp-md) {
+      gap: 12px;
+      min-height: 45vh;
+    }
+
+    @media (max-width: $bp-sm) {
+      gap: 8px;
+    }
+
+    // ---- BOTONES DE NAVEGACIÓN ----
     .nav-btn {
       background: $glass-bg;
       border: 1px solid $glass-border;
       color: $white;
       border-radius: 50%;
-      width: 55px;
-      height: 55px;
+      // Tamaño fluido con un mínimo táctil de 44px
+      width: clamp(44px, 8vw, 55px);
+      height: clamp(44px, 8vw, 55px);
       cursor: pointer;
-      font-size: 1.8rem;
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
       display: flex;
       align-items: center;
       justify-content: center;
       transition: 0.3s ease;
       backdrop-filter: blur(10px);
       z-index: 10;
+      flex-shrink: 0; // Nunca se comprimen
 
       &:hover:not(:disabled) {
         background: rgba($c-secondary, 0.2);
@@ -285,70 +368,68 @@ $glass-border: rgba(255, 255, 255, 0.1);
         box-shadow: 0 0 20px rgba($c-secondary, 0.3);
       }
 
-      @media (max-width: 600px) {
-        width: 45px;
-        height: 45px;
-        font-size: 1.5rem;
+      &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
       }
     }
 
+    // ---- VIEWPORT DEL CARRUSEL ----
     .carousel-viewport {
-      overflow: visible; // 1. LA MAGIA: Permite que se vean los sobres laterales
+      overflow: visible;
       width: 100%;
-      max-width: 320px; // 2. Un poco más angosto para acercar los sobres de los lados
-      padding: 50px 0; // 3. Más espacio vertical para el efecto de escala
-      perspective: 1000px; // 4. Activa el espacio 3D
+      // Ancho fluido: se reduce en pantallas pequeñas
+      max-width: clamp(220px, 65vw, 320px);
+      // Padding vertical fluido para el efecto 3D
+      padding: clamp(30px, 6vw, 50px) 0;
+      perspective: 1000px;
     }
 
     .pack-track {
       display: flex;
       align-items: center;
-      // Efecto "resorte" muy suave y agradable al pasar de sobre
       transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
       transform-style: preserve-3d;
     }
 
+    // ---- CONTENEDOR DEL PAQUETE ----
     .pack-container {
       flex: 0 0 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 30px;
+      gap: clamp(16px, 4vw, 30px);
 
-      // ESTADO INACTIVO (Sobres de los lados)
       opacity: 0.3;
-      transform: scale(0.75) translateZ(-100px); // Más pequeños y al fondo
+      transform: scale(0.75) translateZ(-100px);
       transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-      pointer-events: none; // Evita clics accidentales en sobres que no están en el centro
+      pointer-events: none;
 
-      // ESTADO ACTIVO (Sobre del centro)
       &.active {
         opacity: 1;
-        transform: scale(1) translateZ(0); // Tamaño real al frente
+        transform: scale(1) translateZ(0);
         pointer-events: auto;
         z-index: 5;
 
-        // Un halo de luz sutil para resaltar el que estás viendo
+        // SOBRE ACTIVO — dimensiones fluidas
         .pack-art {
-          width: 240px;
-          height: 350px;
+          width: clamp(180px, 55vw, 240px);
+          height: clamp(260px, 80vw, 350px);
 
-          // --- NUEVO FONDO Y BORDES ESTILO SOBRE PANINI ---
-          background-color: #d12136; // Rojo base
+          background-color: #d12136;
           background-image:
-            radial-gradient(circle at 10% 20%, #4da74b 30%, transparent 31%), // Círculo verde
-            radial-gradient(circle at 90% 10%, #1e4598 40%, transparent 41%), // Círculo azul oscuro
-            radial-gradient(circle at 80% 80%, #68307d 35%, transparent 36%), // Círculo morado
-            radial-gradient(circle at 20% 90%, #f4a024 35%, transparent 36%), // Círculo naranja
-            radial-gradient(circle at 50% 50%, #46a1d8 25%, transparent 26%); // Círculo azul claro
+            radial-gradient(circle at 10% 20%, #4da74b 30%, transparent 31%),
+            radial-gradient(circle at 90% 10%, #1e4598 40%, transparent 41%),
+            radial-gradient(circle at 80% 80%, #68307d 35%, transparent 36%),
+            radial-gradient(circle at 20% 90%, #f4a024 35%, transparent 36%),
+            radial-gradient(circle at 50% 50%, #46a1d8 25%, transparent 26%);
 
           border-left: 5px solid #d4d4d4;
           border-right: 5px solid #d4d4d4;
-          border-top: 15px solid #b3b3b3; // Sello superior del sobre
-          border-bottom: 15px solid #b3b3b3; // Sello inferior del sobre
-          border-radius: 4px; // Sobres más rectangulares
+          border-top: 15px solid #b3b3b3;
+          border-bottom: 15px solid #b3b3b3;
+          border-radius: 4px;
 
-          // ... MANTÉN TODO LO DEMÁS IGUAL DESDE AQUÍ (box-shadow, position, overflow, etc.)
           box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba($c-secondary, 0.15);
           position: relative;
           display: flex;
@@ -358,277 +439,289 @@ $glass-border: rgba(255, 255, 255, 0.1);
           overflow: hidden;
         }
       }
+    }
 
-      // EL SOBRE (ESTILO FOIL/GAMER)
-      .pack-art {
-        width: 240px;
-        height: 350px;
-        background: linear-gradient(145deg, #161e2e 0%, #080b12 100%);
-        border: 2px solid rgba($c-secondary, 0.5);
-        border-radius: 18px;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba($c-secondary, 0.15);
-        position: relative;
+    // ---- EL SOBRE (ESTILO FOIL/GAMER) ----
+    .pack-art {
+      // Dimensiones fluidas para la vista inactiva también
+      width: clamp(180px, 55vw, 240px);
+      height: clamp(260px, 80vw, 350px);
+      background: linear-gradient(145deg, #161e2e 0%, #080b12 100%);
+      border: 2px solid rgba($c-secondary, 0.5);
+      border-radius: 18px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba($c-secondary, 0.15);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(to bottom right,
+            rgba(255, 255, 255, 0) 40%,
+            rgba($c-secondary, 0.2) 50%,
+            rgba(255, 255, 255, 0) 60%);
+        transform: rotate(45deg);
+        animation: foilShine 4s infinite;
+      }
+
+      .pack-design {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        overflow: hidden;
+        justify-content: flex-start;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        padding-top: 25px;
+        border-radius: 16px;
 
-        &::after {
-          content: '';
-          position: absolute;
-          top: -50%;
-          left: -50%;
-          width: 200%;
-          height: 200%;
-          background: linear-gradient(to bottom right, rgba(255, 255, 255, 0) 40%, rgba($c-secondary, 0.2) 50%, rgba(255, 255, 255, 0) 60%);
-          transform: rotate(45deg);
-          animation: foilShine 4s infinite;
-        }
-
-
-        .pack-design {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: flex-start;
+        .pack-image {
           width: 100%;
           height: 100%;
-          z-index: 2;
-          padding-top: 25px;
-          border-radius: 16px;
-
-          .pack-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; 
-            transition: transform 0.3s ease;
-          }
-
-          .fwc-logo-container {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-
-            .number-26 {
-              font-family: 'Arial Black', sans-serif;
-              font-size: 10rem;
-              font-weight: 900;
-              color: white;
-              line-height: 0.75;
-              letter-spacing: -10px;
-              z-index: 1;
-            }
-
-            .trophy {
-              position: absolute;
-              top: 8px;
-              font-size: 5rem;
-              z-index: 2;
-              filter: drop-shadow(0px 5px 5px rgba(0, 0, 0, 0.6));
-            }
-
-            .fifa-text {
-              font-family: 'Arial Black', sans-serif;
-              font-weight: 900;
-              color: black;
-              background: white;
-              padding: 0 10px;
-              font-size: 1.6rem;
-              margin-top: -20px;
-              z-index: 3;
-              letter-spacing: -1px;
-            }
-          }
-
-          .wc-text {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: white;
-            margin-top: 10px;
-
-            span {
-              font-family: 'Arial Black', sans-serif;
-              font-weight: 900;
-              font-size: 1.2rem;
-              letter-spacing: 2px;
-            }
-
-            .year {
-              font-size: 2.5rem;
-              line-height: 0.9;
-              letter-spacing: 1px;
-            }
-          }
-
-          .pack-footer {
-            position: absolute;
-            bottom: 12px;
-            width: 85%;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-
-            .stickers-count {
-              background: #d32f2f;
-              color: white;
-              padding: 4px 6px;
-              font-family: 'Arial Black', sans-serif;
-              font-weight: 900;
-              font-size: 0.75rem;
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              border-radius: 2px;
-              line-height: 1;
-
-              .badge {
-                background: white;
-                color: black;
-                padding: 2px 8px;
-                border-radius: 2px;
-                margin-bottom: 3px;
-                font-size: 0.9rem;
-              }
-            }
-
-            .panini-logo {
-              background: #ffde00;
-              color: #000;
-              padding: 4px 12px;
-              font-family: 'Arial Black', sans-serif;
-              font-weight: 900;
-              font-size: 0.8rem;
-              border: 1px solid black;
-              letter-spacing: 1px;
-            }
-          }
+          object-fit: cover;
+          transition: transform 0.3s ease;
         }
 
-        .pack-opened-content {
+        .fwc-logo-container {
+          position: relative;
           display: flex;
           flex-direction: column;
           align-items: center;
-          opacity: 0.4;
 
-          .icon {
-            font-size: 3rem;
-            margin-bottom: 10px;
+          .number-26 {
+            font-family: 'Arial Black', sans-serif;
+            // Tipografía fluida para el "26"
+            font-size: clamp(5rem, 18vw, 10rem);
+            font-weight: 900;
+            color: white;
+            line-height: 0.75;
+            letter-spacing: -10px;
+            z-index: 1;
           }
+
+          .trophy {
+            position: absolute;
+            top: 8px;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            z-index: 2;
+            filter: drop-shadow(0px 5px 5px rgba(0, 0, 0, 0.6));
+          }
+
+          .fifa-text {
+            font-family: 'Arial Black', sans-serif;
+            font-weight: 900;
+            color: black;
+            background: white;
+            padding: 0 10px;
+            font-size: clamp(0.9rem, 2.5vw, 1.6rem);
+            margin-top: -20px;
+            z-index: 3;
+            letter-spacing: -1px;
+          }
+        }
+
+        .wc-text {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          color: white;
+          margin-top: 10px;
 
           span {
-            font-weight: 800;
-            text-transform: uppercase;
+            font-family: 'Arial Black', sans-serif;
+            font-weight: 900;
+            font-size: clamp(0.8rem, 2.5vw, 1.2rem);
             letter-spacing: 2px;
           }
-        }
 
-        &.shake {
-          animation: shake 0.5s infinite;
-          filter: brightness(1.3);
-          box-shadow: 0 0 40px rgba($c-secondary, 0.6);
-        }
-
-        &.opened {
-          transform: scale(0.85) rotate(10deg);
-          border-color: rgba($white, 0.1);
-          background: rgba(255, 255, 255, 0.02);
-          box-shadow: none;
-
-          &::after {
-            display: none;
+          .year {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            line-height: 0.9;
+            letter-spacing: 1px;
           }
         }
 
-        &.ripping {
-          animation: ripContainer 0.5s ease forwards;
-          cursor: default;
-          pointer-events: none;
-          border: none; // Quitamos el borde general para que las mitades se vean limpias
-          background: transparent;
-          box-shadow: none;
+        .pack-footer {
+          position: absolute;
+          bottom: 12px;
+          width: 85%;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
 
-          // Ocultamos el diseño original al instante
-          .pack-design {
-            opacity: 0;
-            transition: opacity 0.1s ease;
+          .stickers-count {
+            background: #d32f2f;
+            color: white;
+            padding: 4px 6px;
+            font-family: 'Arial Black', sans-serif;
+            font-weight: 900;
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 2px;
+            line-height: 1;
+
+            .badge {
+              background: white;
+              color: black;
+              padding: 2px 8px;
+              border-radius: 2px;
+              margin-bottom: 3px;
+              font-size: 0.9rem;
+            }
           }
 
-          // Mitad Superior del Sobre
-          &::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(145deg, #161e2e 0%, #080b12 100%);
-            border: 2px solid rgba($c-secondary, 0.5);
-            box-sizing: border-box;
-            border-radius: 18px 18px 0 0;
-            z-index: 20;
-            // Corte poligonal en forma de sierra
-            clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 75% 45%, 50% 53%, 25% 47%, 0% 55%);
-            animation: ripTop 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-          }
-
-          // Mitad Inferior del Sobre (Reemplaza el brillo temporalmente)
-          &::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(145deg, #161e2e 0%, #080b12 100%);
-            border: 2px solid rgba($c-secondary, 0.5);
-            box-sizing: border-box;
-            border-radius: 0 0 18px 18px;
-            z-index: 20;
-            // Encaja perfecto con el corte superior
-            clip-path: polygon(0% 55%, 25% 47%, 50% 53%, 75% 45%, 100% 50%, 100% 100%, 0% 100%);
-            animation: ripBottom 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+          .panini-logo {
+            background: #ffde00;
+            color: #000;
+            padding: 4px 12px;
+            font-family: 'Arial Black', sans-serif;
+            font-weight: 900;
+            font-size: 0.8rem;
+            border: 1px solid black;
+            letter-spacing: 1px;
           }
         }
       }
 
-      .btn-play {
-        background: linear-gradient(135deg, $c-primary, #f43f5e);
-        color: $white;
-        border: none;
-        padding: 16px 40px;
-        border-radius: 16px;
-        font-size: 1.15rem;
-        font-weight: 800;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      .pack-opened-content {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        gap: 10px;
-        box-shadow: 0 10px 25px rgba($c-primary, 0.4);
+        opacity: 0.4;
 
+        .icon {
+          font-size: clamp(2rem, 6vw, 3rem);
+          margin-bottom: 10px;
+        }
+
+        span {
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          font-size: clamp(0.7rem, 2vw, 0.9rem);
+        }
+      }
+
+      &.shake {
+        animation: shake 0.5s infinite;
+        filter: brightness(1.3);
+        box-shadow: 0 0 40px rgba($c-secondary, 0.6);
+      }
+
+      &.opened {
+        transform: scale(0.85) rotate(10deg);
+        border-color: rgba($white, 0.1);
+        background: rgba(255, 255, 255, 0.02);
+        box-shadow: none;
+
+        &::after {
+          display: none;
+        }
+      }
+
+      &.ripping {
+        animation: ripContainer 0.5s ease forwards;
+        cursor: default;
+        pointer-events: none;
+        border: none;
+        background: transparent;
+        box-shadow: none;
+
+        .pack-design {
+          opacity: 0;
+          transition: opacity 0.1s ease;
+        }
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(145deg, #161e2e 0%, #080b12 100%);
+          border: 2px solid rgba($c-secondary, 0.5);
+          box-sizing: border-box;
+          border-radius: 18px 18px 0 0;
+          z-index: 20;
+          clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 75% 45%, 50% 53%, 25% 47%, 0% 55%);
+          animation: ripTop 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(145deg, #161e2e 0%, #080b12 100%);
+          border: 2px solid rgba($c-secondary, 0.5);
+          box-sizing: border-box;
+          border-radius: 0 0 18px 18px;
+          z-index: 20;
+          clip-path: polygon(0% 55%, 25% 47%, 50% 53%, 75% 45%, 100% 50%, 100% 100%, 0% 100%);
+          animation: ripBottom 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+      }
+    }
+
+    // ---- BOTÓN ABRIR ----
+    .btn-play {
+      background: linear-gradient(135deg, $c-primary, #f43f5e);
+      color: $white;
+      border: none;
+      // Padding fluido
+      padding: clamp(12px, 3vw, 16px) clamp(24px, 8vw, 40px);
+      border-radius: 16px;
+      font-size: clamp(0.9rem, 3vw, 1.15rem);
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 10px 25px rgba($c-primary, 0.4);
+      min-height: 48px;
+      // En pantallas muy angostas, el botón se ajusta al ancho
+      max-width: 90vw;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-4px) scale(1.05);
+        box-shadow: 0 15px 35px rgba($c-primary, 0.6);
+        background: linear-gradient(135deg, color.adjust($c-primary, $lightness: 5%), #fb7185);
+      }
+
+      // Desactivar hover scale en táctil
+      @media (hover: none) and (pointer: coarse) {
         &:hover:not(:disabled) {
-          transform: translateY(-4px) scale(1.05);
-          box-shadow: 0 15px 35px rgba($c-primary, 0.6);
-          background: linear-gradient(135deg, color.adjust($c-primary, $lightness: 5%), #fb7185);
+          transform: none;
         }
+      }
 
-        &:disabled {
-          background: rgba($white, 0.05);
-          color: rgba($white, 0.3);
-          box-shadow: none;
-          cursor: not-allowed;
-          border: 1px solid rgba($white, 0.1);
-        }
+      &:disabled {
+        background: rgba($white, 0.05);
+        color: rgba($white, 0.3);
+        box-shadow: none;
+        cursor: not-allowed;
+        border: 1px solid rgba($white, 0.1);
       }
     }
   }
 
   // ==========================================
-  // ESTADO VACÍO Y MODAL DE RESULTADOS
+  // ESTADO VACÍO
   // ==========================================
   .glass-card {
     background: $glass-bg;
@@ -636,7 +729,8 @@ $glass-border: rgba(255, 255, 255, 0.1);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid $glass-border;
     border-radius: 24px;
-    padding: 40px;
+    // Padding fluido
+    padding: clamp(24px, 5vw, 40px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   }
 
@@ -646,7 +740,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     animation: popIn 0.5s ease forwards;
 
     .empty-icon {
-      font-size: 4rem;
+      font-size: clamp(2.5rem, 8vw, 4rem);
       display: block;
       margin-bottom: 15px;
       opacity: 0.8;
@@ -656,19 +750,22 @@ $glass-border: rgba(255, 255, 255, 0.1);
     h2 {
       color: $white;
       margin: 0 0 10px 0;
-      font-size: 1.8rem;
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
       font-weight: 800;
     }
 
     p {
       color: rgba($white, 0.6);
-      font-size: 1rem;
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
       line-height: 1.5;
       max-width: 500px;
       margin: 0 auto;
     }
   }
 
+  // ==========================================
+  // OVERLAY — MODAL DE RESULTADOS
+  // ==========================================
   .overlay {
     position: fixed;
     inset: 0;
@@ -676,40 +773,35 @@ $glass-border: rgba(255, 255, 255, 0.1);
     z-index: 1000;
     display: flex;
     flex-direction: column;
-    /* NUEVO: Ayuda a que el contenido fluya hacia abajo */
     overflow-y: auto;
-    /* NUEVO: Habilita el scroll vertical dentro del modal */
     backdrop-filter: blur(15px);
-    padding: 40px 20px;
-    /* NUEVO: Espacio para que no pegue a los bordes del celular */
+    // Padding fluido
+    padding: clamp(16px, 4vw, 40px) clamp(12px, 3vw, 20px);
 
     .glass-card-massive {
       margin: auto;
-      /* ¡LA MAGIA!: Lo centra en PC, pero evita que se corte por arriba en celulares */
       background: rgba(25, 30, 45, 0.6);
       backdrop-filter: blur(25px);
       border: 1px solid rgba($c-secondary, 0.3);
       width: 100%;
       max-width: 900px;
-      padding: 40px;
-      border-radius: 30px;
+      // Padding fluido
+      padding: clamp(20px, 5vw, 40px);
+      border-radius: clamp(16px, 4vw, 30px);
       position: relative;
       box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba($c-secondary, 0.1);
       animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 
-      @media (max-width: 600px) {
-        padding: 40px 20px 20px 20px; // Ajuste de padding interno para móviles
-      }
-
       .close-btn {
         position: absolute;
-        top: 25px;
-        right: 25px;
+        top: clamp(12px, 3vw, 25px);
+        right: clamp(12px, 3vw, 25px);
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
         color: $white;
-        width: 40px;
-        height: 40px;
+        // Área táctil adecuada
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
         font-size: 1.2rem;
         cursor: pointer;
@@ -719,11 +811,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
         justify-content: center;
         z-index: 20;
 
-        @media (max-width: 600px) {
-          top: 15px;
-          right: 15px;
-        }
-
         &:hover {
           background: $c-error;
           border-color: $c-error;
@@ -732,15 +819,19 @@ $glass-border: rgba(255, 255, 255, 0.1);
         }
       }
 
+      .results {
+        // Espacio superior para que el título no quede bajo el botón de cerrar
+        padding-top: clamp(8px, 2vw, 10px);
+      }
+
       .results-title {
         text-align: center;
         margin-top: 0;
-        font-size: 2.5rem;
+        font-size: clamp(1.6rem, 5vw, 2.5rem);
         font-weight: 900;
 
-        @media (max-width: 600px) {
-          font-size: 2rem;
-          margin-top: 15px;
+        @media (max-width: $bp-sm) {
+          margin-top: 10px;
         }
 
         .gradient-text {
@@ -750,14 +841,16 @@ $glass-border: rgba(255, 255, 255, 0.1);
         }
       }
 
+      // ---- GRID DE RESULTADOS ----
       .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 25px;
-        margin-top: 30px;
+        // minmax fluido: mínimo 130px en móviles, hasta 180px en escritorio
+        grid-template-columns: repeat(auto-fill, minmax(clamp(130px, 38vw, 180px), 1fr));
+        gap: clamp(12px, 3vw, 25px);
+        margin-top: clamp(16px, 4vw, 30px);
       }
 
-      // CARTA DE RESULTADO (Sticker)
+      // ---- CARTA DE RESULTADO (STICKER) ----
       .sticker-card {
         background: #0b0f19;
         border-radius: 12px;
@@ -773,9 +866,14 @@ $glass-border: rgba(255, 255, 255, 0.1);
           border-color: $c-secondary;
         }
 
-        /* ===================================== */
-        /* EFECTOS DE RAREZA (BORDES Y BRILLO)   */
-        /* ===================================== */
+        // Desactivar hover en táctil
+        @media (hover: none) and (pointer: coarse) {
+          &:hover {
+            transform: none;
+          }
+        }
+
+        // Rarezas
         &.común {
           border-color: rgba(255, 255, 255, 0.2);
         }
@@ -790,19 +888,20 @@ $glass-border: rgba(255, 255, 255, 0.1);
           box-shadow: 0 0 25px rgba(249, 199, 79, 0.6);
 
           &.foil-effect::after {
-            background: linear-gradient(125deg, rgba(255, 255, 255, 0) 30%, rgba(249, 199, 79, 0.4) 50%, rgba(255, 255, 255, 0) 70%);
+            background: linear-gradient(125deg,
+                rgba(255, 255, 255, 0) 30%,
+                rgba(249, 199, 79, 0.4) 50%,
+                rgba(255, 255, 255, 0) 70%);
           }
         }
 
-        /* ===================================== */
-        /* ETIQUETA VISUAL DE RAREZA             */
-        /* ===================================== */
+        // Etiqueta de rareza
         .rarity-badge {
           position: absolute;
           top: 8px;
           left: 8px;
-          padding: 4px 10px;
-          font-size: 0.6rem;
+          padding: 3px 8px;
+          font-size: clamp(0.5rem, 1.5vw, 0.6rem);
           font-weight: 900;
           text-transform: uppercase;
           border-radius: 12px;
@@ -827,25 +926,30 @@ $glass-border: rgba(255, 255, 255, 0.1);
           }
         }
 
+        // Efecto foil
         &.foil-effect::after {
           content: '';
           position: absolute;
           inset: 0;
-          background: linear-gradient(125deg, rgba(255, 255, 255, 0) 30%, rgba($c-secondary, 0.3) 50%, rgba(255, 255, 255, 0) 70%);
+          background: linear-gradient(125deg,
+              rgba(255, 255, 255, 0) 30%,
+              rgba($c-secondary, 0.3) 50%,
+              rgba(255, 255, 255, 0) 70%);
           background-size: 200% 200%;
           animation: foilShine 3s infinite linear;
           pointer-events: none;
         }
 
+        // Imagen del sticker — altura fluida
         .img-placeholder {
-          height: 220px;
+          height: clamp(140px, 35vw, 220px);
           background: rgba(255, 255, 255, 0.03);
           display: flex;
           align-items: center;
           justify-content: center;
 
           .emoji {
-            font-size: 4rem;
+            font-size: clamp(2.5rem, 6vw, 4rem);
             opacity: 0.5;
             filter: drop-shadow(0 0 10px rgba($white, 0.2));
           }
@@ -853,37 +957,40 @@ $glass-border: rgba(255, 255, 255, 0.1);
 
         .img {
           width: 100%;
-          height: 220px;
+          height: clamp(140px, 35vw, 220px);
           object-fit: cover;
         }
 
+        // Meta / Nombre + Código
         .meta {
-          padding: 15px;
+          padding: clamp(8px, 2.5vw, 15px);
           text-align: center;
           border-top: 1px solid rgba(255, 255, 255, 0.05);
           background: rgba(0, 0, 0, 0.4);
 
           .code {
             color: $c-secondary;
-            font-size: 0.85rem;
+            font-size: clamp(0.7rem, 2vw, 0.85rem);
             font-weight: 800;
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
           }
 
           .title {
             font-weight: 700;
-            font-size: 1rem;
+            font-size: clamp(0.75rem, 2.5vw, 1rem);
             color: $white;
+            word-break: break-word;
           }
         }
 
+        // Badge de repetida
         .dup-badge {
           position: absolute;
           background: $c-error;
           color: white;
-          padding: 5px 12px;
-          font-size: 0.75rem;
+          padding: 4px 10px;
+          font-size: clamp(0.6rem, 1.8vw, 0.75rem);
           font-weight: 800;
           border-radius: 0 0 0 10px;
           top: 0;
@@ -893,70 +1000,11 @@ $glass-border: rgba(255, 255, 255, 0.1);
         }
       }
     }
-
-
-    // --- KEYFRAMES ---
-    @keyframes shake {
-
-      0%,
-      100% {
-        transform: rotate(0deg) scale(1.02);
-      }
-
-      25% {
-        transform: rotate(-3deg);
-      }
-
-      75% {
-        transform: rotate(3deg);
-      }
-    }
-
-    @keyframes foilShine {
-      0% {
-        background-position: 200% 0;
-      }
-
-      100% {
-        background-position: -200% 0;
-      }
-    }
-
-    @keyframes popIn {
-      from {
-        opacity: 0;
-        transform: scale(0.9) translateY(20px);
-      }
-
-      to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-      }
-    }
-
-    @keyframes fadeInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-
-      to {
-        opacity: 1;
-      }
-    }
   }
 
+  // ==========================================
+  // KEYFRAMES
+  // ==========================================
   @keyframes spin {
     from {
       transform: rotate(0deg);
@@ -967,7 +1015,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // --- KEYFRAMES ---
   @keyframes shake {
 
     0%,
@@ -1027,10 +1074,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
       opacity: 1;
     }
   }
-
-  // ==========================================
-  // 🎬 ANIMACIONES DE RASGADO DEL PAQUETE
-  // ==========================================
 
   @keyframes ripTop {
     0% {

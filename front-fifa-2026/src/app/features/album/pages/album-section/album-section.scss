@@ -11,13 +11,21 @@ $white: #ffffff;
 $glass-bg: rgba(255, 255, 255, 0.04);
 $glass-border: rgba(255, 255, 255, 0.1);
 
+// ==========================================
+// BREAKPOINTS CENTRALIZADOS
+// ==========================================
+$bp-xs: 360px; // Teléfonos muy pequeños (Galaxy S5, etc.)
+$bp-sm: 480px; // Teléfonos pequeños
+$bp-md: 600px; // Teléfonos grandes / phablets
+$bp-lg: 768px; // Tablets pequeñas / landscape móvil
+$bp-xl: 900px; // Tablets medianas
+$bp-2xl: 1200px; // Escritorios pequeños
+
 ::ng-deep body {
   margin: 0 !important;
   padding: 0 !important;
   background-color: $c-bg !important;
   font-family: 'Poppins', 'Inter', sans-serif;
-
-
   overflow-y: auto !important;
   overflow-x: hidden !important;
 }
@@ -32,13 +40,13 @@ $glass-border: rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
 
-  @media (max-width: 900px) {
-    height: auto; // Permite que crezca en celular
-    padding-bottom: 80px; // Espacio para los botones flotantes
+  @media (max-width: $bp-xl) {
+    height: auto;
+    padding-bottom: 90px; // Espacio para botones de navegación flotantes
   }
 
   // ==========================================
-  // FONDOS ANIMADOS
+  // FONDOS ANIMADOS — Escalados con clamp()
   // ==========================================
   .bg-shape {
     position: fixed;
@@ -51,8 +59,8 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 
   .shape-1 {
-    width: 500px;
-    height: 500px;
+    width: clamp(200px, 50vw, 500px);
+    height: clamp(200px, 50vw, 500px);
     background: $c-primary;
     top: -10%;
     left: -10%;
@@ -60,8 +68,8 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 
   .shape-2 {
-    width: 600px;
-    height: 600px;
+    width: clamp(250px, 60vw, 600px);
+    height: clamp(250px, 60vw, 600px);
     background: $c-secondary;
     bottom: -20%;
     right: -10%;
@@ -69,8 +77,8 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 
   .shape-3 {
-    width: 400px;
-    height: 400px;
+    width: clamp(150px, 40vw, 400px);
+    height: clamp(150px, 40vw, 400px);
     background: $c-tertiary;
     top: 40%;
     left: 50%;
@@ -112,10 +120,11 @@ $glass-border: rgba(255, 255, 255, 0.1);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     animation: fadeInDown 0.6s ease forwards;
 
-    @media (max-width: 768px) {
+    // Tablets y móviles: columna centrada
+    @media (max-width: $bp-lg) {
       flex-direction: column;
-      gap: 15px;
-      padding: 15px;
+      gap: 10px;
+      padding: 12px 15px 14px;
       text-align: center;
     }
 
@@ -123,7 +132,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
       color: $white;
-      padding: 6px 15px;
+      padding: 8px 16px;
       border-radius: 20px;
       cursor: pointer;
       display: flex;
@@ -131,6 +140,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
       font-weight: 600;
       font-size: 0.85rem;
       transition: all 0.3s ease;
+      min-height: 44px; // Área mínima de toque
 
       .icon {
         margin-right: 8px;
@@ -145,11 +155,15 @@ $glass-border: rgba(255, 255, 255, 0.1);
         box-shadow: 0 0 15px rgba($c-secondary, 0.3);
       }
 
-      @media (max-width: 768px) {
+      // En móvil: icono flotante arriba-izquierda
+      @media (max-width: $bp-lg) {
         position: absolute;
-        top: 15px;
+        top: 12px;
         left: 15px;
         padding: 8px 12px;
+        min-height: 44px;
+        min-width: 44px;
+        justify-content: center;
 
         span.text {
           display: none;
@@ -165,13 +179,15 @@ $glass-border: rgba(255, 255, 255, 0.1);
     .title-area {
       text-align: right;
 
-      @media (max-width: 768px) {
+      @media (max-width: $bp-lg) {
         text-align: center;
+        padding-top: 4px;
       }
 
       .title {
         color: $white;
-        font-size: 1.5rem;
+        // Tipografía fluida: crece con el viewport
+        font-size: clamp(1.1rem, 3.5vw, 1.5rem);
         font-weight: 900;
         margin: 0 0 5px 0;
         text-transform: uppercase;
@@ -180,12 +196,12 @@ $glass-border: rgba(255, 255, 255, 0.1);
 
       .subtitle {
         display: flex;
-        gap: 10px;
+        gap: 8px;
         justify-content: flex-end;
+        flex-wrap: wrap; // Evita desbordamiento en pantallas angostas
 
-        @media (max-width: 768px) {
+        @media (max-width: $bp-lg) {
           justify-content: center;
-          flex-wrap: wrap;
         }
 
         .stat-pill {
@@ -193,11 +209,12 @@ $glass-border: rgba(255, 255, 255, 0.1);
           border: 1px solid $glass-border;
           padding: 4px 10px;
           border-radius: 20px;
-          font-size: 0.8rem;
+          font-size: clamp(0.65rem, 2vw, 0.8rem);
           font-weight: 600;
           display: flex;
           align-items: center;
           gap: 6px;
+          white-space: nowrap;
 
           &.cyan {
             border-color: rgba($c-secondary, 0.4);
@@ -227,12 +244,21 @@ $glass-border: rgba(255, 255, 255, 0.1);
     z-index: 10;
     animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 
-    @media (max-width: 900px) {
-      margin-top: 20px;
-      padding: 0 15px;
+    @media (max-width: $bp-xl) {
+      margin-top: 15px;
+      padding: 0 12px;
+      gap: 0; // Los botones pasan a ser flotantes, no hay gap necesario
+    }
+
+    @media (max-width: $bp-sm) {
+      padding: 0 8px;
+      margin-top: 10px;
     }
   }
 
+  // ==========================================
+  // BOTONES DE NAVEGACIÓN LATERAL
+  // ==========================================
   .nav-side {
     width: 45px;
     height: 45px;
@@ -264,12 +290,14 @@ $glass-border: rgba(255, 255, 255, 0.1);
       cursor: not-allowed;
     }
 
-    @media (max-width: 900px) {
+    // En móvil/tablet: botones flotantes en la parte inferior
+    @media (max-width: $bp-xl) {
       position: fixed;
       bottom: 20px;
       z-index: 1000;
-      width: 55px;
-      height: 55px;
+      width: 56px;
+      height: 56px;
+      font-size: 1.8rem;
       background: linear-gradient(135deg, $c-primary, #f43f5e);
       border: none;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
@@ -280,6 +308,26 @@ $glass-border: rgba(255, 255, 255, 0.1);
 
       &.right {
         right: 20px;
+      }
+
+      &:disabled {
+        opacity: 0.25;
+        pointer-events: none;
+      }
+    }
+
+    // Teléfonos muy pequeños: ligeramente más compactos
+    @media (max-width: $bp-xs) {
+      width: 48px;
+      height: 48px;
+      bottom: 14px;
+
+      &.left {
+        left: 12px;
+      }
+
+      &.right {
+        right: 12px;
       }
     }
   }
@@ -301,8 +349,23 @@ $glass-border: rgba(255, 255, 255, 0.1);
     flex-direction: column;
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), inset 0 0 40px rgba(0, 0, 0, 0.5);
 
-    @media (max-width: 900px) {
-      padding: 25px 20px;
+    @media (max-width: $bp-xl) {
+      padding: 20px 16px;
+      min-height: auto; // El contenido define la altura en móvil
+    }
+
+    @media (max-width: $bp-md) {
+      padding: 16px 12px;
+      border-radius: 10px;
+    }
+
+    @media (max-width: $bp-sm) {
+      padding: 14px 10px;
+    }
+
+    @media (max-width: $bp-xs) {
+      padding: 12px 8px;
+      border-radius: 8px;
     }
 
     &::before {
@@ -315,6 +378,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
       pointer-events: none;
     }
 
+    // Lomo del libro — solo visible en pantallas grandes
     .book-spine {
       position: absolute;
       top: 0;
@@ -334,14 +398,18 @@ $glass-border: rgba(255, 255, 255, 0.1);
       z-index: 0;
       pointer-events: none;
 
-      @media (max-width: 900px) {
+      @media (max-width: $bp-xl) {
         display: none;
       }
     }
 
+    // ==========================================
+    // ENCABEZADO DEL LIBRO
+    // ==========================================
     .book-header {
       display: flex;
       justify-content: space-between;
+      align-items: flex-end;
       position: relative;
       z-index: 1;
       margin-bottom: 20px;
@@ -366,7 +434,8 @@ $glass-border: rgba(255, 255, 255, 0.1);
       }
 
       .country-title {
-        font-size: 2rem;
+        // Tipografía fluida: de 1.1rem en móvil hasta 2rem en escritorio
+        font-size: clamp(1.1rem, 4vw, 2rem);
         margin: 0;
         font-weight: 900;
         letter-spacing: 1px;
@@ -377,15 +446,16 @@ $glass-border: rgba(255, 255, 255, 0.1);
 
       .page-number {
         color: rgba($white, 0.5);
-        font-size: 1rem;
+        font-size: clamp(0.75rem, 2vw, 1rem);
         font-weight: 800;
       }
 
-      @media (max-width: 900px) {
+      // En móvil: encabezado centrado en columna
+      @media (max-width: $bp-xl) {
         flex-direction: column;
         align-items: center;
-        gap: 8px;
-        margin-bottom: 25px;
+        gap: 6px;
+        margin-bottom: 18px;
 
         .left-page-header,
         .right-page-header {
@@ -393,48 +463,76 @@ $glass-border: rgba(255, 255, 255, 0.1);
           justify-content: center;
         }
       }
+
+      @media (max-width: $bp-md) {
+        margin-bottom: 14px;
+        padding-bottom: 8px;
+      }
     }
 
     // ==========================================
-    // GRID Y LÁMINAS (RESPONSIVO)
+    // GRID DE LÁMINAS — Sistema responsivo completo
     // ==========================================
     .album-grid {
       position: relative;
       z-index: 1;
+      // Desktop: dos columnas tipo libro separadas por el lomo
       column-count: 2;
       column-gap: 100px;
       flex-grow: 1;
 
-      @media (max-width: 900px) {
-        column-count: 1;
-        column-gap: 0;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
+      // Tablet y móvil: CSS Grid con columnas adaptivas
+      @media (max-width: $bp-xl) {
+        column-count: unset;
+        column-gap: unset;
+        display: grid;
+        // 3 columnas en tablets
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
       }
 
+      // Teléfonos medianos: 3 columnas más ajustadas
+      @media (max-width: $bp-md) {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+
+      // Teléfonos pequeños: 2 columnas
+      @media (max-width: $bp-sm) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      // Teléfonos muy pequeños: 2 columnas compactas
+      @media (max-width: $bp-xs) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+
+      // ==========================================
+      // SLOT (ESPACIO DE LÁMINA)
+      // ==========================================
       .slot {
+        // Desktop: dentro de column-count
         display: inline-flex;
         flex-direction: column;
         width: calc(33.333% - 16px);
         margin: 0 8px 15px;
         vertical-align: top;
-        aspect-ratio: 2.5/3.5;
+        aspect-ratio: 2.5 / 3.5;
         border-radius: 8px;
         position: relative;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         break-inside: avoid;
 
-        @media (max-width: 900px) {
-          width: calc(50% - 15px);
+        // En Grid: el grid controla el tamaño
+        @media (max-width: $bp-xl) {
+          display: flex;
+          width: 100%;
           margin: 0;
         }
 
-        @media (max-width: 400px) {
-          width: calc(50% - 10px);
-        }
-
+        // ---- SLOT VACÍO ----
         &:not(.owned) {
           background: rgba(0, 0, 0, 0.2);
           border: 2px dashed rgba(255, 255, 255, 0.15);
@@ -449,38 +547,34 @@ $glass-border: rgba(255, 255, 255, 0.1);
           }
 
           .placeholder {
+            padding: 4px;
+
             .code {
               display: block;
-              font-size: 1.5rem;
+              font-size: clamp(0.9rem, 2.5vw, 1.5rem);
               color: rgba(255, 255, 255, 0.2);
               font-weight: 900;
               margin-bottom: 3px;
-
-              @media (max-width: 600px) {
-                font-size: 1.2rem;
-              }
             }
 
             .hint-name {
-              font-size: 0.7rem;
+              font-size: clamp(0.5rem, 1.3vw, 0.7rem);
               color: rgba(255, 255, 255, 0.4);
               text-transform: uppercase;
               font-weight: 600;
-
-              @media (max-width: 600px) {
-                font-size: 0.6rem;
-              }
+              // Permitir salto de línea en pantallas muy angostas
+              word-break: break-word;
+              hyphens: auto;
             }
           }
         }
 
+        // ---- SLOT CON LÁMINA ----
         &.owned {
           background: #0b0e14;
           border: 1px solid rgba($c-secondary, 0.5);
           box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
           cursor: pointer;
-          // ¡EL SECRETO ESTÁ AQUÍ! Hemos removido el overflow: hidden de este nivel
-          // para que el ".badge" (globo rojo) no se corte.
 
           &:hover {
             transform: scale(1.08) translateY(-5px);
@@ -489,26 +583,30 @@ $glass-border: rgba(255, 255, 255, 0.1);
             border-color: $c-secondary;
           }
 
+          // Desactivar hover de escala en pantallas táctiles
+          @media (hover: none) and (pointer: coarse) {
+            &:hover {
+              transform: none;
+            }
+          }
+
           .sticker-content {
             width: 100%;
             height: 100%;
             display: flex;
             flex-direction: column;
-            border-radius: inherit; // Mantiene los bordes redondeados
-            overflow: hidden; // Corta la imagen si es muy grande, pero NO el globo rojo que está afuera
+            border-radius: inherit;
+            overflow: hidden;
 
             .img-fallback {
               flex: 1;
               display: flex;
               align-items: center;
               justify-content: center;
-              font-size: 2.5rem;
+              // Emoji escala con el tamaño del slot
+              font-size: clamp(1.5rem, 4vw, 2.5rem);
               color: rgba(255, 255, 255, 0.1);
               background: rgba(0, 0, 0, 0.5);
-
-              @media (max-width: 600px) {
-                font-size: 2rem;
-              }
             }
 
             .img {
@@ -525,32 +623,31 @@ $glass-border: rgba(255, 255, 255, 0.1);
               display: flex;
               justify-content: space-between;
               align-items: center;
+              gap: 2px;
               border-top: 1px solid rgba($c-secondary, 0.3);
 
               .s-code {
-                font-size: 0.55rem;
+                font-size: clamp(0.4rem, 1.1vw, 0.55rem);
                 font-weight: 900;
                 color: $c-gold;
+                flex-shrink: 0;
               }
 
               .s-title {
-                font-size: 0.6rem;
+                font-size: clamp(0.4rem, 1.1vw, 0.6rem);
                 font-weight: 700;
                 text-transform: uppercase;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                max-width: 60px;
-
-                @media (max-width: 600px) {
-                  font-size: 0.5rem;
-                  max-width: 50px;
-                }
+                // max-width relativo en vez de fijo
+                max-width: 60%;
               }
             }
           }
         }
 
+        // ---- GLOBO DE REPETIDAS ----
         .badge {
           position: absolute;
           top: -8px;
@@ -582,7 +679,15 @@ $glass-border: rgba(255, 255, 255, 0.1);
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(15px);
-  padding: 20px;
+  padding: 16px;
+
+  // Landscape en pantallas pequeñas: permitir scroll
+  @media (max-height: 600px) {
+    align-items: flex-start;
+    overflow-y: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
 
   .detail-card.glass-card-massive {
     background: rgba(20, 25, 35, 0.9);
@@ -596,6 +701,12 @@ $glass-border: rgba(255, 255, 255, 0.1);
     overflow: hidden;
     animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 
+    // En teléfonos muy pequeños, ajustar bordes
+    @media (max-width: $bp-xs) {
+      border-radius: 14px;
+      max-width: 100%;
+    }
+
     &.not-owned {
       filter: grayscale(100%) opacity(0.7);
       border-color: rgba($white, 0.2);
@@ -605,7 +716,10 @@ $glass-border: rgba(255, 255, 255, 0.1);
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(125deg, rgba(255, 255, 255, 0) 30%, rgba($c-secondary, 0.2) 50%, rgba(255, 255, 255, 0) 70%);
+      background: linear-gradient(125deg,
+          rgba(255, 255, 255, 0) 30%,
+          rgba($c-secondary, 0.2) 50%,
+          rgba(255, 255, 255, 0) 70%);
       background-size: 200% 200%;
       animation: foilShine 3s infinite linear;
       pointer-events: none;
@@ -618,8 +732,9 @@ $glass-border: rgba(255, 255, 255, 0.1);
       background: rgba(0, 0, 0, 0.5);
       border: 1px solid rgba(255, 255, 255, 0.1);
       color: $white;
-      width: 35px;
-      height: 35px;
+      // Mínimo 44px de área táctil
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       font-size: 1.1rem;
       cursor: pointer;
@@ -645,13 +760,13 @@ $glass-border: rgba(255, 255, 255, 0.1);
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 
       .code {
-        font-size: 1.2rem;
+        font-size: clamp(1rem, 4vw, 1.2rem);
         font-weight: 900;
         color: $c-gold;
       }
 
       .rarity {
-        font-size: 0.85rem;
+        font-size: clamp(0.75rem, 2.5vw, 0.85rem);
         font-weight: 700;
         background: rgba($white, 0.1);
         padding: 4px 10px;
@@ -660,41 +775,57 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
 
     .detail-img {
-      height: 350px; // Un poco más alto para que la carta luzca imponente
+      // min() garantiza que no desborde en landscape ni en pantallas pequeñas
+      height: min(350px, 45vh);
       background: rgba(0, 0, 0, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 15px; // Un respiro a los lados
+      padding: 15px;
+
+      // Landscape en móviles: imagen más baja
+      @media (max-height: 600px) {
+        height: min(160px, 28vh);
+        padding: 10px;
+      }
+
+      // Teléfonos pequeños
+      @media (max-width: $bp-xs) {
+        height: min(260px, 40vh);
+        padding: 10px;
+      }
 
       .img-fallback {
-        font-size: 6rem;
+        font-size: clamp(3rem, 10vw, 6rem);
         opacity: 0.3;
       }
 
       img {
         width: 100%;
         height: 100%;
-        object-fit: contain; // ¡LA CLAVE!: Hace que la carta se vea completa sin recortarse
-        filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.6)); // Sombrita extra para que resalte
+        object-fit: contain;
+        filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.6));
       }
     }
 
     .detail-info {
-      padding: 20px;
+      padding: clamp(12px, 4vw, 20px);
       text-align: center;
 
       h3 {
         margin: 0 0 10px;
-        font-size: 1.6rem;
+        font-size: clamp(1.1rem, 4vw, 1.6rem);
         font-weight: 900;
         text-transform: uppercase;
+        // Evitar desbordamiento con nombres largos
+        word-break: break-word;
+        hyphens: auto;
       }
 
       .error-text {
         color: $c-error;
         font-weight: 600;
-        font-size: 0.9rem;
+        font-size: clamp(0.8rem, 2.5vw, 0.9rem);
       }
 
       .stats {
@@ -708,12 +839,12 @@ $glass-border: rgba(255, 255, 255, 0.1);
           padding: 4px 12px;
           border-radius: 20px;
           font-weight: 800;
-          font-size: 0.85rem;
+          font-size: clamp(0.75rem, 2.5vw, 0.85rem);
         }
 
         .value {
           color: rgba($white, 0.7);
-          font-size: 0.9rem;
+          font-size: clamp(0.8rem, 2.5vw, 0.9rem);
 
           strong {
             color: $c-gold;
@@ -724,7 +855,9 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 }
 
-// --- KEYFRAMES ---
+// ==========================================
+// KEYFRAMES
+// ==========================================
 @keyframes foilShine {
   0% {
     background-position: 200% 0;
