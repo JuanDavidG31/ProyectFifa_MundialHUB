@@ -460,3 +460,262 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 }
+
+// =============================================================
+// RESPONSIVE COMPLETO — ALBUM HISTORY
+// (El breakpoint 650px de tarjetas ya existe, extendemos el resto)
+// =============================================================
+
+// ─── Reset global anti-overflow ─────────────────────────────
+::ng-deep html,
+::ng-deep app-root {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+.history-wrapper * {
+  box-sizing: border-box;
+}
+
+// ─── TABLET (≤ 768px) ───────────────────────────────────────
+@media (max-width: 768px) {
+  .history-wrapper {
+    .history-hero.centered {
+      padding: 28px 5% 16px;
+
+      h1 {
+        font-size: 2.4rem;
+        letter-spacing: -0.5px;
+      }
+
+      .subtitle {
+        font-size: 0.95rem;
+      }
+    }
+
+    .history-content {
+      padding: 16px 4%;
+    }
+
+    .transaction-card {
+      padding: 18px 20px;
+
+      .tx-icon {
+        width: 55px;
+        height: 55px;
+        font-size: 1.7rem;
+        margin-right: 16px;
+      }
+
+      .tx-details {
+        .tx-header {
+          .tx-type {
+            font-size: 1.05rem;
+          }
+
+          .tx-date {
+            font-size: 0.8rem;
+          }
+        }
+
+        .tx-description {
+          font-size: 0.88rem;
+        }
+      }
+
+      .tx-amount {
+        font-size: 1.7rem;
+        min-width: 75px;
+        margin-left: 14px;
+      }
+    }
+  }
+}
+
+// ─── MOBILE GRANDE (≤ 600px) ────────────────────────────────
+@media (max-width: 600px) {
+  .history-wrapper {
+    .top-nav {
+      padding: 10px 14px;
+
+      .back-nav {
+        padding: 7px 14px;
+        font-size: 0.82rem;
+      }
+    }
+
+    .history-hero.centered {
+      padding: 22px 4% 14px;
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .subtitle {
+        font-size: 0.88rem;
+      }
+    }
+
+    .history-content {
+      padding: 14px 14px;
+    }
+
+    .glass-card {
+      padding: 36px 20px;
+      border-radius: 18px;
+    }
+
+    .empty-state {
+      .empty-icon {
+        font-size: 3.5rem;
+      }
+
+      h2 {
+        font-size: 1.6rem;
+      }
+
+      p {
+        font-size: 0.92rem;
+      }
+
+      .btn-play {
+        padding: 12px 24px;
+        font-size: 1rem;
+      }
+    }
+
+    // Las tarjetas ya se apilan con el breakpoint 650px existente.
+    // Aquí solo ajustamos tamaños dentro del layout apilado:
+    .transaction-card {
+      padding: 16px;
+      border-radius: 14px;
+
+      .tx-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 1.5rem;
+        margin-right: 0;
+        margin-bottom: 12px;
+      }
+
+      .tx-details .tx-header .tx-type {
+        font-size: 0.98rem;
+      }
+
+      .tx-amount {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+// ─── MOBILE ESTÁNDAR (≤ 480px) ──────────────────────────────
+@media (max-width: 480px) {
+  .history-wrapper {
+    .history-hero.centered {
+      padding: 18px 4% 12px;
+
+      h1 {
+        font-size: 1.7rem;
+      }
+
+      .subtitle {
+        font-size: 0.82rem;
+      }
+    }
+
+    .transaction-list {
+      gap: 10px;
+    }
+
+    .transaction-card {
+      padding: 14px;
+
+      .tx-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 1.3rem;
+      }
+
+      .tx-details .tx-description {
+        font-size: 0.82rem;
+      }
+
+      .tx-amount {
+        font-size: 1.4rem;
+
+        .unit {
+          font-size: 0.78rem;
+        }
+      }
+    }
+  }
+}
+
+// ─── MOBILE PEQUEÑO (≤ 375px) ───────────────────────────────
+@media (max-width: 375px) {
+  .history-wrapper {
+    padding-bottom: 40px;
+
+    .top-nav .back-nav {
+      font-size: 0.78rem;
+      padding: 6px 12px;
+    }
+
+    .history-hero.centered h1 {
+      font-size: 1.5rem;
+    }
+
+    .transaction-card {
+      padding: 12px;
+      border-radius: 12px;
+
+      .tx-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 1.2rem;
+      }
+
+      .tx-amount {
+        font-size: 1.3rem;
+      }
+    }
+
+    .shape-1 {
+      width: 250px;
+      height: 250px;
+    }
+
+    .shape-2 {
+      width: 280px;
+      height: 280px;
+    }
+
+    .shape-3 {
+      width: 180px;
+      height: 180px;
+    }
+  }
+}
+
+// ─── REDUCCIÓN DE MOVIMIENTO (accesibilidad) ─────────────────
+@media (prefers-reduced-motion: reduce) {
+  .history-wrapper {
+
+    .bg-shape,
+    .neon-spinner,
+    .transaction-card,
+    .glass-card {
+      animation: none !important;
+    }
+
+    .transaction-card:hover,
+    .back-nav:hover,
+    .btn-play:hover {
+      transform: none !important;
+    }
+  }
+}

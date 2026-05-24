@@ -102,16 +102,16 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
   .logo-container {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 10px;
 
     .logo-image {
-      width: 50px; 
+      width: 50px;
       height: 50px;
-      object-fit: contain; 
-      filter: drop-shadow(0 0 15px rgba($c-secondary, 0.4)); 
+      object-fit: contain;
+      filter: drop-shadow(0 0 15px rgba($c-secondary, 0.4));
     }
 
     .icon-pulse {
@@ -434,16 +434,26 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
   // NUEVO: Estilos del botón flotante
   .chat-fab {
-    width: 60px; height: 60px; border-radius: 50%; background: $c-secondary; 
-    border: none; font-size: 1.8rem; cursor: pointer; 
-    box-shadow: 0 10px 20px rgba($c-secondary, 0.4); 
-    display: flex; align-items: center; justify-content: center;
-    &:hover { transform: scale(1.1); }
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: $c-secondary;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba($c-secondary, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      transform: scale(1.1);
+    }
   }
 
   .chat-window {
     position: absolute; // NUEVO: Permite que flote sobre el botón
-    bottom: 80px;       // NUEVO: Lo separa del botón
+    bottom: 80px; // NUEVO: Lo separa del botón
     right: 0;
     width: 380px;
     height: 500px;
@@ -468,13 +478,13 @@ $glass-border: rgba(255, 255, 255, 0.15);
         margin: 0;
         font-weight: bold;
       }
-      
+
       // NUEVO: Botón de cerrar
-      .btn-close { 
-        background: transparent; 
-        border: none; 
-        font-size: 1.2rem; 
-        cursor: pointer; 
+      .btn-close {
+        background: transparent;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
         color: #000;
         font-weight: bold;
       }
@@ -574,5 +584,426 @@ $glass-border: rgba(255, 255, 255, 0.15);
         background: $c-error;
       }
     }
+  }
+}
+
+// =============================================================
+// RESPONSIVE COMPLETO — SUPPORT
+// Breakpoints: 1024px | 900px | 768px | 600px | 480px | 375px
+// =============================================================
+
+// ─── Reset global anti-overflow ─────────────────────────────
+::ng-deep html,
+::ng-deep body,
+::ng-deep app-root {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+.support-wrapper,
+.support-wrapper * {
+  box-sizing: border-box;
+}
+
+// ─── TABLET LANDSCAPE (≤ 1024px) ────────────────────────────
+@media (max-width: 1024px) {
+  .support-container {
+    padding: 0 4%;
+  }
+
+  .support-grid {
+    grid-template-columns: 300px 1fr;
+    gap: 18px;
+  }
+
+  .support-header .title-container h1 {
+    font-size: 2.2rem;
+  }
+}
+
+// ─── TABLET PORTRAIT (≤ 900px) — colapsa a 1 col ────────────
+// El grid ya tiene @media 900px para 1 columna, refinamos el resto
+@media (max-width: 900px) {
+  .top-nav {
+    padding: 12px 4%;
+
+    // Logo en fila en lugar de columna (más eficiente en pantalla pequeña)
+    .logo-container {
+      flex-direction: row !important;
+      gap: 8px;
+
+      .logo-image {
+        width: 36px;
+        height: 36px;
+      }
+
+      .logo-text {
+        font-size: 1.2rem;
+      }
+    }
+
+    .btn-back {
+      padding: 8px 14px;
+      font-size: 0.85rem;
+    }
+  }
+
+  .support-container {
+    padding: 0 4%;
+  }
+
+  .support-header {
+    margin-bottom: 20px;
+
+    .title-container {
+      gap: 10px;
+
+      .icon {
+        font-size: 2rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+
+    p {
+      font-size: 0.95rem;
+    }
+  }
+
+  // En 1 columna, la lista de casos no necesita max-height fijo —
+  // dejamos que sea más corta para que el panel de detalle sea accesible
+  .case-list {
+    max-height: 45vh;
+  }
+
+  // El panel de detalle tampoco necesita min-height tan grande
+  .detail-panel {
+    min-height: 50vh;
+  }
+}
+
+// ─── TABLET / MÓVIL (≤ 768px) ───────────────────────────────
+@media (max-width: 768px) {
+  .top-nav {
+    padding: 10px 14px;
+    gap: 10px;
+
+    .logo-container .logo-text {
+      font-size: 1.1rem;
+    }
+
+    .btn-back {
+      padding: 7px 12px;
+      font-size: 0.78rem;
+      border-radius: 10px;
+    }
+  }
+
+  .support-header {
+    .title-container {
+      .icon {
+        font-size: 1.8rem;
+      }
+
+      h1 {
+        font-size: 1.7rem;
+      }
+    }
+
+    p {
+      font-size: 0.88rem;
+      margin: 6px 0 0;
+    }
+  }
+
+  .glass-panel {
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .case-list {
+    max-height: 40vh;
+    gap: 10px;
+  }
+
+  .case-card {
+    padding: 12px;
+
+    .issue-title {
+      font-size: 0.95rem;
+    }
+
+    .user-info {
+      font-size: 0.8rem;
+    }
+  }
+
+  .detail-panel {
+    min-height: 40vh;
+
+    .empty-state {
+      padding: 60px 0;
+    }
+
+    .actions-container {
+      padding: 16px;
+      margin: 18px 0;
+
+      .button-group {
+        gap: 10px;
+
+        .btn-action {
+          flex: 1;
+          min-width: 0;
+          padding: 10px 10px;
+          font-size: 0.85rem;
+          text-align: center;
+        }
+      }
+    }
+
+    .timeline {
+      padding-left: 16px;
+
+      .timeline-item {
+        padding-bottom: 18px;
+        padding-left: 16px;
+
+        .timeline-dot {
+          left: -23px;
+          width: 10px;
+          height: 10px;
+        }
+
+        .timeline-content {
+          padding: 12px;
+
+          p {
+            font-size: 0.88rem;
+          }
+
+          .time {
+            font-size: 0.72rem;
+          }
+        }
+      }
+    }
+  }
+
+  // Chat widget: ventana al ancho de la pantalla menos margen
+  .chat-widget {
+    bottom: 20px;
+    right: 14px;
+
+    .chat-fab {
+      width: 52px;
+      height: 52px;
+      font-size: 1.5rem;
+    }
+
+    .chat-window {
+      width: calc(100vw - 28px);
+      right: 0;
+      height: 420px;
+      border-radius: 16px;
+    }
+  }
+}
+
+// ─── MOBILE GRANDE (≤ 600px) ────────────────────────────────
+@media (max-width: 600px) {
+  .support-container {
+    padding: 0 14px;
+  }
+
+  .support-header .title-container {
+    .icon {
+      font-size: 1.5rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .glass-panel {
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .case-list {
+    max-height: 35vh;
+    gap: 8px;
+  }
+
+  .case-card {
+    padding: 10px 12px;
+
+    .issue-title {
+      font-size: 0.9rem;
+    }
+
+    .case-header .case-id {
+      font-size: 0.72rem;
+    }
+
+    .case-header .status-badge {
+      font-size: 0.68rem;
+    }
+  }
+
+  .detail-panel {
+    .actions-container .button-group {
+      // En móvil los 3 botones apilados en columna para que sean fáciles de tocar
+      flex-direction: column;
+      gap: 8px;
+
+      .btn-action {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .chat-widget {
+    bottom: 16px;
+    right: 10px;
+
+    .chat-window {
+      width: calc(100vw - 20px);
+      height: 400px;
+    }
+  }
+}
+
+// ─── MOBILE ESTÁNDAR (≤ 480px) ──────────────────────────────
+@media (max-width: 480px) {
+  .top-nav {
+    .logo-container .logo-image {
+      width: 30px;
+      height: 30px;
+    }
+
+    .logo-container .logo-text {
+      font-size: 1rem;
+    }
+
+    .btn-back {
+      font-size: 0.72rem;
+      padding: 6px 10px;
+    }
+  }
+
+  .support-header {
+    margin-bottom: 16px;
+
+    .title-container h1 {
+      font-size: 1.35rem;
+    }
+
+    p {
+      font-size: 0.82rem;
+    }
+  }
+
+  .case-list {
+    max-height: 30vh;
+  }
+
+  .detail-panel .empty-state {
+    padding: 40px 0;
+  }
+
+  .detail-panel .timeline .timeline-content {
+    p {
+      font-size: 0.82rem;
+    }
+
+    .time {
+      font-size: 0.68rem;
+    }
+  }
+
+  .chat-widget {
+    bottom: 12px;
+    right: 8px;
+
+    .chat-fab {
+      width: 46px;
+      height: 46px;
+      font-size: 1.3rem;
+    }
+
+    .chat-window {
+      width: calc(100vw - 16px);
+      height: 380px;
+
+      .chat-footer {
+        gap: 6px;
+
+        button {
+          padding: 0 10px;
+          font-size: 0.82rem;
+        }
+      }
+    }
+  }
+}
+
+// ─── MOBILE PEQUEÑO (≤ 375px) ───────────────────────────────
+@media (max-width: 375px) {
+  .top-nav .logo-container .logo-text {
+    display: none;
+  }
+
+  .support-header .title-container h1 {
+    font-size: 1.2rem;
+  }
+
+  .glass-panel {
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .case-card {
+    padding: 9px 10px;
+  }
+
+  // Bg shapes reducidos
+  .shape-1 {
+    width: 260px;
+    height: 260px;
+  }
+
+  .shape-2 {
+    width: 300px;
+    height: 300px;
+  }
+
+  .shape-3 {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+// ─── REDUCCIÓN DE MOVIMIENTO (accesibilidad) ─────────────────
+@media (prefers-reduced-motion: reduce) {
+
+  .bg-shape,
+  .icon-pulse,
+  .chat-fab {
+    animation: none !important;
+  }
+
+  .case-card:hover,
+  .btn-back:hover,
+  .btn-action:hover {
+    transform: none !important;
   }
 }

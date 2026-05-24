@@ -8,22 +8,36 @@ $white: #ffffff;
 $glass-bg: rgba(255, 255, 255, 0.05);
 $glass-border: rgba(255, 255, 255, 0.15);
 
-::ng-deep body {
+::ng-deep html,
+::ng-deep body,
+::ng-deep app-root {
   margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  // overflow: hidden corta el contenido en móviles pequeños — usar overflow-x solamente
+  overflow-x: hidden !important;
   background-color: $c-bg;
   font-family: 'Poppins', 'Inter', sans-serif;
-  overflow: hidden;
 }
 
 .login-wrapper {
   position: relative;
   min-height: 100vh;
-  width: 100vw;
+  // 100vw incluye el scrollbar → overflow horizontal en móvil
+  width: 100%;
+  max-width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
   box-sizing: border-box;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 }
 
 // FONDOS ANIMADOS
@@ -172,10 +186,10 @@ $glass-border: rgba(255, 255, 255, 0.15);
   flex-direction: column;
   gap: 20px;
 
-  
+
   .forgot-password-container {
     text-align: right;
-    margin-top: -10px; 
+    margin-top: -10px;
 
     .forgot-password-link {
       color: rgba($white, 0.6);
@@ -185,7 +199,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
       transition: color 0.3s ease;
 
       &:hover {
-        color: $c-secondary; 
+        color: $c-secondary;
         text-decoration: underline;
       }
     }
@@ -209,7 +223,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
     .input-icon {
       background: $c-secondary;
-      color: #000; 
+      color: #000;
       text-shadow: none;
       box-shadow: 0 0 15px rgba($c-secondary, 0.6);
     }
@@ -372,7 +386,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
 // 🔒 SECCIÓN DE VERIFICACIÓN (DISEÑO LIMPIO)
 // ==========================================
 .verification-step {
-  
+
   .step-header {
     text-align: center;
     margin-bottom: 30px;
@@ -459,5 +473,241 @@ $glass-border: rgba(255, 255, 255, 0.15);
       border-color: rgba($white, 0.3);
       color: $white;
     }
+  }
+}
+
+// =============================================================
+// RESPONSIVE COMPLETO — LOGIN
+// Breakpoints: 480px | 375px | 320px
+// (La tarjeta ya es centrada con max-width: 420px, solo
+//  necesitamos ajustar para pantallas muy pequeñas)
+// =============================================================
+
+// ─── MOBILE ESTÁNDAR (≤ 480px) ──────────────────────────────
+@media (max-width: 480px) {
+  .login-wrapper {
+    // En móvil alineamos hacia arriba con algo de espacio,
+    // no centrado vertical, para que el teclado no tape el form
+    align-items: flex-start;
+    padding: 40px 16px 24px;
+  }
+
+  .login-glass-card {
+    padding: 32px 24px;
+    border-radius: 24px;
+    // La sombra más suave en móvil ahorra recursos
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  }
+
+  .card-header {
+    margin-bottom: 28px;
+
+    .logo-container {
+      .logo-image {
+        width: 72px;
+        height: 72px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+    }
+  }
+
+  .login-form {
+    gap: 16px;
+  }
+
+  .input-group input {
+    padding: 16px 14px;
+    padding-right: 70px;
+    font-size: 1rem;
+  }
+
+  .btn-play {
+    padding: 16px;
+    font-size: 1rem;
+    border-radius: 14px;
+    margin-top: 6px;
+  }
+
+  .card-footer {
+    margin-top: 24px;
+    padding-top: 16px;
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+
+  // Verificación
+  .verification-step {
+    .step-header {
+      margin-bottom: 22px;
+
+      .pin-icon {
+        font-size: 1.3rem;
+      }
+
+      h2 {
+        font-size: 1.4rem;
+      }
+    }
+
+    .pin-group .pin-input {
+      font-size: 1.9rem;
+      letter-spacing: 12px;
+      padding: 13px;
+    }
+
+    .btn-cancel {
+      padding: 13px;
+    }
+  }
+}
+
+// ─── MOBILE PEQUEÑO (≤ 375px) ───────────────────────────────
+@media (max-width: 375px) {
+  .login-wrapper {
+    padding: 30px 14px 20px;
+  }
+
+  .login-glass-card {
+    padding: 26px 18px;
+    border-radius: 20px;
+  }
+
+  .card-header {
+    margin-bottom: 22px;
+
+    .logo-container {
+      .logo-image {
+        width: 60px;
+        height: 60px;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+      }
+    }
+
+    .subtitle {
+      font-size: 0.82rem;
+    }
+  }
+
+  .login-form {
+    gap: 14px;
+  }
+
+  .input-group {
+    border-radius: 12px;
+
+    input {
+      padding: 14px 12px;
+      padding-right: 65px;
+      font-size: 0.95rem;
+    }
+
+    .btn-eye {
+      font-size: 0.68rem;
+      padding: 5px 8px;
+    }
+  }
+
+  .btn-play {
+    padding: 14px;
+    font-size: 0.95rem;
+    border-radius: 12px;
+  }
+
+  .card-footer {
+    margin-top: 18px;
+    padding-top: 14px;
+
+    p {
+      font-size: 0.82rem;
+    }
+  }
+
+  // Verificación PIN más compacto
+  .verification-step {
+    .step-header h2 {
+      font-size: 1.25rem;
+    }
+
+    .pin-group .pin-input {
+      font-size: 1.6rem;
+      letter-spacing: 10px;
+    }
+  }
+}
+
+// ─── MOBILE MUY PEQUEÑO (≤ 320px) ───────────────────────────
+@media (max-width: 320px) {
+  .login-wrapper {
+    padding: 20px 10px;
+  }
+
+  .login-glass-card {
+    padding: 22px 14px;
+  }
+
+  .card-header .logo-container {
+    .logo-image {
+      width: 50px;
+      height: 50px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .input-group input {
+    font-size: 0.9rem;
+    padding: 12px 10px;
+    padding-right: 60px;
+  }
+
+  .btn-play {
+    font-size: 0.88rem;
+    padding: 13px;
+  }
+
+  // Fondos más pequeños para no saturar CPU
+  .shape-1 {
+    width: 200px;
+    height: 200px;
+  }
+
+  .shape-2 {
+    width: 220px;
+    height: 220px;
+  }
+
+  .shape-3 {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+// ─── REDUCCIÓN DE MOVIMIENTO (accesibilidad) ─────────────────
+@media (prefers-reduced-motion: reduce) {
+
+  .bg-shape,
+  .icon-pulse,
+  .login-glass-card,
+  .spinner {
+    animation: none !important;
+  }
+
+  .btn-play:hover,
+  .input-group:focus-within {
+    transform: none !important;
   }
 }
