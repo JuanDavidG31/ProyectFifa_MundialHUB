@@ -1,12 +1,10 @@
 package co.edu.unbosque.projectFifaUbosque.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
@@ -18,12 +16,11 @@ public class EmailService {
 	@Autowired
 	private JavaMailSender mailSender;
 
-	@Value("${spring.mail.username}")
-	private String fromEmail;
+	private String fromEmail = "proyectofifa2026@gmail.com";
 
 	public boolean sendEmail(String toEmail, String subject, String body) {
 		try {
-			
+
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 			helper.setFrom(fromEmail);
@@ -69,8 +66,7 @@ public class EmailService {
 			qrBase64 = qrBase64.replaceAll("\\s+", "");
 
 			byte[] imageBytes = Base64.getDecoder().decode(qrBase64);
-			ByteArrayResource imageResource = new ByteArrayResource(
-					imageBytes);
+			ByteArrayResource imageResource = new ByteArrayResource(imageBytes);
 
 			helper.addInline("qrImage", imageResource, "image/png");
 
