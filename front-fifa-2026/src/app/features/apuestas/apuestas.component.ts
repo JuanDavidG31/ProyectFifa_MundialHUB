@@ -69,7 +69,7 @@ export class ApuestasComponent implements OnInit {
     private router: Router
   ) { }
   ngOnInit(): void {
-    this.router.navigate(['/home']);
+    // this.router.navigate(['/home']);
 
     window.scrollTo(0, 0);
     this.bettingService.connect();
