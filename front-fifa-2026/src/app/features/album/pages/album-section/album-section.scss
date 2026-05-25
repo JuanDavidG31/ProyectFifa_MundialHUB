@@ -120,12 +120,19 @@ $bp-2xl: 1200px; // Escritorios pequeños
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     animation: fadeInDown 0.6s ease forwards;
 
-    // Tablets y móviles: columna centrada
+    // Tablets y móviles: grid de 2 columnas (botón | título)
     @media (max-width: $bp-lg) {
-      flex-direction: column;
-      gap: 10px;
-      padding: 12px 15px 14px;
-      text-align: center;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 0 12px;
+      padding: 10px 14px;
+      flex-direction: unset;
+    }
+
+    @media (max-width: $bp-sm) {
+      padding: 8px 12px;
+      gap: 0 8px;
     }
 
     .back-nav {
@@ -140,7 +147,9 @@ $bp-2xl: 1200px; // Escritorios pequeños
       font-weight: 600;
       font-size: 0.85rem;
       transition: all 0.3s ease;
-      min-height: 44px; // Área mínima de toque
+      min-height: 44px;
+      white-space: nowrap;
+      flex-shrink: 0;
 
       .icon {
         margin-right: 8px;
@@ -155,23 +164,28 @@ $bp-2xl: 1200px; // Escritorios pequeños
         box-shadow: 0 0 15px rgba($c-secondary, 0.3);
       }
 
-      // En móvil: icono flotante arriba-izquierda
+      // Móvil: mostrar sólo el icono «‹» para ahorrar espacio
       @media (max-width: $bp-lg) {
-        position: absolute;
-        top: 12px;
-        left: 15px;
-        padding: 8px 12px;
-        min-height: 44px;
+        font-size: 0;
+        padding: 0;
         min-width: 44px;
+        min-height: 44px;
         justify-content: center;
-
-        span.text {
-          display: none;
-        }
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.06);
 
         .icon {
+          font-size: 1.4rem;
           margin: 0;
-          font-size: 1.2rem;
+        }
+      }
+
+      @media (max-width: $bp-sm) {
+        min-width: 40px;
+        min-height: 40px;
+
+        .icon {
+          font-size: 1.25rem;
         }
       }
     }
@@ -181,7 +195,13 @@ $bp-2xl: 1200px; // Escritorios pequeños
 
       @media (max-width: $bp-lg) {
         text-align: center;
-        padding-top: 4px;
+        padding-top: 0;
+        // Compensa el ancho del botón para centrar ópticamente el título
+        padding-right: 44px;
+      }
+
+      @media (max-width: $bp-sm) {
+        padding-right: 40px;
       }
 
       .title {
@@ -198,10 +218,15 @@ $bp-2xl: 1200px; // Escritorios pequeños
         display: flex;
         gap: 8px;
         justify-content: flex-end;
-        flex-wrap: wrap; // Evita desbordamiento en pantallas angostas
+        flex-wrap: wrap;
 
         @media (max-width: $bp-lg) {
           justify-content: center;
+          gap: 6px;
+        }
+
+        @media (max-width: $bp-sm) {
+          gap: 4px;
         }
 
         .stat-pill {
@@ -215,6 +240,10 @@ $bp-2xl: 1200px; // Escritorios pequeños
           align-items: center;
           gap: 6px;
           white-space: nowrap;
+
+          @media (max-width: $bp-sm) {
+            padding: 3px 8px;
+          }
 
           &.cyan {
             border-color: rgba($c-secondary, 0.4);
@@ -851,6 +880,51 @@ $bp-2xl: 1200px; // Escritorios pequeños
           }
         }
       }
+    }
+  }
+}
+
+// ==========================================
+// RESPONSIVE — AJUSTES ADICIONALES
+// ==========================================
+
+// Tablet grande (769–900px): 4 columnas de láminas aprovechan el espacio
+@media (min-width: #{$bp-lg + 1px}) and (max-width: $bp-xl) {
+  .section-wrapper .book-spread.glass-card .album-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+}
+
+// Landscape en móvil: nav compacta para no robar pantalla vertical
+@media (max-height: 500px) and (orientation: landscape) {
+  .section-wrapper {
+    .top-nav {
+      padding: 6px 14px;
+
+      .title-area {
+        .title {
+          font-size: 1rem;
+          margin-bottom: 2px;
+        }
+
+        .subtitle {
+          gap: 4px;
+
+          .stat-pill {
+            padding: 2px 8px;
+            font-size: 0.65rem;
+          }
+        }
+      }
+    }
+
+    // Botones flotantes más pequeños en landscape
+    .nav-side {
+      width: 44px;
+      height: 44px;
+      bottom: 12px;
+      font-size: 1.4rem;
     }
   }
 }
