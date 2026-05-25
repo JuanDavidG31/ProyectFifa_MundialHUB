@@ -87,15 +87,31 @@ export class Register implements OnInit {
 
   crearCuenta(): void {
     this.isLoading = true;
+    this.registrationError = '';
+    this.registrationSuccess = '';
+
     this.authService.register(this.registerData, this.imagen).subscribe({
       next: () => {
-        this.registrationSuccess = '¡Registro completado!';
+        this.registrationSuccess = '¡Registro completado con éxito!';
         this.isLoading = false;
         setTimeout(() => this.router.navigate(['/login']), 2000);
       },
       error: (err) => {
         this.isLoading = false;
-        this.registrationError = err.error?.message || 'Error al registrar';
+
+        if (err.status === 0) {
+          this.registrationError = 'Error de conexión. Verifica tu internet o intenta más tarde.';
+        } else if (err.status === 409) {
+          this.registrationError = 'El nombre de usuario o la cédula ya están registrados.';
+        } else if (err.status === 400) {
+          this.registrationError = 'Por favor, revisa que todos los datos ingresados sean correctos.';
+        } else if (err.status >= 500) {
+          this.registrationError = 'Problemas en el servidor de MundialHub. Intenta en unos minutos.';
+        } else {
+          this.registrationError = err.error?.message || 'Ocurrió un error inesperado al registrar tu cuenta.';
+        }
+
+        console.error("Detalle del error de registro:", err);
       }
     });
   }
