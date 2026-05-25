@@ -54,7 +54,7 @@ export class BettingService {
     const token = this.authService.getToken();
 
     this.stompClient = new Client({
-      webSocketFactory: () => new SockJS('http://proyectfifa-mundialhub.onrender.com/ws'),
+      webSocketFactory: () => new SockJS('https://proyectfifa-mundialhub.onrender.com/ws'),
       connectHeaders: { Authorization: `Bearer ${token}` },
       onConnect: () => {
 
