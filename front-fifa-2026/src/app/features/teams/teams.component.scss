@@ -1,19 +1,16 @@
 @use "sass:color";
 
-// --- PALETA VIBRANTE Y GAMER ---
 $c-bg: #0b0f19;
 $c-primary: #ec4899;
 $c-secondary: #06b6d4;
 $c-tertiary: #8b5cf6;
 $c-gold: #f9c74f;
-$c-error: #ef4444; // <-- ¡Aquí está la variable corregida!
+$c-error: #ef4444; 
 $white: #ffffff;
 $glass-bg: rgba(255, 255, 255, 0.04);
 $glass-border: rgba(255, 255, 255, 0.1);
 
-// ==========================================
-// RESET GLOBAL (ELIMINA BORDES BLANCOS)
-// ==========================================
+
 ::ng-deep html,
 ::ng-deep body,
 ::ng-deep app-root {
@@ -29,7 +26,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
 .teams-wrapper {
   box-sizing: border-box;
 
-  // Todos los hijos respetan box-sizing para evitar desbordamientos
   *,
   *::before,
   *::after {
@@ -38,7 +34,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
 
   position: relative;
   min-height: 100vh;
-  // 100vw incluye el scrollbar y causa desbordamiento en móvil
   width: 100%;
   max-width: 100%;
   color: $white;
@@ -47,9 +42,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
 
-  // ==========================================
-  // FONDOS ANIMADOS (BLOBS)
-  // ==========================================
+  // FONDOS ANIMADOS
   .bg-shape {
     position: fixed;
     border-radius: 50%;
@@ -246,9 +239,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // ==========================================
   // CONTENIDO PRINCIPAL
-  // ==========================================
   .content {
     flex-grow: 1;
     position: relative;
@@ -259,8 +250,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     padding: 20px 5%;
   }
 
-  // --- SECCIÓN DESTACADA: TU EQUIPO Y PARTIDOS ---
-  // --- SECCIÓN DESTACADA: TU EQUIPO Y PARTIDOS ---
+  
   .my-team-section {
     background: rgba(15, 20, 30, 0.6);
     backdrop-filter: blur(20px);
@@ -273,11 +263,10 @@ $glass-border: rgba(255, 255, 255, 0.1);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba($c-secondary, 0.05);
     animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 
-    // 🌟 NUEVO: Reducimos el relleno en celulares para ganar espacio
     @media (max-width: 768px) {
       padding: 30px 15px;
       margin-bottom: 30px;
-      border-radius: 16px; // Bordes un poco menos pronunciados
+      border-radius: 16px; 
     }
 
     .badge-star {
@@ -294,7 +283,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
       letter-spacing: 1px;
 
       @media (max-width: 600px) {
-        left: 50%; // Centramos el badge en móviles
+        left: 50%; 
         transform: translateX(-50%);
       }
     }
@@ -308,7 +297,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
 
       @media (max-width: 600px) {
         font-size: 2.2rem;
-        text-align: center; // Centramos el título en móviles
+        text-align: center; 
         margin-top: 15px;
       }
     }
@@ -367,14 +356,12 @@ $glass-border: rgba(255, 255, 255, 0.1);
           align-items: center;
           text-align: center;
 
-          // 🌟 ARREGLO MÓVIL: Espaciado seguro
           @media (max-width: 480px) {
             gap: 5px;
           }
 
           .team {
             flex: 1;
-            // 🌟 ARREGLO MÓVIL: Evitar que el nombre se desborde
             min-width: 0;
 
             img {
@@ -395,7 +382,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
               font-weight: 700;
               font-size: 0.95rem;
 
-              // 🌟 ARREGLO MÓVIL: Letra adaptada
               @media (max-width: 480px) {
                 font-size: 0.75rem;
                 white-space: nowrap;
@@ -425,7 +411,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 12px auto; // Añadimos margin auto para centrar
+            margin: 0 auto 12px auto;
             box-shadow: 0 4px 15px rgba($c-primary, 0.4);
             border: 2px solid rgba(255, 255, 255, 0.2);
             overflow: hidden;
@@ -448,7 +434,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // --- GRID DE EQUIPOS CLASIFICADOS ---
   .grid-title {
     font-size: 1.8rem;
     font-weight: 800;
@@ -457,15 +442,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     margin-bottom: 25px;
   }
 
-  // teams.component.scss
 
-  // ... (resto de tus estilos)
-
-  /* Archivo: teams.component.scss */
-
-  // ==========================================
-  // CONTROLES: BÚSQUEDA Y TÍTULO
-  // ==========================================
   .teams-header-controls {
     display: flex;
     justify-content: space-between;
@@ -475,7 +452,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
     gap: 20px;
     animation: fadeIn 0.8s ease forwards;
 
-    // 🌟 NUEVO: Apilamos los controles y los centramos en celular
     @media (max-width: 768px) {
       flex-direction: column;
       align-items: stretch;
@@ -515,7 +491,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
       gap: 15px;
 
       @media (max-width: 768px) {
-        flex-direction: column; // Apila los filtros verticalmente
+        flex-direction: column; 
       }
 
       .search-box {
@@ -533,7 +509,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
           border-radius: 8px;
           padding: 10px 15px 10px 35px;
           color: $white;
-          // Ancho fluido: 250px en desktop, 100% en pantallas pequeñas
           width: min(250px, 100%);
           box-sizing: border-box;
           font-family: 'Poppins', sans-serif;
@@ -586,7 +561,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // GRID ESTILO "TRADING CARDS"
+  // GRID ESTILO 
   .teams-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -619,7 +594,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
       background: $c-bg;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
 
-      // 🌟 ARREGLO MÓVIL: Altura proporcional para que no se vea estirada
       @media (max-width: 768px) {
         height: 200px;
         border-radius: 12px;
@@ -630,7 +604,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
         z-index: 2;
       }
 
-      // MAGIA: Bordes Neón
       &:nth-child(4n+1) {
         border-color: #00d2ff;
         box-shadow: 0 0 15px rgba(#00d2ff, 0.4);
@@ -780,12 +753,11 @@ $glass-border: rgba(255, 255, 255, 0.1);
           text-transform: uppercase;
           text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 
-          // 🌟 ARREGLO MÓVIL: Evita que nombres muy largos rompan la carta
           @media (max-width: 768px) {
             font-size: 1.05rem;
             white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis; // Ej: "ESTADOS UN..."
+            text-overflow: ellipsis; 
           }
         }
 
@@ -795,7 +767,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
           margin: 5px 0 0 0;
           font-weight: 600;
 
-          // 🌟 ARREGLO MÓVIL: Una sola línea asegurada
           @media (max-width: 768px) {
             font-size: 0.6rem;
             margin: 3px 0 0 0;
@@ -808,7 +779,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // --- ALERTAS Y PANTALLA DE CARGA ---
+  // ALERTAS Y PANTALLA DE CARGA
   .alert-box {
     padding: 15px;
     border-radius: 12px;
@@ -852,7 +823,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // --- KEYFRAMES ---
+  // KEYFRAMES
   @keyframes spin {
     100% {
       transform: rotate(360deg);
@@ -903,12 +874,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // =============================================================
-  // RESPONSIVE COMPLETO
-  // Breakpoints: 1024px | 768px | 600px | 480px | 375px
-  // =============================================================
 
-  // ─── TABLET LANDSCAPE (≤ 1024px) ────────────────────────────
   @media (max-width: 1024px) {
     .content {
       padding: 20px 4%;
@@ -934,7 +900,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // ─── TABLET PORTRAIT (≤ 768px) ──────────────────────────────
   @media (max-width: 768px) {
     .bg-shape {
       filter: blur(80px);
@@ -953,8 +918,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
 
     .top-nav {
       padding: 12px 20px;
-      // Ya tiene flex-direction: column desde el bloque inline,
-      // aquí perfeccionamos el gap y alineación
+
       gap: 12px;
 
       .nav-actions {
@@ -1060,7 +1024,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // ─── MOBILE GRANDE (≤ 600px) ────────────────────────────────
   @media (max-width: 600px) {
     .top-nav {
       padding: 10px 14px;
@@ -1155,7 +1118,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // ─── MOBILE ESTÁNDAR (≤ 480px) ──────────────────────────────
   @media (max-width: 480px) {
     .top-nav {
       padding: 10px 12px;
@@ -1198,8 +1160,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
       }
     }
 
-    // En pantallas muy pequeñas se mantienen 2 columnas
-    // pero se reduce más la altura para que quepan bien
     .teams-grid {
       grid-template-columns: repeat(2, 1fr);
       gap: 8px;
@@ -1239,7 +1199,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // ─── MOBILE PEQUEÑO (≤ 375px) ───────────────────────────────
   @media (max-width: 375px) {
     .top-nav .logo-container .logo-text {
       display: none;
@@ -1286,7 +1245,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // ─── REDUCCIÓN DE MOVIMIENTO (accesibilidad) ─────────────────
   @media (prefers-reduced-motion: reduce) {
 
     .bg-shape,

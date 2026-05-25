@@ -69,10 +69,9 @@ isRipping = false;
 
   
   async buyPack() {
-    // Si no hay dinero o ya se está comprando, no hacemos nada
     if (this.coins < 10 || this.isBuyingPack) return;
 
-    this.isBuyingPack = true; // ⬅️ ENCENDEMOS EL SPINNER
+    this.isBuyingPack = true; 
 
     try {
       await this.albumService.buyPackOnServer();
@@ -80,7 +79,7 @@ isRipping = false;
       console.error(e);
       alert(e.error?.error || "Error al comprar el paquete.");
     } finally {
-      this.isBuyingPack = false; // ⬅️ APAGAMOS EL SPINNER AL TERMINAR (haya error o no)
+      this.isBuyingPack = false; 
     }
   }
 
@@ -89,18 +88,16 @@ isRipping = false;
     if (!p || p.status === 'OPENED' || this.isShaking || this.isRipping) return;
 
     this.openingPackId = p.id;
-    this.isShaking = true; // Fase 1: Empieza a temblar
+    this.isShaking = true; 
 
     try {
       const results = await this.albumService.openPackOnServer();
 
-      // Transición quirúrgica entre temblar y rasgar
       setTimeout(() => {
         this.isShaking = false;
-        this.isRipping = true; // Fase 2: Se dispara el rasgado visual
-      }, 700); // Tiembla durante 700ms
+        this.isRipping = true; 
+      }, 700); 
 
-      // Al finalizar todo el tiempo (1200ms totales) mostramos las láminas
       setTimeout(() => {
         this.lastStickers = results.map(s => ({
           ...s,
@@ -109,7 +106,7 @@ isRipping = false;
 
         p.status = 'OPENED';
         this.openStep = 'RESULTS';
-        this.isRipping = false; // Reseteamos la animación
+        this.isRipping = false; 
         this.openingPackId = null;
       }, this.shakeMs);
 

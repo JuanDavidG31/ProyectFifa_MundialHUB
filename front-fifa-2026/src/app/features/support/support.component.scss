@@ -11,7 +11,6 @@ $white: #ffffff;
 $glass-bg: rgba(255, 255, 255, 0.05);
 $glass-border: rgba(255, 255, 255, 0.15);
 
-// 🛠️ CORRECCIÓN: Forzar el fondo oscuro a toda la página
 ::ng-deep body {
   margin: 0 !important;
   background-color: $c-bg !important;
@@ -28,7 +27,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   box-sizing: border-box;
 }
 
-// 🛠️ CORRECCIÓN: Animaciones de los fondos
 .bg-shape {
   position: fixed;
   border-radius: 50%;
@@ -85,7 +83,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// NUEVO: Estilos del Header / Nav
 .top-nav {
   position: sticky;
   top: 0;
@@ -423,16 +420,13 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ==========================================
-// ESTILOS WIDGET DE CHAT (SOPORTE)
-// ==========================================
+// ESTILOS WIDGET DE CHAT 
 .chat-widget {
   position: fixed;
   bottom: 30px;
   right: 30px;
   z-index: 1000;
 
-  // NUEVO: Estilos del botón flotante
   .chat-fab {
     width: 60px;
     height: 60px;
@@ -452,8 +446,8 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 
   .chat-window {
-    position: absolute; // NUEVO: Permite que flote sobre el botón
-    bottom: 80px; // NUEVO: Lo separa del botón
+    position: absolute; 
+    bottom: 80px; 
     right: 0;
     width: 380px;
     height: 500px;
@@ -470,7 +464,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
       background: $c-secondary;
       padding: 15px;
       display: flex;
-      justify-content: space-between; // CAMBIO: Para separar el título de la X
+      justify-content: space-between; 
       align-items: center;
       color: #000;
 
@@ -479,7 +473,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
         font-weight: bold;
       }
 
-      // NUEVO: Botón de cerrar
       .btn-close {
         background: transparent;
         border: none;
@@ -587,12 +580,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// =============================================================
-// RESPONSIVE COMPLETO — SUPPORT
-// Breakpoints: 1024px | 900px | 768px | 600px | 480px | 375px
-// =============================================================
 
-// ─── Reset global anti-overflow ─────────────────────────────
 ::ng-deep html,
 ::ng-deep body,
 ::ng-deep app-root {
@@ -608,7 +596,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   box-sizing: border-box;
 }
 
-// ─── TABLET LANDSCAPE (≤ 1024px) ────────────────────────────
 @media (max-width: 1024px) {
   .support-container {
     padding: 0 4%;
@@ -624,13 +611,11 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ─── TABLET PORTRAIT (≤ 900px) — colapsa a 1 col ────────────
-// El grid ya tiene @media 900px para 1 columna, refinamos el resto
+
 @media (max-width: 900px) {
   .top-nav {
     padding: 12px 4%;
 
-    // Logo en fila en lugar de columna (más eficiente en pantalla pequeña)
     .logo-container {
       flex-direction: row !important;
       gap: 8px;
@@ -675,19 +660,16 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
   }
 
-  // En 1 columna, la lista de casos no necesita max-height fijo —
-  // dejamos que sea más corta para que el panel de detalle sea accesible
+  
   .case-list {
     max-height: 45vh;
   }
 
-  // El panel de detalle tampoco necesita min-height tan grande
   .detail-panel {
     min-height: 50vh;
   }
 }
 
-// ─── TABLET / MÓVIL (≤ 768px) ───────────────────────────────
 @media (max-width: 768px) {
   .top-nav {
     padding: 10px 14px;
@@ -795,7 +777,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
   }
 
-  // Chat widget: ventana al ancho de la pantalla menos margen
   .chat-widget {
     bottom: 20px;
     right: 14px;
@@ -815,7 +796,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ─── MOBILE GRANDE (≤ 600px) ────────────────────────────────
 @media (max-width: 600px) {
   .support-container {
     padding: 0 14px;
@@ -859,7 +839,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
   .detail-panel {
     .actions-container .button-group {
-      // En móvil los 3 botones apilados en columna para que sean fáciles de tocar
       flex-direction: column;
       gap: 8px;
 
@@ -882,7 +861,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ─── MOBILE ESTÁNDAR (≤ 480px) ──────────────────────────────
 @media (max-width: 480px) {
   .top-nav {
     .logo-container .logo-image {
@@ -956,7 +934,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ─── MOBILE PEQUEÑO (≤ 375px) ───────────────────────────────
 @media (max-width: 375px) {
   .top-nav .logo-container .logo-text {
     display: none;
@@ -975,7 +952,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     padding: 9px 10px;
   }
 
-  // Bg shapes reducidos
   .shape-1 {
     width: 260px;
     height: 260px;
@@ -992,7 +968,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ─── REDUCCIÓN DE MOVIMIENTO (accesibilidad) ─────────────────
 @media (prefers-reduced-motion: reduce) {
 
   .bg-shape,

@@ -9,8 +9,8 @@ $c-success: #10b981;
 $c-error: #ef4444;
 $white: #ffffff;
 $bg-dark: #0f172a;
-$c-accent: #06b6d4; // Cian
-$c-secondary: #ef4444; // Magenta
+$c-accent: #06b6d4; 
+$c-secondary: #ef4444; 
 $glass-bg: rgba(255, 255, 255, 0.05);
 $glass-border: rgba(255, 255, 255, 0.15);
 
@@ -78,9 +78,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
         }
     }
 
-    // ==========================================
     // NAVEGACIÓN SUPERIOR
-    // ==========================================
     .top-nav {
         width: 100%;
         max-width: 1200px;
@@ -138,9 +136,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
         }
     }
 
-    // ==========================================
     // LAYOUT PRINCIPAL 
-    // ==========================================
     .admin-layout {
         width: 100%;
         max-width: 1200px;
@@ -235,7 +231,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
                 }
             }
 
-            // TABLA NEÓN
+            // TABLA 
             .neon-table {
                 width: 100%;
                 border-collapse: collapse;
@@ -366,9 +362,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
 }
 
-// ==========================================
 // BOTONES GLOBALES DEL ADMIN
-// ==========================================
 .btn-action {
     padding: 8px 16px;
     border-radius: 8px;
@@ -448,9 +442,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
 }
 
-// ==========================================
 // UTILIDADES Y ANIMACIONES
-// ==========================================
 .loading-state {
     display: flex;
     align-items: center;
@@ -471,9 +463,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
 
 
-// ==========================================
 // ESTILOS DEL MODAL FLOTANTE 
-// ==========================================
 
 .overlay {
     position: fixed;
@@ -606,9 +596,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
 }
 
-// ==========================================
 // ESTILOS DE LA TABLA DE INVENTARIO (STICKERS)
-// ==========================================
 
 .table-container {
     background: rgba(0, 0, 0, 0.25);
@@ -754,12 +742,8 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
 }
 
-// =============================================================
-// RESPONSIVE COMPLETO — ADMIN
-// Breakpoints: 1024px | 768px | 600px | 480px | 375px
-// =============================================================
 
-// ─── Reset global anti-overflow ─────────────────────────────
+
 ::ng-deep html,
 ::ng-deep body,
 ::ng-deep app-root {
@@ -770,7 +754,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     overflow-x: hidden !important;
 }
 
-// ─── TABLET LANDSCAPE (≤ 1024px) ────────────────────────────
 @media (max-width: 1024px) {
     .admin-wrapper {
         padding: 16px;
@@ -785,9 +768,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
 }
 
-// ─── TABLET PORTRAIT (≤ 900px) — el layout ya colapsa ───────
-// El flex-direction: column del sidebar ya existe en 900px.
-// Aquí solo refinamos los detalles.
+
 @media (max-width: 900px) {
     .admin-wrapper {
         padding: 14px;
@@ -821,12 +802,10 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
 }
 
-// ─── TABLET / MÓVIL (≤ 768px) ───────────────────────────────
 @media (max-width: 768px) {
     .admin-wrapper {
         padding: 12px;
 
-        // Navbar: apilado
         .top-nav {
             flex-direction: column;
             align-items: center;
@@ -837,7 +816,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
                 font-size: 1.1rem;
             }
 
-            // El div spacer de 100px ya no tiene sentido apilado
             div[style*="width: 100px"] {
                 display: none !important;
             }
@@ -850,14 +828,13 @@ $glass-border: rgba(255, 255, 255, 0.15);
             }
         }
 
-        // Sidebar: tabs en fila con scroll horizontal si no caben
         .admin-layout {
             gap: 12px;
 
             .sidebar {
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
-                flex-wrap: nowrap !important; // forzar fila sin salto
+                flex-wrap: nowrap !important; 
                 justify-content: flex-start !important;
                 padding: 12px 10px;
                 gap: 8px;
@@ -895,7 +872,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
         }
     }
 
-    // Tablas: scroll horizontal para no romper layout
     .table-container,
     .admin-table-container {
         overflow-x: auto;
@@ -918,7 +894,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
 
     .data-table,
     .admin-table {
-        min-width: 520px; // garantiza que las columnas no se aplanen
+        min-width: 520px; 
 
         th,
         td {
@@ -961,12 +937,10 @@ $glass-border: rgba(255, 255, 255, 0.15);
             gap: 14px;
         }
 
-        // Campos a 1 columna en móvil
         .input-group {
             flex: 1 1 100% !important;
         }
 
-        // Excepto el grupo de imagen que ya tiene row interno
         .input-group[style*="flex-direction: row"] {
             flex-direction: column !important;
             gap: 14px !important;
@@ -989,14 +963,12 @@ $glass-border: rgba(255, 255, 255, 0.15);
         }
     }
 
-    // Botón crear usuario/sticker
     .btn-play {
         padding: 14px;
         font-size: 1rem;
     }
 }
 
-// ─── MOBILE GRANDE (≤ 600px) ────────────────────────────────
 @media (max-width: 600px) {
     .admin-wrapper {
         padding: 10px;
@@ -1022,7 +994,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
         }
     }
 
-    // Formulario de creación: fondo con menos padding
     div[style*="padding: 20px"][style*="border-radius: 12px"] {
         padding: 14px !important;
         border-radius: 10px !important;
@@ -1038,7 +1009,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
         }
     }
 
-    // Botones de acción dentro de la tabla más pequeños
     .table-actions button {
         padding: 5px 9px !important;
         font-size: 0.72rem !important;
@@ -1055,7 +1025,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
 }
 
-// ─── MOBILE ESTÁNDAR (≤ 480px) ──────────────────────────────
 @media (max-width: 480px) {
     .admin-wrapper .top-nav {
         .logo-container h1 {
@@ -1063,7 +1032,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
         }
     }
 
-    // Sidebar: tabs compactísimas
     .admin-layout .sidebar {
         padding: 10px 8px;
         gap: 6px;
@@ -1075,7 +1043,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
         }
     }
 
-    // Formulario: reducir gap
     .form-grid {
         gap: 12px !important;
     }
@@ -1102,7 +1069,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
 }
 
-// ─── MOBILE PEQUEÑO (≤ 375px) ───────────────────────────────
 @media (max-width: 375px) {
     .admin-wrapper {
         padding: 8px;
@@ -1111,7 +1077,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
             display: none;
         }
 
-        // solo ícono ⚙️
 
         .admin-layout .sidebar .tab-btn {
             font-size: 0.65rem;
@@ -1142,7 +1107,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
         }
     }
 
-    // Bg shapes más pequeños
     .admin-wrapper .bg-shape {
         &.shape-1 {
             width: 250px;
@@ -1161,7 +1125,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
 }
 
-// ─── REDUCCIÓN DE MOVIMIENTO (accesibilidad) ─────────────────
+
 @media (prefers-reduced-motion: reduce) {
 
     .bg-shape,

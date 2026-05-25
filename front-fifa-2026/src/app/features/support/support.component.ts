@@ -28,7 +28,6 @@ interface SupportCase {
 })
 export class SupportComponent implements OnInit {
   
-  // NUEVO: Variables para controlar la ventana del chat
   isChatOpen = false;
   myUsername = localStorage.getItem('username') || 'Agente';
   cases: SupportCase[] = [
@@ -67,7 +66,7 @@ export class SupportComponent implements OnInit {
   constructor(private chatService: ChatService) {}
 
   ngOnInit(): void {
-    this.chatService.connect(); // Esto dispara el "agentAvailable" por ser SUPPORT
+    this.chatService.connect(); 
     
     this.chatSubscription = this.chatService.messages$.subscribe(msg => {
       if (!msg) return;
@@ -107,12 +106,10 @@ export class SupportComponent implements OnInit {
     this.selectedCase = supportCase;
   }
 
-  // Acciones predefinidas según el documento
   executeAction(action: 'REINTENTAR_NOTIFICACION' | 'REACTIVAR_RESERVA' | 'ABRIR_INVESTIGACION'): void {
     if (!this.selectedCase) return;
     
     this.isLoadingAction = true;
-    // Aquí iría la llamada a tu servicio (ej. this.supportService.executeAction(...))
     setTimeout(() => {
       let actionDesc = '';
       switch (action) {
@@ -121,7 +118,6 @@ export class SupportComponent implements OnInit {
         case 'ABRIR_INVESTIGACION': actionDesc = 'Caso escalado a Compliance / Investigación.'; break;
       }
 
-      // Agregamos el evento a la línea de tiempo simulando la respuesta del back
       this.selectedCase?.timeline.unshift({
         date: new Date(),
         description: actionDesc,

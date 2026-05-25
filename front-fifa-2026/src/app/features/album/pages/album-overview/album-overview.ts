@@ -34,7 +34,6 @@ export class AlbumOverview implements OnInit, OnDestroy {
 
     this.subs.add(this.albumService.pages$.subscribe(() => {
       this.updateStats();
-      // Aumentamos el retraso visual para asegurar que toda la data llegue del backend
       setTimeout(() => {
         this.isLoading = false;
       }, 1750);
@@ -53,7 +52,6 @@ export class AlbumOverview implements OnInit, OnDestroy {
     const estadiosData = this.albumService.getSectionProgress('estadios');
     const categoriasData = this.albumService.getSectionProgress('categorias');
 
-    // 🌟 Sin emojis y arreglando la duplicación que tenías
     this.sections = [
       { id: 'selecciones', name: 'Equipos 2026', total: seleccionesData.total, collected: seleccionesData.collected, shortName: 'EQ' },
       { id: 'estadios', name: 'Estadios Oficiales', total: estadiosData.total, collected: estadiosData.collected, shortName: 'ST' },

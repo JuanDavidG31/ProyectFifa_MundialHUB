@@ -1,6 +1,5 @@
 @use "sass:color";
 
-// --- PALETA VIBRANTE Y GAMER ---
 $c-bg: #0b0f19;
 $c-primary: #ec4899;
 $c-secondary: #06b6d4;
@@ -31,9 +30,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
 
-  // ==========================================
   // FONDOS ANIMADOS
-  // ==========================================
   .bg-shape {
     position: fixed;
     border-radius: 50%;
@@ -90,9 +87,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // ==========================================
   // BARRA SUPERIOR
-  // ==========================================
   .top-nav {
     position: sticky;
     top: 0;
@@ -135,9 +130,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // ==========================================
   // CABECERA
-  // ==========================================
   .history-hero.centered {
     position: relative;
     z-index: 10;
@@ -172,9 +165,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // ==========================================
   // CONTENIDO PRINCIPAL
-  // ==========================================
   .history-content {
     flex-grow: 1;
     position: relative;
@@ -185,7 +176,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
     padding: 20px 5%;
   }
 
-  // ESTADO DE CARGA Y VACÍO (GLASS CARD)
   .glass-card {
     background: $glass-bg;
     backdrop-filter: blur(20px);
@@ -271,9 +261,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // ==========================================
-  // LISTA DE TRANSACCIONES (GLASS PANELS)
-  // ==========================================
+  // LISTA DE TRANSACCIONES 
   .transaction-list {
     display: flex;
     flex-direction: column;
@@ -292,7 +280,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
     animation: fadeInDown 0.5s ease forwards;
 
-    // Efecto cascada
     @for $i from 1 through 10 {
       &:nth-child(#{$i}) {
         animation-delay: $i * 0.05s;
@@ -362,7 +349,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
         opacity: 0.8;
       }
 
-      // Mapeo dinámico de colores
       &.positive {
         color: $c-success;
         text-shadow: 0 0 15px rgba($c-success, 0.3);
@@ -380,7 +366,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // --- KEYFRAMES ---
+  // KEYFRAMES 
   @keyframes spin {
     to {
       transform: rotate(360deg);
@@ -431,7 +417,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // --- RESPONSIVE ---
+
   @media (max-width: 650px) {
     .transaction-card {
       flex-direction: column;
@@ -461,12 +447,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 }
 
-// =============================================================
-// RESPONSIVE COMPLETO — ALBUM HISTORY
-// (El breakpoint 650px de tarjetas ya existe, extendemos el resto)
-// =============================================================
 
-// ─── Reset global anti-overflow ─────────────────────────────
 ::ng-deep html,
 ::ng-deep app-root {
   margin: 0 !important;
@@ -480,7 +461,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
   box-sizing: border-box;
 }
 
-// ─── TABLET (≤ 768px) ───────────────────────────────────────
 @media (max-width: 768px) {
   .history-wrapper {
     .history-hero.centered {
@@ -535,7 +515,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 }
 
-// ─── MOBILE GRANDE (≤ 600px) ────────────────────────────────
 @media (max-width: 600px) {
   .history-wrapper {
     .top-nav {
@@ -587,8 +566,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
       }
     }
 
-    // Las tarjetas ya se apilan con el breakpoint 650px existente.
-    // Aquí solo ajustamos tamaños dentro del layout apilado:
+
     .transaction-card {
       padding: 16px;
       border-radius: 14px;
@@ -612,7 +590,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 }
 
-// ─── MOBILE ESTÁNDAR (≤ 480px) ──────────────────────────────
 @media (max-width: 480px) {
   .history-wrapper {
     .history-hero.centered {
@@ -655,7 +632,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 }
 
-// ─── MOBILE PEQUEÑO (≤ 375px) ───────────────────────────────
 @media (max-width: 375px) {
   .history-wrapper {
     padding-bottom: 40px;
@@ -701,7 +677,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 }
 
-// ─── REDUCCIÓN DE MOVIMIENTO (accesibilidad) ─────────────────
 @media (prefers-reduced-motion: reduce) {
   .history-wrapper {
 

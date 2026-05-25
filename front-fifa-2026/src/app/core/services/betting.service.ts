@@ -71,7 +71,7 @@ export class BettingService {
           } else if (body.type === 'ROOM_CLOSED') {
             this.notifications$.next('La sala ha sido cerrada por el administrador.');
             this.currentRoom$.next(null);
-            this.joinRequests$.next([]); // <-- Evita el bug de las solicitudes viejas
+            this.joinRequests$.next([]); 
 
           } else {
             this.currentRoom$.next(body);

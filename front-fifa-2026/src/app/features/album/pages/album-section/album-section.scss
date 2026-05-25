@@ -1,6 +1,5 @@
 @use "sass:color";
 
-// --- PALETA VIBRANTE Y GAMER ---
 $c-bg: #0b0f19;
 $c-primary: #ec4899;
 $c-secondary: #06b6d4;
@@ -11,15 +10,12 @@ $white: #ffffff;
 $glass-bg: rgba(255, 255, 255, 0.04);
 $glass-border: rgba(255, 255, 255, 0.1);
 
-// ==========================================
-// BREAKPOINTS CENTRALIZADOS
-// ==========================================
-$bp-xs: 360px; // Teléfonos muy pequeños (Galaxy S5, etc.)
-$bp-sm: 480px; // Teléfonos pequeños
-$bp-md: 600px; // Teléfonos grandes / phablets
-$bp-lg: 768px; // Tablets pequeñas / landscape móvil
-$bp-xl: 900px; // Tablets medianas
-$bp-2xl: 1200px; // Escritorios pequeños
+$bp-xs: 360px; 
+$bp-sm: 480px; 
+$bp-md: 600px; 
+$bp-lg: 768px; 
+$bp-xl: 900px; 
+$bp-2xl: 1200px;
 
 ::ng-deep body {
   margin: 0 !important;
@@ -42,12 +38,10 @@ $bp-2xl: 1200px; // Escritorios pequeños
 
   @media (max-width: $bp-xl) {
     height: auto;
-    padding-bottom: 90px; // Espacio para botones de navegación flotantes
+    padding-bottom: 90px; 
   }
 
-  // ==========================================
-  // FONDOS ANIMADOS — Escalados con clamp()
-  // ==========================================
+  // FONDOS ANIMADOS 
   .bg-shape {
     position: fixed;
     border-radius: 50%;
@@ -104,9 +98,8 @@ $bp-2xl: 1200px; // Escritorios pequeños
     }
   }
 
-  // ==========================================
   // BARRA SUPERIOR
-  // ==========================================
+  
   .top-nav {
     position: relative;
     z-index: 100;
@@ -120,7 +113,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     animation: fadeInDown 0.6s ease forwards;
 
-    // Tablets y móviles: grid de 2 columnas (botón | título)
     @media (max-width: $bp-lg) {
       display: grid;
       grid-template-columns: auto 1fr;
@@ -164,7 +156,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
         box-shadow: 0 0 15px rgba($c-secondary, 0.3);
       }
 
-      // Móvil: mostrar sólo el icono «‹» para ahorrar espacio
       @media (max-width: $bp-lg) {
         font-size: 0;
         padding: 0;
@@ -196,7 +187,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
       @media (max-width: $bp-lg) {
         text-align: center;
         padding-top: 0;
-        // Compensa el ancho del botón para centrar ópticamente el título
         padding-right: 44px;
       }
 
@@ -206,7 +196,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
 
       .title {
         color: $white;
-        // Tipografía fluida: crece con el viewport
         font-size: clamp(1.1rem, 3.5vw, 1.5rem);
         font-weight: 900;
         margin: 0 0 5px 0;
@@ -255,9 +244,7 @@ $bp-2xl: 1200px; // Escritorios pequeños
     }
   }
 
-  // ==========================================
   // ÁREA DE NAVEGACIÓN Y LIBRO
-  // ==========================================
   .page-area {
     flex-grow: 1;
     max-width: 1300px;
@@ -276,7 +263,7 @@ $bp-2xl: 1200px; // Escritorios pequeños
     @media (max-width: $bp-xl) {
       margin-top: 15px;
       padding: 0 12px;
-      gap: 0; // Los botones pasan a ser flotantes, no hay gap necesario
+      gap: 0; 
     }
 
     @media (max-width: $bp-sm) {
@@ -285,9 +272,7 @@ $bp-2xl: 1200px; // Escritorios pequeños
     }
   }
 
-  // ==========================================
   // BOTONES DE NAVEGACIÓN LATERAL
-  // ==========================================
   .nav-side {
     width: 45px;
     height: 45px;
@@ -319,7 +304,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
       cursor: not-allowed;
     }
 
-    // En móvil/tablet: botones flotantes en la parte inferior
     @media (max-width: $bp-xl) {
       position: fixed;
       bottom: 20px;
@@ -345,7 +329,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
       }
     }
 
-    // Teléfonos muy pequeños: ligeramente más compactos
     @media (max-width: $bp-xs) {
       width: 48px;
       height: 48px;
@@ -361,9 +344,7 @@ $bp-2xl: 1200px; // Escritorios pequeños
     }
   }
 
-  // ==========================================
   // DISEÑO DEL LIBRO (BOOK SPREAD)
-  // ==========================================
   .book-spread.glass-card {
     flex: 1;
     position: relative;
@@ -380,7 +361,7 @@ $bp-2xl: 1200px; // Escritorios pequeños
 
     @media (max-width: $bp-xl) {
       padding: 20px 16px;
-      min-height: auto; // El contenido define la altura en móvil
+      min-height: auto;
     }
 
     @media (max-width: $bp-md) {
@@ -407,7 +388,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
       pointer-events: none;
     }
 
-    // Lomo del libro — solo visible en pantallas grandes
     .book-spine {
       position: absolute;
       top: 0;
@@ -432,9 +412,7 @@ $bp-2xl: 1200px; // Escritorios pequeños
       }
     }
 
-    // ==========================================
     // ENCABEZADO DEL LIBRO
-    // ==========================================
     .book-header {
       display: flex;
       justify-content: space-between;
@@ -463,7 +441,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
       }
 
       .country-title {
-        // Tipografía fluida: de 1.1rem en móvil hasta 2rem en escritorio
         font-size: clamp(1.1rem, 4vw, 2rem);
         margin: 0;
         font-weight: 900;
@@ -479,7 +456,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
         font-weight: 800;
       }
 
-      // En móvil: encabezado centrado en columna
       @media (max-width: $bp-xl) {
         flex-direction: column;
         align-items: center;
@@ -499,50 +475,38 @@ $bp-2xl: 1200px; // Escritorios pequeños
       }
     }
 
-    // ==========================================
-    // GRID DE LÁMINAS — Sistema responsivo completo
-    // ==========================================
+    // GRID DE LÁMINAS
     .album-grid {
       position: relative;
       z-index: 1;
-      // Desktop: dos columnas tipo libro separadas por el lomo
       column-count: 2;
       column-gap: 100px;
       flex-grow: 1;
 
-      // Tablet y móvil: CSS Grid con columnas adaptivas
       @media (max-width: $bp-xl) {
         column-count: unset;
         column-gap: unset;
         display: grid;
-        // 3 columnas en tablets
         grid-template-columns: repeat(3, 1fr);
         gap: 12px;
       }
 
-      // Teléfonos medianos: 3 columnas más ajustadas
       @media (max-width: $bp-md) {
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
       }
 
-      // Teléfonos pequeños: 2 columnas
       @media (max-width: $bp-sm) {
         grid-template-columns: repeat(2, 1fr);
         gap: 8px;
       }
 
-      // Teléfonos muy pequeños: 2 columnas compactas
       @media (max-width: $bp-xs) {
         grid-template-columns: repeat(2, 1fr);
         gap: 6px;
       }
 
-      // ==========================================
-      // SLOT (ESPACIO DE LÁMINA)
-      // ==========================================
       .slot {
-        // Desktop: dentro de column-count
         display: inline-flex;
         flex-direction: column;
         width: calc(33.333% - 16px);
@@ -554,14 +518,12 @@ $bp-2xl: 1200px; // Escritorios pequeños
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         break-inside: avoid;
 
-        // En Grid: el grid controla el tamaño
         @media (max-width: $bp-xl) {
           display: flex;
           width: 100%;
           margin: 0;
         }
 
-        // ---- SLOT VACÍO ----
         &:not(.owned) {
           background: rgba(0, 0, 0, 0.2);
           border: 2px dashed rgba(255, 255, 255, 0.15);
@@ -591,14 +553,12 @@ $bp-2xl: 1200px; // Escritorios pequeños
               color: rgba(255, 255, 255, 0.4);
               text-transform: uppercase;
               font-weight: 600;
-              // Permitir salto de línea en pantallas muy angostas
               word-break: break-word;
               hyphens: auto;
             }
           }
         }
 
-        // ---- SLOT CON LÁMINA ----
         &.owned {
           background: #0b0e14;
           border: 1px solid rgba($c-secondary, 0.5);
@@ -612,7 +572,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
             border-color: $c-secondary;
           }
 
-          // Desactivar hover de escala en pantallas táctiles
           @media (hover: none) and (pointer: coarse) {
             &:hover {
               transform: none;
@@ -632,7 +591,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
               display: flex;
               align-items: center;
               justify-content: center;
-              // Emoji escala con el tamaño del slot
               font-size: clamp(1.5rem, 4vw, 2.5rem);
               color: rgba(255, 255, 255, 0.1);
               background: rgba(0, 0, 0, 0.5);
@@ -669,14 +627,12 @@ $bp-2xl: 1200px; // Escritorios pequeños
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                // max-width relativo en vez de fijo
                 max-width: 60%;
               }
             }
           }
         }
 
-        // ---- GLOBO DE REPETIDAS ----
         .badge {
           position: absolute;
           top: -8px;
@@ -696,9 +652,7 @@ $bp-2xl: 1200px; // Escritorios pequeños
   }
 }
 
-// ==========================================
 // OVERLAY (DETALLE DE LÁMINA)
-// ==========================================
 .overlay {
   position: fixed;
   inset: 0;
@@ -710,7 +664,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
   backdrop-filter: blur(15px);
   padding: 16px;
 
-  // Landscape en pantallas pequeñas: permitir scroll
   @media (max-height: 600px) {
     align-items: flex-start;
     overflow-y: auto;
@@ -730,7 +683,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
     overflow: hidden;
     animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 
-    // En teléfonos muy pequeños, ajustar bordes
     @media (max-width: $bp-xs) {
       border-radius: 14px;
       max-width: 100%;
@@ -761,7 +713,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
       background: rgba(0, 0, 0, 0.5);
       border: 1px solid rgba(255, 255, 255, 0.1);
       color: $white;
-      // Mínimo 44px de área táctil
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -804,7 +755,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
     }
 
     .detail-img {
-      // min() garantiza que no desborde en landscape ni en pantallas pequeñas
       height: min(350px, 45vh);
       background: rgba(0, 0, 0, 0.5);
       display: flex;
@@ -812,13 +762,11 @@ $bp-2xl: 1200px; // Escritorios pequeños
       justify-content: center;
       padding: 15px;
 
-      // Landscape en móviles: imagen más baja
       @media (max-height: 600px) {
         height: min(160px, 28vh);
         padding: 10px;
       }
 
-      // Teléfonos pequeños
       @media (max-width: $bp-xs) {
         height: min(260px, 40vh);
         padding: 10px;
@@ -846,7 +794,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
         font-size: clamp(1.1rem, 4vw, 1.6rem);
         font-weight: 900;
         text-transform: uppercase;
-        // Evitar desbordamiento con nombres largos
         word-break: break-word;
         hyphens: auto;
       }
@@ -884,11 +831,7 @@ $bp-2xl: 1200px; // Escritorios pequeños
   }
 }
 
-// ==========================================
-// RESPONSIVE — AJUSTES ADICIONALES
-// ==========================================
 
-// Tablet grande (769–900px): 4 columnas de láminas aprovechan el espacio
 @media (min-width: #{$bp-lg + 1px}) and (max-width: $bp-xl) {
   .section-wrapper .book-spread.glass-card .album-grid {
     grid-template-columns: repeat(4, 1fr);
@@ -896,7 +839,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
   }
 }
 
-// Landscape en móvil: nav compacta para no robar pantalla vertical
 @media (max-height: 500px) and (orientation: landscape) {
   .section-wrapper {
     .top-nav {
@@ -919,7 +861,6 @@ $bp-2xl: 1200px; // Escritorios pequeños
       }
     }
 
-    // Botones flotantes más pequeños en landscape
     .nav-side {
       width: 44px;
       height: 44px;
@@ -929,9 +870,7 @@ $bp-2xl: 1200px; // Escritorios pequeños
   }
 }
 
-// ==========================================
 // KEYFRAMES
-// ==========================================
 @keyframes foilShine {
   0% {
     background-position: 200% 0;

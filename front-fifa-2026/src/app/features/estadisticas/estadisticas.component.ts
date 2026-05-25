@@ -116,7 +116,7 @@ export class EstadisticasComponent implements OnInit, OnDestroy {
 
     this.matchesService.getAllMatches().subscribe({
       next: (data: LiveMatch[]) => {
-        this.ordenarPartidos(data); // <-- Llamamos a la función recicable
+        this.ordenarPartidos(data); 
         checkCompletion();
       },
       error: (err) => {

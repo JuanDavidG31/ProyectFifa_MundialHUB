@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms'; // <-- Importamos FormsModule
+import { FormsModule } from '@angular/forms'; 
 import { AuthService } from '../../core/services/auth.service';
 import { TicketsService } from '../../core/services/ticket.service';
 import { MatchesService } from '../../core/services/matches.service';
@@ -9,18 +9,17 @@ import { ItineraryService } from '../../core/services/itinerary.service';
 @Component({
   selector: 'app-tickets',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule], // <-- Lo agregamos a los imports
+  imports: [CommonModule, RouterLink, FormsModule], 
   templateUrl: './tickets.component.html',
   styleUrls: ['./tickets.component.scss']
 })
 export class TicketsComponent implements OnInit {
   processingId: number | null = null;
-  partidosRaw: any[] = []; // <-- Guardará la lista original intacta
+  partidosRaw: any[] = []; 
   partidos: any[] = [];
   gruposDePartidos: { nombre: string, partidos: any[] }[] = [];
   isLoadingMatches = false;
 
-  // Variables para filtros
   searchTerm: string = '';
   sortOption: string = 'default';
   private monthMap: { [key: string]: string } = {
@@ -36,18 +35,17 @@ export class TicketsComponent implements OnInit {
 
   formatearFechaParaBackend(fechaSucia: string): string {
     try {
-      // Si la fecha es "16 jun 2026 - 20:00", la dividimos por el espacio
       const partes = fechaSucia.split(' ');
-      const dia = partes[0].padStart(2, '0'); // "16"
-      const mesTexto = partes[1].toLowerCase(); // "jun"
-      const anio = partes[2]; // "2026"
+      const dia = partes[0].padStart(2, '0'); 
+      const mesTexto = partes[1].toLowerCase(); 
+      const anio = partes[2]; 
 
       const mesNumero = this.monthMap[mesTexto] || '01';
 
-      return `${anio}-${mesNumero}-${dia}`; // Retorna "2026-06-16"
+      return `${anio}-${mesNumero}-${dia}`; 
     } catch (e) {
       console.error("Error formateando fecha:", e);
-      return fechaSucia; // Si falla, devuelve la original por si acaso
+      return fechaSucia; 
     }
   }
 
@@ -55,8 +53,8 @@ export class TicketsComponent implements OnInit {
     this.isLoadingMatches = true;
     this.matchesService.getWcMatches().subscribe({
       next: (data) => {
-        this.partidosRaw = data; // Guardamos la data original
-        this.aplicarFiltros(); // Llamamos a los filtros en lugar de agrupar directamente
+        this.partidosRaw = data; 
+        this.aplicarFiltros(); 
         this.isLoadingMatches = false;
       },
       error: (err) => {
@@ -67,24 +65,18 @@ export class TicketsComponent implements OnInit {
     });
   }
 
-  // Nueva función mágica que filtra y ordena
-  // Nueva función mágica que filtra y ordena
   aplicarFiltros() {
-    // 1. Filtrar por texto (busca en equipo local o visitante)
     let filtrados = this.partidosRaw.filter(p =>
       p.local.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
       p.visitante.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
 
-    // FUNCIÓN AUXILIAR: Asegura que el precio siempre sea un número matemático real
     const obtenerPrecioNum = (precio: any) => {
       if (!precio) return 0;
-      // Convierte a texto, elimina símbolos de moneda si los hay y lo pasa a decimal
       const valor = parseFloat(precio.toString().replace(/[^0-9.-]+/g, ""));
       return isNaN(valor) ? 0 : valor;
     };
 
-    // 2. Ordenar según la opción seleccionada
     if (this.sortOption === 'priceDesc') {
       filtrados.sort((a, b) => obtenerPrecioNum(b.precio) - obtenerPrecioNum(a.precio));
     } else if (this.sortOption === 'priceAsc') {
@@ -94,7 +86,6 @@ export class TicketsComponent implements OnInit {
     } else if (this.sortOption === 'alphaDesc') {
       filtrados.sort((a, b) => b.local.localeCompare(a.local));
     } else if (this.sortOption === 'default') {
-      // Si es por defecto, vuelve al orden original que traía el servidor
       filtrados.sort((a, b) => a.id - b.id);
     }
 
@@ -103,17 +94,14 @@ export class TicketsComponent implements OnInit {
   }
 
   agruparPartidos() {
-    // TRUCO DE DISEÑO: Si el usuario está ordenando por precio o alfabéticamente, 
-    // agrupamos todo en una sola lista para que el orden global sea evidente y no se rompa por fases.
     if (this.sortOption !== 'default') {
       this.gruposDePartidos = [{
         nombre: 'Resultados Ordenados',
         partidos: this.partidos
       }];
-      return; // Detenemos la ejecución aquí
+      return; 
     }
 
-    // Si la opción es "default", hacemos el agrupamiento original por Fases/Grupos
     const gruposMap = new Map<string, any[]>();
 
     this.partidos.forEach(partido => {
@@ -160,31 +148,27 @@ export class TicketsComponent implements OnInit {
     this.processingId = partidoId;
     const currentUser = localStorage.getItem('username') || 'usuario';
 
-    // --- 1. PREPARAMOS EL TICKET (Formato Original) ---
     const purchasePayload = {
       userEmail: currentUser,
       matchName: `${partido.local} VS ${partido.visitante}`,
       stadium: partido.estadio,
-      date: partido.fecha // 🎫 Aquí enviamos "16 jun 2026 - 20:00" tal cual
+      date: partido.fecha 
     };
 
-    // Primero enviamos a la API de Tickets
     this.ticketsService.buyTicket(purchasePayload).subscribe({
       next: (res) => {
 
-        // --- 2. PREPARAMOS EL ITINERARIO (Formato Técnico) ---
-        // Solo convertimos la fecha aquí, para el calendario
+        
         const fechaLimpia = this.formatearFechaParaBackend(partido.fecha);
 
         const eventoItinerario = [{
           userEmail: currentUser,
           eventType: 'MATCH',
-          title: `⚽ Partido: ${partido.local} vs ${partido.visitante}`,
-          eventDate: fechaLimpia, // 📅 Aquí enviamos "2026-06-16"
+          title: `Partido: ${partido.local} vs ${partido.visitante}`,
+          eventDate: fechaLimpia, 
           location: partido.estadio
         }];
 
-        // Guardamos en la tabla de itinerario
         this.itineraryService.saveItineraryEvents(eventoItinerario).subscribe({
           next: () => {
             this.processingId = null;

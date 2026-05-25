@@ -19,15 +19,14 @@ interface ItineraryEvent {
 interface TravelPackage {
   id: number;
   name: string;
-  category: string; // 🌟 Necesario para el diseño
+  category: string; 
   description: string;
   price: number;
   imageIcon: string;
   includedMatches: string;
-  matchesRawData?: any[]; // 🌟 Aquí es donde viven los partidos del paquete
+  matchesRawData?: any[]; 
 }
 
-// Interfaz para el calendario visual
 interface CalendarDay {
   dayNum: number | null;
   dateStr: string | null;
@@ -42,8 +41,8 @@ interface CalendarDay {
   styleUrls: ['./calendario.component.scss']
 })
 export class CalendarioComponent implements OnInit {
-  searchTerm: string = ''; // Texto de búsqueda
-  packagesRaw: TravelPackage[] = []; // Lista original de respaldo
+  searchTerm: string = ''; 
+  packagesRaw: TravelPackage[] = []; 
   selectedPackage: any = null;
   isDetailsModalOpen = false;
   allMatches: any[] = [];
@@ -54,7 +53,7 @@ export class CalendarioComponent implements OnInit {
   myEvents: ItineraryEvent[] = [];
   showAddEventForm = false;
   newEvent: Partial<ItineraryEvent> = { type: 'MATCH', title: '', date: '', location: '' };
-  selectedMatchIds: number[] = [];  // Inicializamos vacío para llenarlo dinámicamente
+  selectedMatchIds: number[] = [];  
   packages: any[] = [];
   newEventTitle: string = '';
   newEventDate: string = '';
@@ -62,7 +61,6 @@ export class CalendarioComponent implements OnInit {
   newEventLocation: string = '';
   isGeneratingPack: boolean = false;
   isSavingManual: boolean = false;
-  // Esta la usaremos para agrupar los eventos en la lista
   userEventsGrouped: any[] = [];
   currentDate: Date = new Date();
   weekDays: string[] = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
@@ -78,27 +76,23 @@ export class CalendarioComponent implements OnInit {
   toggleMatchSelection(matchId: number) {
     const index = this.selectedMatchIds.indexOf(matchId);
     if (index > -1) {
-      this.selectedMatchIds.splice(index, 1); // Quitar si ya estaba
+      this.selectedMatchIds.splice(index, 1); 
     } else {
-      this.selectedMatchIds.push(matchId); // Añadir si no estaba
+      this.selectedMatchIds.push(matchId); 
     }
   }
 
 
-  // 🌟 CONSTRUCTOR DE PLANES PERSONALIZADOS (CONECTADO A LA API REAL)
-  // 🌟 CONSTRUCTOR DE PLANES PERSONALIZADOS (MODO DEBUG)
   createCustomPackage() {
     if (this.selectedMatchIds.length === 0) return;
     this.isGeneratingPack = true;
     const currentUser = localStorage.getItem('username') || '';
 
-    // 🌟 1. Extraemos todas las fechas de los partidos seleccionados
     const fechasTimestamp = this.selectedMatchIds.map(id => {
       const m = this.allMatches.find(x => x.id == id);
       return new Date(this.formatearFechaParaCalendario(m.fecha) + 'T00:00:00').getTime();
     });
 
-    // 🌟 2. Calculamos la fecha más antigua y la más lejana
     const minDate = new Date(Math.min(...fechasTimestamp));
     const maxDate = new Date(Math.max(...fechasTimestamp));
 
@@ -119,7 +113,6 @@ export class CalendarioComponent implements OnInit {
         if (vuelos.inbound && vuelos.inbound.length > 0) {
           inboundFlight = vuelos.inbound[0];
         } else {
-          // Vuelo espejo basado en la fecha FINAL
           const returnDateObj = new Date(endDateBackend + 'T00:00:00');
           returnDateObj.setDate(returnDateObj.getDate() + 2);
           inboundFlight = { airline: outboundFlight.airline, price: outboundFlight.price, departureTime: returnDateObj.toISOString().split('T')[0] + " 10:00" };
@@ -164,7 +157,6 @@ export class CalendarioComponent implements OnInit {
   openPackageDetails(pkg: any) {
     this.selectedPackage = pkg;
     this.isDetailsModalOpen = true;
-    // Forzamos el scroll del modal hacia arriba al abrirlo
     window.scrollTo(0, 0);
   }
 
@@ -173,21 +165,17 @@ export class CalendarioComponent implements OnInit {
     this.isDetailsModalOpen = false;
   }
 
-  // --- UTILIDAD PARA CREAR VUELOS IMAGINARIOS ---
   generarFechaVuelo(fechaPartidoStr: string): string {
-    // fechaPartidoStr viene formateada como "2026-06-11" por tu función previa
-    const date = new Date(fechaPartidoStr + 'T00:00:00'); // Añadimos T00:00:00 para evitar desfases de zona horaria
-    date.setDate(date.getDate() - 7); // Restamos 7 días
+    const date = new Date(fechaPartidoStr + 'T00:00:00'); 
+    date.setDate(date.getDate() - 7); 
     return date.toISOString().split('T')[0];
   }
 
   cargarDatosIniciales() {
     const currentUser = localStorage.getItem('username') || 'usuario';
 
-    // 1. Pedimos el itinerario a la base de datos
     this.itineraryService.getUserItinerary(currentUser).subscribe({
       next: (eventosGuardados) => {
-        // Transformamos los DTOs que vienen del back a nuestra interfaz interna
         this.myEvents = eventosGuardados.map(e => ({
           id: e.id,
           type: e.eventType,
@@ -200,7 +188,6 @@ export class CalendarioComponent implements OnInit {
       error: (err) => console.error("Error cargando el itinerario:", err)
     });
 
-    // 2. Traemos los partidos (como ya lo tenías)
     this.matchesService.getWcMatches().subscribe({
       next: (data) => {
         this.allMatches = data;
@@ -218,7 +205,6 @@ export class CalendarioComponent implements OnInit {
 
     if (!this.allMatches || this.allMatches.length === 0) return;
 
-    // --- 1. PAQUETES POR SELECCIÓN (Todos los países) ---
     const todosLosPaises = new Set<string>();
     this.allMatches.forEach(m => {
       if (m.local) todosLosPaises.add(m.local);
@@ -235,14 +221,13 @@ export class CalendarioComponent implements OnInit {
         name: `Sigue a ${pais}`,
         category: 'Selección',
         description: `Todos los partidos de ${pais} en el torneo.`,
-        price: partidosPais.length * 150, // Precio dinámico
-        imageIcon: "✉", // <-- Cambiado de emoji a texto
+        price: partidosPais.length * 150, 
+        imageIcon: "✉", 
         includedMatches: partidosPais.map(m => `${m.local} vs ${m.visitante}`).join(', '),
         matchesRawData: partidosPais
       });
     });
 
-    // --- 2. PAQUETES POR GRUPOS (A, B, C...) ---
     const todosLosGrupos = new Set<string>();
     this.allMatches.forEach(m => {
       if (m.grupo && m.grupo.startsWith('Grupo')) todosLosGrupos.add(m.grupo);
@@ -257,7 +242,7 @@ export class CalendarioComponent implements OnInit {
         category: 'Fase de Grupos',
         description: `Vive la emoción completa de todos los encuentros del ${grupo}.`,
         price: 800,
-        imageIcon: "✉", // <-- Cambiado de emoji a texto
+        imageIcon: "✉", 
         includedMatches: `${partidosGrupo.length} partidos de la fase inicial.`,
         matchesRawData: partidosGrupo
       });
@@ -277,7 +262,7 @@ export class CalendarioComponent implements OnInit {
         category: 'Fase Final',
         description: "El paquete definitivo: Cuartos, Semifinales y la Gran Final.",
         price: 4500,
-        imageIcon: "VIP", // <-- Cambiado de emoji a texto
+        imageIcon: "VIP", 
         includedMatches: "Partidos de eliminación directa y Final.",
         matchesRawData: faseFinal
       });
@@ -301,14 +286,12 @@ export class CalendarioComponent implements OnInit {
   formatearFechaParaCalendario(fechaRaw: string): string {
     if (!fechaRaw) return '';
 
-    // Diccionario de meses para el formato de tu back
     const meses: { [key: string]: string } = {
       'ene': '01', 'feb': '02', 'mar': '03', 'abr': '04', 'may': '05', 'jun': '06',
       'jul': '07', 'ago': '08', 'sep': '09', 'oct': '10', 'nov': '11', 'dic': '12'
     };
 
     try {
-      // Espera algo como "11 jun 2026 - 14:00"
       const partes = fechaRaw.split(' ');
       const dia = partes[0].padStart(2, '0');
       const mes = meses[partes[1].toLowerCase()];
@@ -330,7 +313,6 @@ export class CalendarioComponent implements OnInit {
       next: () => {
         if (pkg.matchesRawData && pkg.matchesRawData.length > 0) {
 
-          // 🌟 Calculamos el inicio y fin del paquete
           const fechasTimestamp = pkg.matchesRawData.map((m: any) =>
             new Date(this.formatearFechaParaCalendario(m.fecha) + 'T00:00:00').getTime()
           );
@@ -361,7 +343,6 @@ export class CalendarioComponent implements OnInit {
               });
 
               if (inboundFlight && outboundFlight) {
-                // Si usamos el fallback local (espejo) porque Google falló el regreso
                 const returnDate = vuelos.inbound && vuelos.inbound.length > 0 ? inboundFlight.departureTime.split(' ')[0] : (() => {
                   const d = new Date(endDateBackend + 'T00:00:00');
                   d.setDate(d.getDate() + 2);
@@ -393,7 +374,6 @@ export class CalendarioComponent implements OnInit {
   }
   setTab(tab: string) {
     this.activeTab = tab;
-    // Si entramos a la pestaña de reportes, los cargamos
     if (tab === 'reportes') {
       this.loadReports();
     }
@@ -455,7 +435,7 @@ export class CalendarioComponent implements OnInit {
       return;
     }
 
-    this.isSavingManual = true; // 🌟 Empieza a cargar
+    this.isSavingManual = true; 
 
     const currentUser = localStorage.getItem('username') || 'usuario';
     const eventToSave = [{
@@ -472,7 +452,7 @@ export class CalendarioComponent implements OnInit {
         this.cargarDatosIniciales();
       },
       error: (err) => {
-        this.isSavingManual = false; // 🌟 Termina de cargar
+        this.isSavingManual = false; 
         console.error("Error añadiendo evento individual", err);
         alert("Hubo un error al guardar tu evento.");
       }
@@ -480,10 +460,8 @@ export class CalendarioComponent implements OnInit {
   }
 
   deleteEvent(id: number) {
-    // Borramos el evento por su ID real en la base de datos
     this.itineraryService.deleteItineraryEvent(id).subscribe({
       next: () => {
-        // Lo quitamos visualmente sin tener que recargar todo
         this.myEvents = this.myEvents.filter(e => e.id !== id);
         this.generateCalendar();
       },

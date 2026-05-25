@@ -1,6 +1,5 @@
 @use "sass:color";
 
-// --- PALETA VIBRANTE Y GAMER ---
 $c-bg: #0b0f19;
 $c-primary: #ec4899;
 $c-secondary: #06b6d4;
@@ -11,15 +10,13 @@ $white: #ffffff;
 $glass-bg: rgba(255, 255, 255, 0.04);
 $glass-border: rgba(255, 255, 255, 0.1);
 
-// ==========================================
-// BREAKPOINTS CENTRALIZADOS
-// ==========================================
-$bp-xs: 360px; // Teléfonos muy pequeños
-$bp-sm: 480px; // Teléfonos pequeños
-$bp-md: 600px; // Teléfonos grandes / phablets
-$bp-lg: 768px; // Tablets pequeñas
-$bp-xl: 900px; // Tablets medianas
-$bp-2xl: 1200px; // Escritorios
+
+$bp-xs: 360px;
+$bp-sm: 480px; 
+$bp-md: 600px; 
+$bp-lg: 768px; 
+$bp-xl: 900px; 
+$bp-2xl: 1200px; 
 
 ::ng-deep body {
   margin: 0 !important;
@@ -38,9 +35,7 @@ $bp-2xl: 1200px; // Escritorios
   overflow-x: hidden;
   padding-bottom: 60px;
 
-  // ==========================================
-  // FONDOS ANIMADOS — Escalados con clamp()
-  // ==========================================
+  // FONDOS ANIMADOS 
   .bg-shape {
     position: fixed;
     border-radius: 50%;
@@ -97,9 +92,7 @@ $bp-2xl: 1200px; // Escritorios
     }
   }
 
-  // ==========================================
   // BARRA SUPERIOR Y TIENDA
-  // ==========================================
   .top-nav {
     position: sticky;
     top: 0;
@@ -115,7 +108,6 @@ $bp-2xl: 1200px; // Escritorios
     animation: fadeInDown 0.6s ease forwards;
     gap: 12px;
 
-    // Tablets: columna centrada
     @media (max-width: $bp-lg) {
       flex-direction: column;
       align-items: stretch;
@@ -135,7 +127,7 @@ $bp-2xl: 1200px; // Escritorios
       font-weight: 600;
       font-size: 0.9rem;
       transition: all 0.3s ease;
-      min-height: 44px; // Área mínima táctil
+      min-height: 44px; 
       white-space: nowrap;
       flex-shrink: 0;
 
@@ -152,18 +144,16 @@ $bp-2xl: 1200px; // Escritorios
         box-shadow: 0 0 15px rgba($c-secondary, 0.3);
       }
 
-      // En tablet/móvil: ancho completo, centrado
       @media (max-width: $bp-lg) {
         width: 100%;
         justify-content: center;
 
         &:hover {
-          transform: none; // Evitar desplazamiento en táctil
+          transform: none; 
         }
       }
     }
 
-    // ---- PILL DE TIENDA ----
     .store-pill {
       display: flex;
       align-items: center;
@@ -173,9 +163,8 @@ $bp-2xl: 1200px; // Escritorios
       background: $glass-bg;
       border: 1px solid $glass-border;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      flex-wrap: wrap; // Permite que se ajuste si no cabe
+      flex-wrap: wrap; 
 
-      // En móvil: padding reducido, border-radius adaptado
       @media (max-width: $bp-lg) {
         width: 100%;
         border-radius: 16px;
@@ -206,7 +195,6 @@ $bp-2xl: 1200px; // Escritorios
 
         .stat-icon {
           font-size: 1.1rem;
-          // En móvil, quitamos el margin-left inline que viene del HTML
           margin-left: 0 !important;
 
           @media (max-width: $bp-sm) {
@@ -214,7 +202,6 @@ $bp-2xl: 1200px; // Escritorios
           }
         }
 
-        // En pantallas muy pequeñas: reducir texto
         @media (max-width: $bp-xs) {
           font-size: 0.8rem;
           gap: 5px;
@@ -253,7 +240,6 @@ $bp-2xl: 1200px; // Escritorios
           background: transparent;
         }
 
-        // En móvil: botón ancho completo
         @media (max-width: $bp-sm) {
           width: 100%;
           padding: 10px 18px;
@@ -273,14 +259,12 @@ $bp-2xl: 1200px; // Escritorios
     }
   }
 
-  // ==========================================
-  // CABECERA / HERO
-  // ==========================================
+  // CABECERA 
   .packs-hero.centered {
     position: relative;
     z-index: 10;
     text-align: center;
-    // padding vertical fluido
+    
     padding: clamp(24px, 6vw, 50px) 5% clamp(12px, 3vw, 20px);
     max-width: 800px;
     margin: 0 auto;
@@ -288,7 +272,6 @@ $bp-2xl: 1200px; // Escritorios
 
     h1 {
       margin: 0 0 10px 0;
-      // Tipografía fluida: de 2rem en móvil hasta 3.5rem en escritorio
       font-size: clamp(2rem, 7vw, 3.5rem);
       font-weight: 900;
       letter-spacing: -1px;
@@ -309,9 +292,7 @@ $bp-2xl: 1200px; // Escritorios
     }
   }
 
-  // ==========================================
   // CONTENIDO Y CARRUSEL
-  // ==========================================
   .packs-content {
     position: relative;
     z-index: 10;
@@ -331,7 +312,6 @@ $bp-2xl: 1200px; // Escritorios
     gap: 20px;
     min-height: 50vh;
 
-    // En móvil, reducir el gap lateral (los nav-btn son más pequeños)
     @media (max-width: $bp-md) {
       gap: 12px;
       min-height: 45vh;
@@ -341,13 +321,12 @@ $bp-2xl: 1200px; // Escritorios
       gap: 8px;
     }
 
-    // ---- BOTONES DE NAVEGACIÓN ----
+    // BOTONES DE NAVEGACIÓN 
     .nav-btn {
       background: $glass-bg;
       border: 1px solid $glass-border;
       color: $white;
       border-radius: 50%;
-      // Tamaño fluido con un mínimo táctil de 44px
       width: clamp(44px, 8vw, 55px);
       height: clamp(44px, 8vw, 55px);
       cursor: pointer;
@@ -358,7 +337,7 @@ $bp-2xl: 1200px; // Escritorios
       transition: 0.3s ease;
       backdrop-filter: blur(10px);
       z-index: 10;
-      flex-shrink: 0; // Nunca se comprimen
+      flex-shrink: 0; 
 
       &:hover:not(:disabled) {
         background: rgba($c-secondary, 0.2);
@@ -374,13 +353,11 @@ $bp-2xl: 1200px; // Escritorios
       }
     }
 
-    // ---- VIEWPORT DEL CARRUSEL ----
+    // VIEWPORT DEL CARRUSEL
     .carousel-viewport {
       overflow: visible;
       width: 100%;
-      // Ancho fluido: se reduce en pantallas pequeñas
       max-width: clamp(220px, 65vw, 320px);
-      // Padding vertical fluido para el efecto 3D
       padding: clamp(30px, 6vw, 50px) 0;
       perspective: 1000px;
     }
@@ -392,7 +369,7 @@ $bp-2xl: 1200px; // Escritorios
       transform-style: preserve-3d;
     }
 
-    // ---- CONTENEDOR DEL PAQUETE ----
+    // CONTENEDOR DEL PAQUETE 
     .pack-container {
       flex: 0 0 100%;
       display: flex;
@@ -411,7 +388,6 @@ $bp-2xl: 1200px; // Escritorios
         pointer-events: auto;
         z-index: 5;
 
-        // SOBRE ACTIVO — dimensiones fluidas
         .pack-art {
           width: clamp(180px, 55vw, 240px);
           height: clamp(260px, 80vw, 350px);
@@ -441,9 +417,7 @@ $bp-2xl: 1200px; // Escritorios
       }
     }
 
-    // ---- EL SOBRE (ESTILO FOIL/GAMER) ----
     .pack-art {
-      // Dimensiones fluidas para la vista inactiva también
       width: clamp(180px, 55vw, 240px);
       height: clamp(260px, 80vw, 350px);
       background: linear-gradient(145deg, #161e2e 0%, #080b12 100%);
@@ -498,7 +472,6 @@ $bp-2xl: 1200px; // Escritorios
 
           .number-26 {
             font-family: 'Arial Black', sans-serif;
-            // Tipografía fluida para el "26"
             font-size: clamp(5rem, 18vw, 10rem);
             font-weight: 900;
             color: white;
@@ -676,12 +649,10 @@ $bp-2xl: 1200px; // Escritorios
       }
     }
 
-    // ---- BOTÓN ABRIR ----
     .btn-play {
       background: linear-gradient(135deg, $c-primary, #f43f5e);
       color: $white;
       border: none;
-      // Padding fluido
       padding: clamp(12px, 3vw, 16px) clamp(24px, 8vw, 40px);
       border-radius: 16px;
       font-size: clamp(0.9rem, 3vw, 1.15rem);
@@ -694,7 +665,6 @@ $bp-2xl: 1200px; // Escritorios
       gap: 10px;
       box-shadow: 0 10px 25px rgba($c-primary, 0.4);
       min-height: 48px;
-      // En pantallas muy angostas, el botón se ajusta al ancho
       max-width: 90vw;
 
       &:hover:not(:disabled) {
@@ -703,7 +673,6 @@ $bp-2xl: 1200px; // Escritorios
         background: linear-gradient(135deg, color.adjust($c-primary, $lightness: 5%), #fb7185);
       }
 
-      // Desactivar hover scale en táctil
       @media (hover: none) and (pointer: coarse) {
         &:hover:not(:disabled) {
           transform: none;
@@ -720,16 +689,13 @@ $bp-2xl: 1200px; // Escritorios
     }
   }
 
-  // ==========================================
   // ESTADO VACÍO
-  // ==========================================
   .glass-card {
     background: $glass-bg;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid $glass-border;
     border-radius: 24px;
-    // Padding fluido
     padding: clamp(24px, 5vw, 40px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   }
@@ -763,9 +729,7 @@ $bp-2xl: 1200px; // Escritorios
     }
   }
 
-  // ==========================================
   // OVERLAY — MODAL DE RESULTADOS
-  // ==========================================
   .overlay {
     position: fixed;
     inset: 0;
@@ -775,7 +739,6 @@ $bp-2xl: 1200px; // Escritorios
     flex-direction: column;
     overflow-y: auto;
     backdrop-filter: blur(15px);
-    // Padding fluido
     padding: clamp(16px, 4vw, 40px) clamp(12px, 3vw, 20px);
 
     .glass-card-massive {
@@ -785,7 +748,6 @@ $bp-2xl: 1200px; // Escritorios
       border: 1px solid rgba($c-secondary, 0.3);
       width: 100%;
       max-width: 900px;
-      // Padding fluido
       padding: clamp(20px, 5vw, 40px);
       border-radius: clamp(16px, 4vw, 30px);
       position: relative;
@@ -799,7 +761,6 @@ $bp-2xl: 1200px; // Escritorios
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
         color: $white;
-        // Área táctil adecuada
         width: 44px;
         height: 44px;
         border-radius: 50%;
@@ -820,7 +781,6 @@ $bp-2xl: 1200px; // Escritorios
       }
 
       .results {
-        // Espacio superior para que el título no quede bajo el botón de cerrar
         padding-top: clamp(8px, 2vw, 10px);
       }
 
@@ -841,16 +801,15 @@ $bp-2xl: 1200px; // Escritorios
         }
       }
 
-      // ---- GRID DE RESULTADOS ----
+      //GRID DE RESULTADOS
       .grid {
         display: grid;
-        // minmax fluido: mínimo 130px en móviles, hasta 180px en escritorio
         grid-template-columns: repeat(auto-fill, minmax(clamp(130px, 38vw, 180px), 1fr));
         gap: clamp(12px, 3vw, 25px);
         margin-top: clamp(16px, 4vw, 30px);
       }
 
-      // ---- CARTA DE RESULTADO (STICKER) ----
+      // CARTA DE RESULTADO (STICKER) 
       .sticker-card {
         background: #0b0f19;
         border-radius: 12px;
@@ -866,14 +825,12 @@ $bp-2xl: 1200px; // Escritorios
           border-color: $c-secondary;
         }
 
-        // Desactivar hover en táctil
         @media (hover: none) and (pointer: coarse) {
           &:hover {
             transform: none;
           }
         }
 
-        // Rarezas
         &.común {
           border-color: rgba(255, 255, 255, 0.2);
         }
@@ -895,7 +852,6 @@ $bp-2xl: 1200px; // Escritorios
           }
         }
 
-        // Etiqueta de rareza
         .rarity-badge {
           position: absolute;
           top: 8px;
@@ -926,7 +882,6 @@ $bp-2xl: 1200px; // Escritorios
           }
         }
 
-        // Efecto foil
         &.foil-effect::after {
           content: '';
           position: absolute;
@@ -940,7 +895,6 @@ $bp-2xl: 1200px; // Escritorios
           pointer-events: none;
         }
 
-        // Imagen del sticker — altura fluida
         .img-placeholder {
           height: clamp(140px, 35vw, 220px);
           background: rgba(255, 255, 255, 0.03);
@@ -961,7 +915,6 @@ $bp-2xl: 1200px; // Escritorios
           object-fit: cover;
         }
 
-        // Meta / Nombre + Código
         .meta {
           padding: clamp(8px, 2.5vw, 15px);
           text-align: center;
@@ -984,7 +937,6 @@ $bp-2xl: 1200px; // Escritorios
           }
         }
 
-        // Badge de repetida
         .dup-badge {
           position: absolute;
           background: $c-error;
@@ -1002,9 +954,7 @@ $bp-2xl: 1200px; // Escritorios
     }
   }
 
-  // ==========================================
   // KEYFRAMES
-  // ==========================================
   @keyframes spin {
     from {
       transform: rotate(0deg);

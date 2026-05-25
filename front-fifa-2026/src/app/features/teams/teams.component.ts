@@ -23,7 +23,6 @@ export class TeamsComponent implements OnInit {
   searchTerm: string = '';
   filteredTeams: any[] = [];
 
-  // 🌟 Ya no inyectamos HttpClient, solo usamos tu AuthService
   constructor(private authService: AuthService, private footballService: FootballService, private matchesService: MatchesService) {}
 
   ngOnInit() {
@@ -38,7 +37,6 @@ export class TeamsComponent implements OnInit {
 
     this.footballService.getUserDashboard(username).subscribe({
         next: (data) => {
-          // El país inicial es el favorito del usuario
           this.userCountry = data.userCountry || 'Colombia'; 
           
           this.matchesService.getWcMatches().subscribe({

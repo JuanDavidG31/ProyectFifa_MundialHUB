@@ -90,7 +90,7 @@ export class ForgotPasswordComponent implements OnInit {
     this.http.post('https://proyectfifa-mundialhub.onrender.com/api/email/send', payload, { responseType: 'text' }).subscribe({
       next: () => {
         this.isLoading = false;
-        this.step = 2; // Pasamos al siguiente paso
+        this.step = 2; 
         this.successMsg = 'Código enviado. Revisa tu bandeja de entrada.';
       },
       error: () => {

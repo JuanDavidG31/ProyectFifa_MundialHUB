@@ -32,7 +32,7 @@ export class UserService {
     updateProfile(id: number, payload: any): Observable<any> {
         return this.http.put(`${this.apiUrlUser}/updatejson?id=${id}`, payload, {
             headers: this.authService.createAuthHeaders(),
-            responseType: 'text' // SpringBoot devuelve un texto, no un JSON estructurado
+            responseType: 'text' 
         });
     }
     getUserByUsername(username: string): Observable<any> {

@@ -83,7 +83,6 @@ $glass-border: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // Animación del contenedor principal
   .content-wrapper {
     animation: fadeIn 0.5s ease-out forwards;
   }
@@ -305,7 +304,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
     .section-image {
       width: 100%;  
       height: 100%; 
-      object-fit: contain; // Asegura que no se deforme
+      object-fit: contain; 
       filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
       transition: transform 0.3s ease;
     }

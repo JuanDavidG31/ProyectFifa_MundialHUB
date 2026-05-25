@@ -11,39 +11,32 @@ export class AlbumService {
     private pagesSubject = new BehaviorSubject<AlbumPage[]>([]);
     public pages$ = this.pagesSubject.asObservable();
 
-    // NUEVO: Estado global de economía
     private statusSubject = new BehaviorSubject<AlbumStatus>({ availablePacks: 0, coins: 0 });
     public status$ = this.statusSubject.asObservable();
     private stompClient: Client | null = null;
     public p2pRoom$ = new BehaviorSubject<any>(null);
     constructor(private http: HttpClient) { }
     connectToP2PWebSocket() {
-        const token = localStorage.getItem('authToken'); // O usa tu AuthService para obtener el token
+        const token = localStorage.getItem('authToken'); 
 
-        // 1. Creamos el socket apuntando a la ruta de Spring Boot
         const socket = new SockJS('https://proyectfifa-mundialhub.onrender.com/ws');
 
-        // 2. Configuramos el cliente STOMP
         this.stompClient = new Client({
             webSocketFactory: () => socket,
             connectHeaders: {
-                Authorization: `Bearer ${token}` // Enviamos el JWT para pasar el filtro de seguridad
+                Authorization: `Bearer ${token}` 
             },
-            reconnectDelay: 5000, // Intenta reconectar si se cae la red
+            reconnectDelay: 5000, 
             onConnect: (frame) => {
-                console.log('🔗 Conectado a la Sala P2P (WebSocket)');
+                console.log('Conectado a la Sala P2P (WebSocket)');
 
-                // 3. Nos suscribimos al canal personal de este usuario
                 this.stompClient?.subscribe('/user/queue/exchange', (message) => {
                     
-                    // ======================================================
-                    // ¡AQUÍ VA EL NUEVO CÓDIGO! (El Radar)
-                    console.log('📥 ¡Mágia WebSocket recibida!', message.body);
-                    // ======================================================
+                    
 
                     if (message.body) {
                         const roomState = JSON.parse(message.body);
-                        this.p2pRoom$.next(roomState); // ¡Actualiza el frontend al instante!
+                        this.p2pRoom$.next(roomState); 
                     }
                 });
                 
@@ -56,7 +49,6 @@ export class AlbumService {
         this.stompClient.activate();
     }
 
-    // Cierra el túnel cuando el usuario sale de la página
     disconnectP2PWebSocket() {
         if (this.stompClient) {
             this.stompClient.deactivate();

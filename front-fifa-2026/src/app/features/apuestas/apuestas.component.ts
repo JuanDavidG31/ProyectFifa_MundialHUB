@@ -29,12 +29,12 @@ export interface MatchPrediction {
 })
 export class ApuestasComponent implements OnInit {
 
-  activeTab: 'proximos' | 'historial' | 'salas' = 'proximos'; // <-- Añadido 'salas'
+  activeTab: 'proximos' | 'historial' | 'salas' = 'proximos'; 
 
   availableRooms: any[] = [];
   currentRoom: any = null;
-  joinRequests: BetMessageDTO[] = []; // Solicitudes pendientes
-  myUsername = localStorage.getItem('username') || 'Jugador1'; // Ajusta según tu lógica
+  joinRequests: BetMessageDTO[] = []; 
+  myUsername = localStorage.getItem('username') || 'Jugador1'; 
 
   isCreateRoomModalOpen = false;
   newRoomName = '';

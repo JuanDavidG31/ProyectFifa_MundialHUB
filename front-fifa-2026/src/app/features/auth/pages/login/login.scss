@@ -15,7 +15,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   padding: 0 !important;
   width: 100% !important;
   max-width: 100% !important;
-  // overflow: hidden corta el contenido en móviles pequeños — usar overflow-x solamente
   overflow-x: hidden !important;
   background-color: $c-bg;
   font-family: 'Poppins', 'Inter', sans-serif;
@@ -24,7 +23,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
 .login-wrapper {
   position: relative;
   min-height: 100vh;
-  // 100vw incluye el scrollbar → overflow horizontal en móvil
   width: 100%;
   max-width: 100%;
   display: flex;
@@ -382,9 +380,8 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ==========================================
-// 🔒 SECCIÓN DE VERIFICACIÓN (DISEÑO LIMPIO)
-// ==========================================
+// SECCIÓN DE VERIFICACIÓN 
+
 .verification-step {
 
   .step-header {
@@ -419,7 +416,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
     .pin-input {
       width: 100%;
       text-align: center;
-      letter-spacing: 15px; // Separa los números para que parezcan cajas
+      letter-spacing: 15px; 
       font-weight: 800;
       font-size: 2.2rem;
       padding: 15px;
@@ -443,7 +440,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
   }
 
-  // Botón Verde de Éxito
   .btn-verify {
     background: linear-gradient(135deg, #10b981, #059669);
     box-shadow: 0 10px 25px rgba(#10b981, 0.3);
@@ -455,7 +451,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
   }
 
-  // Botón Cancelar (Sobrio)
   .btn-cancel {
     margin-top: 15px;
     width: 100%;
@@ -476,18 +471,10 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// =============================================================
-// RESPONSIVE COMPLETO — LOGIN
-// Breakpoints: 480px | 375px | 320px
-// (La tarjeta ya es centrada con max-width: 420px, solo
-//  necesitamos ajustar para pantallas muy pequeñas)
-// =============================================================
 
-// ─── MOBILE ESTÁNDAR (≤ 480px) ──────────────────────────────
 @media (max-width: 480px) {
   .login-wrapper {
-    // En móvil alineamos hacia arriba con algo de espacio,
-    // no centrado vertical, para que el teclado no tape el form
+
     align-items: flex-start;
     padding: 40px 16px 24px;
   }
@@ -495,7 +482,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   .login-glass-card {
     padding: 32px 24px;
     border-radius: 24px;
-    // La sombra más suave en móvil ahorra recursos
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
   }
 
@@ -570,7 +556,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ─── MOBILE PEQUEÑO (≤ 375px) ───────────────────────────────
 @media (max-width: 375px) {
   .login-wrapper {
     padding: 30px 14px 20px;
@@ -634,7 +619,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
   }
 
-  // Verificación PIN más compacto
   .verification-step {
     .step-header h2 {
       font-size: 1.25rem;
@@ -647,7 +631,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ─── MOBILE MUY PEQUEÑO (≤ 320px) ───────────────────────────
 @media (max-width: 320px) {
   .login-wrapper {
     padding: 20px 10px;
@@ -679,7 +662,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     padding: 13px;
   }
 
-  // Fondos más pequeños para no saturar CPU
   .shape-1 {
     width: 200px;
     height: 200px;
@@ -696,7 +678,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ─── REDUCCIÓN DE MOVIMIENTO (accesibilidad) ─────────────────
 @media (prefers-reduced-motion: reduce) {
 
   .bg-shape,

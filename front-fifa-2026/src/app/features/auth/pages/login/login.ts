@@ -47,7 +47,6 @@ export class Login implements OnInit {
           localStorage.setItem('userName', this.credentials.user);
 
           if (localStorage.getItem('verify') === 'false') {
-            // Requiere verificación
             this.needsVerification = true;
             this.isLoading = false;
 
@@ -59,17 +58,14 @@ export class Login implements OnInit {
             });
 
           } else {
-            // Ya está verificado, entra normal
             this.router.navigate(['/home']);
           }
         } else {
-          // Un caso de fallback por si el servidor devuelve status 200 pero success false
           this.loginError = 'Usuario o contraseña incorrectos';
           this.isLoading = false;
         }
       },
       error: (err) => {
-        // Aquí validamos el código de estado HTTP para mostrar el mensaje correcto
         if (err.status === 401) {
           this.loginError = 'Usuario o contraseña incorrectos';
         } else if (err.status === 0 || err.status >= 500) {
@@ -79,7 +75,7 @@ export class Login implements OnInit {
         }
 
         this.isLoading = false;
-        console.error("Detalle del error de login:", err); // Útil para depurar en consola
+        console.error("Detalle del error de login:", err); 
       }
     });
   }

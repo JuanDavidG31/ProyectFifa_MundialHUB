@@ -378,14 +378,11 @@ $glass-border: rgba(255, 255, 255, 0.15);
   overflow-x: auto;
   padding-bottom: 15px;
 
-  // Scroll suave con inercia
-  // scroll-behavior: smooth;
+  
   -webkit-overflow-scrolling: touch;
 
-  // Snap: cada tarjeta encaja al detenerse
   scroll-snap-type: x proximity;
 
-  // Ocultar scrollbar en todos los navegadores
   &::-webkit-scrollbar {
     display: none;
   }
@@ -393,13 +390,10 @@ $glass-border: rgba(255, 255, 255, 0.15);
   -ms-overflow-style: none;
   scrollbar-width: none;
 
-  // Cada tarjeta se ancla al scroll
   .app-card {
     scroll-snap-align: start;
     scroll-snap-stop: normal;
-    // Evita que las tarjetas se encojan en el flex
     flex-shrink: 0;
-    // Transición suave al hacer hover (no se ve cortada mientras scrollea)
     transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
       box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
       background 0.35s ease;
@@ -674,7 +668,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
         }
       }
 
-      // Adaptación para móviles
       @media (max-width: 768px) {
         flex-direction: column;
         border-radius: 20px;
@@ -1465,7 +1458,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
         margin-bottom: 5px;
       }
 
-      // Ajuste del Input Gigante
       .amount-wrapper {
         .coin-symbol {
           left: 12px;
@@ -1482,7 +1474,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
         }
       }
 
-      // Ajuste de la Tarjeta para que no se salga de la pantalla
       .dummy-credit-card {
         padding: 15px;
         margin-bottom: 15px;
@@ -2042,12 +2033,7 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// =============================================================
-// RESPONSIVE COMPLETO — TODAS LAS PANTALLAS
-// Breakpoints: 1024px | 768px | 600px | 480px | 375px
-// =============================================================
 
-// ─── TABLET LANDSCAPE (≤ 1024px) ────────────────────────────
 @media (max-width: 1024px) {
   .main-content {
     padding: 20px 4%;
@@ -2076,7 +2062,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ─── TABLET PORTRAIT (≤ 768px) ──────────────────────────────
 @media (max-width: 768px) {
 
   // Nav
@@ -2118,7 +2103,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
   }
 
-  // Carrusel: scroll horizontal con snap en tablet/móvil
   .cards-carousel {
     display: flex !important;
     flex-wrap: nowrap !important;
@@ -2145,7 +2129,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
   }
 
-  // Admin cards: 2 cols o 1 col si solo hay uno
   .admin-cards-container {
     grid-template-columns: repeat(2, 1fr);
     gap: 14px;
@@ -2233,10 +2216,8 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ─── MOBILE GRANDE (≤ 600px) ────────────────────────────────
 @media (max-width: 600px) {
 
-  // Fondos animados más pequeños para no sobrecargar GPU
   .shape-1 {
     width: 300px;
     height: 300px;
@@ -2268,7 +2249,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
   }
 
-  // Carrusel: tarjetas más compactas en móvil, sigue siendo scroll horizontal
   .cards-carousel {
     gap: 12px;
 
@@ -2301,7 +2281,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
   }
 
-  // Admin cards: 1 columna en móvil
   .admin-cards-container {
     grid-template-columns: 1fr;
 
@@ -2310,7 +2289,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
   }
 
-  // News section
   .news-section {
     padding: 24px 10px;
 
@@ -2359,7 +2337,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
   }
 
-  // Empty news state
   .empty-news-state {
     padding: 40px 16px;
 
@@ -2438,7 +2415,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ─── MOBILE ESTÁNDAR (≤ 480px) ──────────────────────────────
 @media (max-width: 480px) {
   .top-nav {
     padding: 10px 14px !important;
@@ -2492,7 +2468,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     font-size: 1.5rem;
   }
 
-  // Carrusel: tarjetas aún más compactas en móvil pequeño
   .cards-carousel {
     gap: 10px;
 
@@ -2527,7 +2502,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     }
   }
 
-  // Payment modal: scroll para que quepa en pantallas pequeñas
   .payment-modal {
     width: 98%;
     max-height: 95vh;
@@ -2543,7 +2517,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     scrollbar-width: none;
   }
 
-  // Tutorial: ocupa casi toda la pantalla
   .tutorial-modal {
     width: 96%;
     padding: 22px 16px;
@@ -2568,7 +2541,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ─── MOBILE PEQUEÑO (≤ 375px) ───────────────────────────────
 @media (max-width: 375px) {
   .top-nav {
     .logo-container .logo-text {
@@ -2597,7 +2569,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
     font-size: 1.3rem;
   }
 
-  // Carrusel: tarjetas mínimas en pantalla muy pequeña, sigue con scroll horizontal
   .cards-carousel {
     .app-card {
       min-width: 130px;
@@ -2627,7 +2598,6 @@ $glass-border: rgba(255, 255, 255, 0.15);
   }
 }
 
-// ─── REDUCCIÓN DE MOVIMIENTO (accesibilidad) ─────────────────
 @media (prefers-reduced-motion: reduce) {
 
   .bg-shape,

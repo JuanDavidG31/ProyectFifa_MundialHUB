@@ -94,7 +94,6 @@ export class HomeComponent implements OnInit {
     this.isAdmin = role === 'ADMIN';
     this.isSupport = role === 'SUPPORT';
 
-    // Cargar nombre
     const nombreLimpio = localStorage.getItem('userName');
     if (nombreLimpio) {
       this.userName = nombreLimpio;
@@ -187,7 +186,6 @@ export class HomeComponent implements OnInit {
     const username = localStorage.getItem('userName') || 'normaluser';
     this.footballService.getUserDashboard(username).subscribe({
       next: (data) => {
-        // Igual que en TeamsComponent, usamos userCountry
         this.favoriteTeam = data.userCountry || 'Ninguno';
       },
       error: (err) => {
@@ -254,7 +252,6 @@ export class HomeComponent implements OnInit {
   verificarCierreSeguro(): void {
     if (localStorage.getItem('countActive') === 'false') {
 
-      // ¡Éxito! Limpiamos todo y cerramos sesión
       this.albumService.clearAlbumState();
       localStorage.removeItem('userAvatar');
       this.authService.logout();

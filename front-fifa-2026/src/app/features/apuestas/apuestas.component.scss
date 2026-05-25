@@ -1,6 +1,5 @@
 @use "sass:color";
 
-// --- PALETA VIBRANTE Y GAMER ---
 $c-bg: #0b0f19;
 $c-primary: #ec4899;
 $c-secondary: #06b6d4;
@@ -26,7 +25,6 @@ $white: #ffffff;
     overflow-x: hidden;
 }
 
-// Fondos, Nav y Header (Igual que estadísticas)
 .bg-shape {
     position: fixed;
     border-radius: 50%;
@@ -173,7 +171,7 @@ $white: #ffffff;
     }
 }
 
-// 🌟 DASHBOARD USUARIO
+// DASHBOARD USUARIO
 .user-stats-panel {
     max-width: 700px;
     margin: 0 auto 30px;
@@ -227,7 +225,7 @@ $white: #ffffff;
     }
 }
 
-// 🌟 TABS PÍLDORA
+// TABS PÍLDORA
 .tabs-wrapper {
     display: flex;
     justify-content: center;
@@ -268,7 +266,7 @@ $white: #ffffff;
     }
 }
 
-// 🌟 GRID DE PARTIDOS Y TARJETAS
+// GRID DE PARTIDOS Y TARJETAS
 .matches-grid {
     max-width: 800px;
     margin: 0 auto;
@@ -464,9 +462,7 @@ $white: #ffffff;
     }
 }
 
-// ==========================================
-// 🌟 ESTILOS DE SALAS MULTIJUGADOR
-// ==========================================
+// ESTILOS DE SALAS MULTIJUGADOR
 
 .rooms-wrapper {
     max-width: 800px;
@@ -875,11 +871,7 @@ $white: #ffffff;
 }
 
 
-// ==========================================
-// 📱 RESPONSIVE — MEDIA QUERIES
-// ==========================================
 
-// --- Tablet grande / Desktop pequeño (≤ 1024px) ---
 @media (max-width: 1024px) {
 
     .matches-grid,
@@ -897,10 +889,8 @@ $white: #ffffff;
     }
 }
 
-// --- Tablet (≤ 768px) ---
 @media (max-width: 768px) {
 
-    // NAV
     .top-nav {
         padding: 12px 20px;
         flex-wrap: wrap;
@@ -930,7 +920,6 @@ $white: #ffffff;
         }
     }
 
-    // HEADER
     .header.centered {
         padding: 8px 16px 16px;
 
@@ -943,7 +932,6 @@ $white: #ffffff;
         }
     }
 
-    // STATS PANEL
     .user-stats-panel {
         max-width: 95%;
         padding: 16px 10px;
@@ -957,7 +945,6 @@ $white: #ffffff;
         }
     }
 
-    // TABS — permite scroll horizontal en móvil
     .tabs-wrapper {
         overflow-x: auto;
         padding: 0 16px;
@@ -980,7 +967,6 @@ $white: #ffffff;
         }
     }
 
-    // TARJETAS DE PARTIDOS
     .match-prediction-card {
         padding: 18px 16px;
 
@@ -1012,7 +998,6 @@ $white: #ffffff;
         }
     }
 
-    // SALAS
     .rooms-header {
         flex-direction: column;
         align-items: flex-start;
@@ -1055,16 +1040,13 @@ $white: #ffffff;
         }
     }
 
-    // GRID PRONÓSTICOS COMPARTIDOS
     .shared-bets-grid {
         grid-template-columns: 1fr;
     }
 }
 
-// --- Móvil (≤ 480px) ---
 @media (max-width: 480px) {
 
-    // NAV — logo a la izquierda, acciones apiladas
     .top-nav {
         padding: 10px 14px;
 
@@ -1074,7 +1056,7 @@ $white: #ffffff;
 
         .nav-actions {
             .back-nav .icon {
-                display: none; // ocultar flecha en espacios muy reducidos
+                display: none; 
             }
         }
     }
@@ -1090,7 +1072,6 @@ $white: #ffffff;
         }
     }
 
-    // STATS PANEL — apilado verticalmente
     .user-stats-panel {
         flex-direction: column;
         gap: 16px;
@@ -1099,7 +1080,7 @@ $white: #ffffff;
 
         .divider {
             width: 60%;
-            height: 1px; // horizontal en móvil
+            height: 1px; 
         }
 
         .stat-value {
@@ -1107,7 +1088,6 @@ $white: #ffffff;
         }
     }
 
-    // TARJETAS — prediction area apilada verticalmente
     .match-prediction-card {
         padding: 16px 12px;
 
@@ -1159,13 +1139,11 @@ $white: #ffffff;
         }
     }
 
-    // TABS — más compactos
     .tabs-container .tab-btn {
         padding: 9px 16px;
         font-size: 0.8rem;
     }
 
-    // SALAS
     .rooms-header {
         padding: 16px;
 
@@ -1231,7 +1209,6 @@ $white: #ffffff;
     }
 }
 
-// --- Móvil muy pequeño (≤ 360px) ---
 @media (max-width: 360px) {
 
     .top-nav {

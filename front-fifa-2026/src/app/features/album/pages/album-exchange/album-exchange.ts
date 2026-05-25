@@ -13,21 +13,19 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./album-exchange.scss']
 })
 export class AlbumExchange implements OnInit, OnDestroy {
-  // VARIABLES DEL MERCADO
   totalDuplicates = 0;
   potentialCoins = 0;
   isLoading = false;
   showSuccessModal = false;
   coinsGained = 0;
 
-  // VARIABLES P2P
   p2pTargetUser = '';
   myUsername = localStorage.getItem('username') || '';
   currentRoom: any = null;
   showP2PSuccess = false;
   private roomSubscription!: Subscription;
   isInviting = false;
-  isTrading = false; // ¡NUEVO! Reemplaza al countdown
+  isTrading = false; 
   isFetchingInventories = false;
   isSettingReady = false;
   constructor(private albumService: AlbumService) { }
@@ -37,16 +35,13 @@ export class AlbumExchange implements OnInit, OnDestroy {
     this.albumService.connectToP2PWebSocket();
 
     this.roomSubscription = this.albumService.p2pRoom$.subscribe((room) => {
-      // 1. Si la sala pasa a ACCEPTED y antes no lo estaba, forzamos la pantalla de carga
       if (room && room.status === 'ACCEPTED' && this.currentRoom?.status !== 'ACCEPTED') {
         this.isFetchingInventories = true;
-        // Simulamos un retraso de 2 segundos para dar la sensación de "Buscando fichas..."
         setTimeout(() => {
           this.isFetchingInventories = false;
         }, 2000);
       }
 
-      // 2. Disparamos la animación de intercambio
       if (room && room.status === 'EXECUTED' && this.currentRoom?.status !== 'EXECUTED') {
         this.startTradeAnimation();
       }
@@ -60,9 +55,7 @@ export class AlbumExchange implements OnInit, OnDestroy {
     this.albumService.disconnectP2PWebSocket();
   }
 
-  // ==========================================
-  // GETTERS INTELIGENTES
-  // ==========================================
+
   get myInventory() {
     if (!this.currentRoom) return null;
     return this.currentRoom.requester === this.myUsername ? this.currentRoom.requesterInventory : this.currentRoom.targetInventory;
@@ -93,9 +86,7 @@ export class AlbumExchange implements OnInit, OnDestroy {
     return this.theirInventory?.find((s: any) => s.id === id);
   }
 
-  // ==========================================
-  // ACCIONES P2P
-  // ==========================================
+
   async inviteUser() {
     if (!this.p2pTargetUser) return;
     this.isInviting = true;
@@ -108,7 +99,6 @@ export class AlbumExchange implements OnInit, OnDestroy {
   }
 
   async answerInvite(action: 'ACCEPT' | 'REJECT') {
-    // ¡LA MAGIA!: Si el usuario le da a aceptar, mostramos el radar instantáneamente
     if (action === 'ACCEPT') {
       this.isFetchingInventories = true; 
     }
@@ -118,7 +108,6 @@ export class AlbumExchange implements OnInit, OnDestroy {
       this.currentRoom = await this.albumService.pollP2PRoom();
     } catch (e) { 
       console.error(e); 
-      // Si el servidor falla, quitamos la pantalla de carga
       this.isFetchingInventories = false; 
     }
   }
@@ -131,7 +120,7 @@ export class AlbumExchange implements OnInit, OnDestroy {
   }
 
   async setReady() {
-    this.isSettingReady = true; // Encendemos la ruedita al hacer clic
+    this.isSettingReady = true; 
     try {
       await this.albumService.actionP2P('READY');
       const updatedRoom = await this.albumService.pollP2PRoom();
@@ -143,7 +132,7 @@ export class AlbumExchange implements OnInit, OnDestroy {
     } catch (e) { 
       console.error(e); 
     } finally {
-      this.isSettingReady = false; // Apagamos la ruedita cuando el servidor responde
+      this.isSettingReady = false; 
     }
   }
 
@@ -154,29 +143,25 @@ export class AlbumExchange implements OnInit, OnDestroy {
     } catch (e) { console.error(e); }
   }
 
-  // --- ¡NUEVA! ANIMACIÓN DIRECTA POKÉMON ---
   startTradeAnimation() {
     this.isTrading = true;
 
-    // 1. Las cartas giran en la pantalla durante 4 segundos
     setTimeout(() => {
       this.isTrading = false;
-      this.showP2PSuccess = true; // Mostramos el modal de éxito
-      this.albumService.actionP2P('LEAVE'); // Limpiamos la sala en el backend
-      this.calculateDuplicates(); // Recalculamos las cartas
+      this.showP2PSuccess = true; 
+      this.albumService.actionP2P('LEAVE'); 
+      this.calculateDuplicates(); 
 
-      // 2. ¡NUEVO!: Esperamos 2.5 segundos para que lea el mensaje de éxito y cerramos todo automáticamente
       setTimeout(() => {
-        this.closeModal(); // Cierra el modal
-        this.currentRoom = null; // Reinicia el estado de la sala a la normalidad
+        this.closeModal(); 
+        this.currentRoom = null; 
       }, 2500);
 
-    }, 4000); // 4 segundos exactos de animación
+    }, 4000); 
   }
 
-  // ==========================================
-  // FUNCIONES DEL MERCADO CLÁSICO
-  // ==========================================
+  // FUNCIONES DEL MERCADO 
+
   calculateDuplicates() {
     this.albumService.pages$.subscribe(pages => {
       this.totalDuplicates = 0;

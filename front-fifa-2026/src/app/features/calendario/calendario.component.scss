@@ -73,7 +73,7 @@ $white: #ffffff;
         transition: transform 0.3s ease;
 
         &:hover {
-            transform: scale(1.05); // Pequeño aumento al pasar el ratón
+            transform: scale(1.05); 
         }
 
         .logo-image {
@@ -187,7 +187,7 @@ $white: #ffffff;
     }
 }
 
-// SISTEMA DE TABS (Pestañas)
+// SISTEMA DE TABS 
 .tabs-wrapper {
     display: flex;
     justify-content: center;
@@ -224,7 +224,7 @@ $white: #ffffff;
     }
 }
 
-// COMPONENTES GLOBALES (Tarjetas y Botones)
+// COMPONENTES GLOBALES 
 .glass-card {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -265,7 +265,7 @@ $white: #ffffff;
     }
 }
 
-// ITINERARIO (Timeline y Formulario)
+// ITINERARIO 
 .itinerary-view {
     max-width: 1000px;
     margin: 0 auto;
@@ -1675,7 +1675,7 @@ $white: #ffffff;
 
     .report-status {
         .status-ok {
-            color: #10b981; // Verde éxito
+            color: #10b981;
             background: rgba(#10b981, 0.1);
             padding: 5px 12px;
             border-radius: 20px;
@@ -1839,12 +1839,7 @@ $white: #ffffff;
     }
 }
 
-// =============================================================
-// RESPONSIVE COMPLETO
-// Breakpoints: 1100px | 768px | 600px | 480px | 375px
-// =============================================================
 
-// ─── Reset global anti-overflow ─────────────────────────────
 ::ng-deep html,
 ::ng-deep body,
 ::ng-deep app-root {
@@ -1860,14 +1855,11 @@ $white: #ffffff;
     box-sizing: border-box;
 }
 
-// ─── TABLET LANDSCAPE (≤ 1100px) ────────────────────────────
 @media (max-width: 1100px) {
     .content {
         padding: 0 4%;
     }
 
-    // El dashboard ya colapsa a 1 columna en este punto (ya definido)
-    // Solo ajustamos el sidebar para que no quede pegajoso en tablet
     .planner-sidebar {
         position: static !important;
         top: unset;
@@ -1883,7 +1875,6 @@ $white: #ffffff;
     }
 }
 
-// ─── TABLET PORTRAIT (≤ 768px) ──────────────────────────────
 @media (max-width: 768px) {
 
     // Navbar
@@ -1924,7 +1915,6 @@ $white: #ffffff;
         }
     }
 
-    // Tabs: ya manejado abajo en el bloque existente, reforzamos
     .tabs-wrapper {
         padding: 0 4%;
     }
@@ -1958,7 +1948,6 @@ $white: #ffffff;
         gap: 16px;
     }
 
-    // Package cards: footer precio + botón en columna si hay poco espacio
     .package-card .pkg-footer {
         flex-wrap: wrap;
         gap: 12px;
@@ -2028,7 +2017,6 @@ $white: #ffffff;
     }
 }
 
-// ─── MOBILE GRANDE (≤ 600px) ────────────────────────────────
 @media (max-width: 600px) {
     .top-nav {
         padding: 10px 14px;
@@ -2067,7 +2055,7 @@ $white: #ffffff;
         padding: 0 14px 24px;
     }
 
-    // Calendario: celdas más compactas
+    // Calendario
     .calendar-grid-wrapper {
         padding: 12px 8px;
 
@@ -2087,7 +2075,7 @@ $white: #ffffff;
         }
     }
 
-    // Formulario manual: filas en columna
+    // Formulario manual
     .manual-form-card {
 
         .input-row-double,
@@ -2097,7 +2085,6 @@ $white: #ffffff;
         }
     }
 
-    // Smart builder
     .smart-builder-vip {
         padding: 16px !important;
 
@@ -2112,7 +2099,6 @@ $white: #ffffff;
         }
     }
 
-    // Modal de eventos
     .event-modal-card {
         width: 96%;
         padding: 22px 16px;
@@ -2122,7 +2108,7 @@ $white: #ffffff;
         }
     }
 
-    // Reportes: icono más pequeño
+    // Reportes
     .report-card {
         padding: 12px 14px;
         gap: 10px;
@@ -2164,20 +2150,17 @@ $white: #ffffff;
     }
 }
 
-// ─── MOBILE ESTÁNDAR (≤ 480px) ──────────────────────────────
 @media (max-width: 480px) {
     .header.centered h1 {
         font-size: 1.5rem;
     }
 
-    // Tabs: texto aún más pequeño
     .tabs-container .tab-btn {
         font-size: 0.65rem;
         padding: 9px 4px;
         letter-spacing: 0;
     }
 
-    // Calendario: altura mínima pero funcional
     .calendar-grid-wrapper {
         padding: 10px 6px;
 
@@ -2229,13 +2212,11 @@ $white: #ffffff;
         }
     }
 
-    // Builder: botón generador ocupa todo el ancho
     .generate-btn {
         padding: 13px !important;
         font-size: 0.95rem !important;
     }
 
-    // Modal de paquete: encabezado apilado
     .modal-details-card {
         width: 98%;
         padding: 22px 14px;
@@ -2261,7 +2242,6 @@ $white: #ffffff;
     }
 }
 
-// ─── MOBILE PEQUEÑO (≤ 375px) ───────────────────────────────
 @media (max-width: 375px) {
     .top-nav .logo-container .logo-text {
         display: none;
@@ -2288,20 +2268,17 @@ $white: #ffffff;
         height: 55px;
     }
 
-    // Añadir evento: texto más corto
     .add-event-neon-btn {
         font-size: 0.9rem;
         padding: 13px;
     }
 
-    // Reportes
     .report-card .report-details .badges {
         flex-direction: column;
         gap: 4px;
     }
 }
 
-// ─── REDUCCIÓN DE MOVIMIENTO (accesibilidad) ─────────────────
 @media (prefers-reduced-motion: reduce) {
 
     .bg-shape,
