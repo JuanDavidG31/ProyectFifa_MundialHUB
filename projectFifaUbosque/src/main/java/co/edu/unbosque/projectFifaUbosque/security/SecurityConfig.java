@@ -41,13 +41,10 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.cors(cors -> cors.configurationSource(corsConfigurationSource())).csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(auth -> auth
-						// Swagger
 						.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**",
 								"/webjars/**")
 						.permitAll()
-						// Endpoints públicos
 						.requestMatchers("/auth/**", "/api/email/send", "/ws/**", "/error").permitAll()
-						// Roles
 						.requestMatchers("/user/showAll", "/user/deletebyuser").hasAnyRole("ADMIN", "SUPPORT")
 						.requestMatchers("/user/getbyuser/**", "/user/updatejson", "/user/eliminarId/**", "/album/**",
 								"/api/stickers", "/api/tickets", "/api/flights", "/api/notices", "/api/reports")
@@ -63,7 +60,6 @@ public class SecurityConfig {
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 
-		// Divide la variable de entorno por comas para soportar múltiples orígenes
 		List<String> origins = Arrays.asList(allowedOriginsRaw.split(","));
 		configuration.setAllowedOrigins(origins);
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));

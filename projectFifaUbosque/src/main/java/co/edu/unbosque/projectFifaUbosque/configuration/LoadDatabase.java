@@ -21,10 +21,36 @@ import co.edu.unbosque.projectFifaUbosque.repository.TeamRepository;
 import co.edu.unbosque.projectFifaUbosque.repository.UserRepository;
 import co.edu.unbosque.projectFifaUbosque.util.AESUtil;
 
+/**
+ * Clase de configuración encargada de la inicialización y precarga de datos en
+ * la base de datos.
+ * <p>
+ * Al arrancar la aplicación, verifica la existencia de roles esenciales de
+ * usuario (ADMIN, USER, SUPPORT), así como el catálogo inicial de láminas
+ * (Stickers) del Álbum 2026 y las selecciones de fútbol (Teams).
+ * </p>
+ *
+ * @author Equipo de Desarrollo - FIFA Ubosque
+ * @version 1.0
+ */
 @Configuration
 public class LoadDatabase {
+	/** Registrador de eventos de sistema (Logger) para la clase LoadDatabase. */
 	private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
 
+	/**
+	 * Define un {@link CommandLineRunner} que se ejecuta automáticamente tras el
+	 * despliegue del contexto de Spring. Se encarga de verificar y poblar la base
+	 * de datos de manera idempotente.
+	 *
+	 * @param userRepo        Repositorio para la gestión de persistencia de
+	 *                        usuarios.
+	 * @param passwordEncoder Componente de cifrado para contraseñas de usuarios.
+	 * @param stickerRepo     Repositorio para la gestión del catálogo de láminas.
+	 * @param teamRepository  Repositorio para la gestión del catálogo de
+	 *                        selecciones.
+	 * @return Un CommandLineRunner ejecutable por Spring Boot.
+	 */
 	@Bean
 	CommandLineRunner initDatabase(UserRepository userRepo, PasswordEncoder passwordEncoder,
 			StickerRepository stickerRepo, TeamRepository teamRepository) {
@@ -55,13 +81,13 @@ public class LoadDatabase {
 				userRepo.save(normalUser);
 				log.info("Precargando usuario normal");
 			}
-			
+
 			Optional<User> found3 = userRepo.findByUser(AESUtil.encrypt("support"));
 			if (found3.isPresent()) {
 				log.info("El soporte ya existe, omitiendo la creación del soporte...");
 			} else {
-				User supportUser = new User(AESUtil.encrypt("support"), passwordEncoder.encode("1234567890"), null, null,
-						null, null, null, false, 0, true, true, false);
+				User supportUser = new User(AESUtil.encrypt("support"), passwordEncoder.encode("1234567890"), null,
+						null, null, null, null, false, 0, true, true, false);
 				supportUser.setRole(Role.SUPPORT);
 				supportUser.setAvailablePacks(50);
 				userRepo.save(supportUser);
@@ -73,14 +99,16 @@ public class LoadDatabase {
 				log.info("Iniciando carga del Catálogo del Álbum 2026...");
 
 				List<Sticker> catalogoInicial = Arrays.asList(
-						
+
 						new Sticker("ARG-01", "Lionel Messi", "selecciones", "Argentina",
 								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776051964/zlqhu2ztvza3ovfytjuh.png",
 								"Legendaria"),
 						new Sticker("ARG-02", "Emiliano Martínez", "selecciones", "Argentina",
-								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776052095/oayluxuoadqm9enjh8t4.png", "Épica"),
+								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776052095/oayluxuoadqm9enjh8t4.png",
+								"Épica"),
 						new Sticker("ARG-03", "Julián Álvarez", "selecciones", "Argentina",
-								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776052886/s9u6wwnlw6dqtn5osxgd.png", "Épica"),
+								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776052886/s9u6wwnlw6dqtn5osxgd.png",
+								"Épica"),
 						new Sticker("ARG-04", "Rodrigo De Paul", "selecciones", "Argentina",
 								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776052783/h7xjaghuujafoaumivlq.png",
 								"Épica"),
@@ -109,7 +137,6 @@ public class LoadDatabase {
 								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776097891/ujvve8hh2dibnyqgvhwc.png",
 								"Común"),
 
-						
 						new Sticker("BRA-01", "Vinícius Júnior", "selecciones", "Brasil",
 								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776703005/zxg7sxeagti0sx7bt4qy.png",
 								"Legendaria"),
@@ -144,12 +171,12 @@ public class LoadDatabase {
 								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776704447/u7nb4dggf548mx8mnxeu.png",
 								"Común"),
 
-						
 						new Sticker("COL-01", "Luis Díaz", "selecciones", "Colombia",
 								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776713418/jyqalajjluc70xc1msbb.png",
 								"Épica"),
 						new Sticker("COL-02", "James Rodríguez", "selecciones", "Colombia",
-								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776713511/mnfgigash88lejux0mrd.png", "Épica"),
+								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776713511/mnfgigash88lejux0mrd.png",
+								"Épica"),
 						new Sticker("COL-03", "Camilo Vargas", "selecciones", "Colombia",
 								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776713618/ckexhg0jlv9gdjktynhq.png",
 								"Común"),
@@ -181,11 +208,12 @@ public class LoadDatabase {
 								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776715200/fz3igt28opxb3joeyp2j.png",
 								"Común"),
 
-						
 						new Sticker("FRA-01", "Kylian Mbappé", "selecciones", "Francia",
-								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776715503/lxo3l4htv5qw17xn6hxk.png", "Legendaria"),
+								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776715503/lxo3l4htv5qw17xn6hxk.png",
+								"Legendaria"),
 						new Sticker("FRA-02", "Antoine Griezmann", "selecciones", "Francia",
-								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776715605/ddhfys1karoq4tdysif1.png", "Épica"),
+								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776715605/ddhfys1karoq4tdysif1.png",
+								"Épica"),
 						new Sticker("FRA-03", "Eduardo Camavinga", "selecciones", "Francia",
 								"https://res.cloudinary.com/dd61vteo5/image/upload/v1776715993/ljxbldqwepdmifbffryn.png",
 								"Épica"),
@@ -193,7 +221,8 @@ public class LoadDatabase {
 								"https://res.cloudinary.com/dd61vteo5/image/upload/v1777923988/k2iqiqcutv6ck4vun17j.png",
 								"Épica"),
 						new Sticker("FRA-05", "Jules Koundé", "selecciones", "Francia",
-								"https://res.cloudinary.com/dd61vteo5/image/upload/v1777923475/h668a4b0dyf17b8ev42y.png", "Épica"),
+								"https://res.cloudinary.com/dd61vteo5/image/upload/v1777923475/h668a4b0dyf17b8ev42y.png",
+								"Épica"),
 						new Sticker("FRA-06", "Dayot Upamecano", "selecciones", "Francia",
 								"https://res.cloudinary.com/dd61vteo5/image/upload/v1777923821/mubavrkya1pkxocznkd4.png",
 								"Común"),
@@ -213,9 +242,9 @@ public class LoadDatabase {
 								"https://res.cloudinary.com/dd61vteo5/image/upload/v1777924573/i8t4o4z8ypfcl7hbzsoi.png",
 								"Común"),
 
-						
 						new Sticker("ESP-01", "Lamine Yamal", "selecciones", "España",
-								"https://res.cloudinary.com/dd61vteo5/image/upload/v1777924803/fadbpdcpxppp0e4rmayi.png", "Épica"),
+								"https://res.cloudinary.com/dd61vteo5/image/upload/v1777924803/fadbpdcpxppp0e4rmayi.png",
+								"Épica"),
 						new Sticker("ESP-02", "Nico Williams", "selecciones", "España",
 								"https://res.cloudinary.com/dd61vteo5/image/upload/v1777925012/gi4klxdmuz9ekzd6ay6u.png",
 								"Épica"),
@@ -248,7 +277,6 @@ public class LoadDatabase {
 								"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAB7hsa0CADOL4BK_5GZGsfEw5emvA_25MBg&s",
 								"Común"),
 
-						
 						new Sticker("ENG-01", "Jude Bellingham", "selecciones", "Inglaterra",
 								"https://preview.redd.it/jude-bellingham-tots-card-fair-or-not-v0-0sboi1b83xvc1.png?auto=webp&s=fa139a010e15010e7ebb81bd990b830056566b28",
 								"Legendaria"),
@@ -282,7 +310,6 @@ public class LoadDatabase {
 								"https://game-assets.fut.gg/cdn-cgi/image/quality=85,format=auto,width=200/2025/futgg-player-item-card/25-84117361.2694c6ad813dd24d10c0423d50f07c5e645adfbef959e716afe4ec0bcbf7eeee.webp",
 								"Épica"),
 
-						
 						new Sticker("USA-01", "Christian Pulisic", "selecciones", "Estados Unidos",
 								"https://ratings-images-prod.pulse.ea.com/FC26/components/items/227796_mx.webp",
 								"Épica"),
@@ -317,7 +344,6 @@ public class LoadDatabase {
 								"https://ratings-images-prod.pulse.ea.com/FC26/components/items/250954_en.webp",
 								"Común"),
 
-						
 						new Sticker("MEX-01", "Edson Álvarez", "selecciones", "México",
 								"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEv9p58xSM1DNgnpVpO-zWI5LDD3RRWNRn6w&s",
 								"Épica"),
@@ -351,7 +377,6 @@ public class LoadDatabase {
 								"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWT1ujeL6OPXuoEF-M7F6pgPmzLhmJH7qWZw&s",
 								"Común"),
 
-						
 						new Sticker("GER-01", "Jamal Musiala", "selecciones", "Alemania",
 								"https://game-assets.fut.gg/cdn-cgi/image/quality=85,format=auto,width=200/2026/futgg-player-item-card/26-50588438.9e26035e5856b01b049de9b214efe27f3432e34b36e5c6006d1103a1f0c3406d.webp",
 								"Épica"),
@@ -383,7 +408,6 @@ public class LoadDatabase {
 								"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwkOUKoWHal6YICAwkUr04xbcADQeypk6L-Q&s",
 								"Común"),
 
-						
 						new Sticker("POR-01", "Cristiano Ronaldo", "selecciones", "Portugal",
 								"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtsl89IdKWy9VI1V875dxtNZ46PiBiu9PfYQ&s",
 								"Legendaria"),
@@ -413,7 +437,6 @@ public class LoadDatabase {
 						new Sticker("POR-10", "Diogo Jota", "selecciones", "Portugal",
 								"https://pbs.twimg.com/media/Gu69AG1W4AAMHuo.jpg", "Común"),
 
-						
 						new Sticker("EST-01", "Estadio Azteca (MEX)", "estadios", "Estadios Oficiales",
 								"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJafCPgRXZGY8lSmNfk-wonKU-FaaKsCqwsQ&s",
 								"Legendaria"),
@@ -436,7 +459,6 @@ public class LoadDatabase {
 								"https://upload.wikimedia.org/wikipedia/commons/5/57/Mexico_Guadalupe_Monterrey_Estadio_BBVA_Bancomer_fifa_world_cup_2026_6.JPG",
 								"Común"),
 
-						
 						new Sticker("CAT-01", "Pelé (BRA)", "categorias", "Leyendas del Mundial",
 								"https://i.pinimg.com/736x/d5/65/61/d56561a3469c43e52add047005eecc80.jpg",
 								"Legendaria"),

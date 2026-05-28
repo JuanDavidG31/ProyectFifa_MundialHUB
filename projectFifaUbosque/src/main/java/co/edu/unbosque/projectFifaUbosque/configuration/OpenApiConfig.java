@@ -14,10 +14,27 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
+/**
+ * Clase de configuración para estructurar la documentación interactiva de la
+ * API (Swagger/OpenAPI).
+ * <p>
+ * Define títulos, descripciones generales del ecosistema de módulos de la
+ * aplicación, esquemas de seguridad globales basados en tokens Bearer JWT y
+ * respuestas estándar de error HTTP.
+ * </p>
+ *
+ * @author Equipo de Desarrollo - FIFA Ubosque
+ * @version 1.0
+ */
 @Configuration
 public class OpenApiConfig {
-
+	/**
+	 * Configura el Bean global estructurado de {@link OpenAPI} con metadatos del
+	 * proyecto y esquemas de seguridad.
+	 *
+	 * @return Un objeto OpenAPI conteniendo la metadata de Swagger adaptada para
+	 *         FIFA Ubosque 2026.
+	 */
 	@Bean
 	public OpenAPI customOpenAPI() {
 
@@ -50,6 +67,15 @@ public class OpenApiConfig {
 						.addResponses("NotFoundError", createApiResponse("Recurso no encontrado")));
 	}
 
+	/**
+	 * Método utilitario estructurado para generar respuestas HTTP de error
+	 * consistentes dentro de la interfaz Swagger UI.
+	 *
+	 * @param description Breve descripción que explica el motivo de la falla o
+	 *                    error HTTP.
+	 * @return Una instancia de {@link ApiResponse} formateada en estructura JSON
+	 *         válida.
+	 */
 	private ApiResponse createApiResponse(String description) {
 		return new ApiResponse().description(description).content(new Content().addMediaType("application/json",
 				new MediaType().addExamples("error", new Example().value("{\"error\": \"" + description + "\"}"))));
